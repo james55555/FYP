@@ -1,0 +1,94 @@
+/*
+ *  Namespace       : Include
+ *  File name       : main 
+ *  File extension  : css
+ *  Author          : James Graham
+ *  Description     : Administer application styling
+ * 
+ */ 
+
+//Set body default
+body 
+{ 
+    font-family: Calibri, sans-serif;
+    font-size: 1em;
+  
+}
+p
+{
+    padding: 5px;
+    text-align: left;
+    margin-bottom: 5px;
+}
+//Set heading defaults
+h1
+{
+    font-size: 2em;
+    margin-bottom: 5px;
+}
+
+h2
+{
+    font-size: 1.75em;
+}
+
+table
+{
+    margin:0;
+    padding:0;
+    width: 100%;
+
+}
+table, th, td
+{
+    vertical-align: middle;
+    border: 1px solid black;
+}
+//Set #container defaults
+#container
+{
+    width: 700px;
+    margin: 0 auto;
+    border: 2px solid black;
+    position: relative;
+}
+.header #headerWrapper  {
+}
+
+//Set #header default
+.header
+{
+ display: block; position: relative; top: -250px; visibility: hidden;
+    vertical-align: middle;
+    margin:auto;
+    min-width: 100%;
+    text-align: center;
+    background-color: #000;
+    border: 2px solid black;
+}
+
+.header #headerList ul{
+    list-style-type: none;
+    margin: 0px;
+    padding-right: 200px;
+}
+
+.header #headerList li a
+{
+    padding: 10px;
+    text-decoration: none;
+    font-weight: bold;
+    color: #E0E0E0;
+    background-color: #000;
+    float: left;
+}
+
+
+#footer 
+{
+    width:100%;
+    bottom:0;
+    height:10%;
+    margin-left:10px;
+    border-top: 1px solid black;
+}

@@ -1,0 +1,8 @@
+{
+    "autoload": {
+		"psr-4": "include/"
+	},
+    "require-dev":  {
+        "phpunit/phpunit": "3.7.*"
+    }
+}

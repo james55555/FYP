@@ -1,0 +1,15 @@
+/*
+ *  Namespace       : Include
+ *  File name       : register 
+ *  File extension  : css
+ *  Author          : James Graham
+ *  Description     : Administer application styling to: 
+ *                    /Include/System/View/registration.php
+ * 
+ */ 
+
+
+root { 
+    display: block;
+}
+

@@ -26,41 +26,31 @@ include __COMMON_PATH . 'Router.class.php';
 
 //include Database class
 include __COMMON_PATH . 'Database.class.php';
+
 //Autoload undefined class
 //@param className
-function __autoload($className)
-    {
-    if (substr($className, -5) == 'Model')
-        {
-        $fileName = str_replace('\\', '/', (__MODEL_PATH . 
+function __autoload($className) {
+    if (substr($className, -5) == 'Model') {
+        $fileName = str_replace('\\', '/', (__MODEL_PATH .
                 $className . '.php'));
-        }
-        else if (substr($className, -10) == 'Controller')    {
-            echo "controller";
-            $fileName = str_replace('\\', '/', (__CONTROLLER_PATH . 
+    } else if (substr($className, -10) == 'Controller') {
+        $fileName = str_replace('\\', '/', (__CONTROLLER_PATH .
                 $className . '.php'));
-            }
-    else
-        {
+    } else {
         $fileName = str_replace('\\', '/', (__SITE_PATH . DIRECTORY_SEPARATOR . $className . '.class.php'));
-        }
+    }
 
 
 //Run this class
-    if (file_exists($fileName))
-        {
+    if (file_exists($fileName)) {
         require $fileName;
-        }
-    else
-        {
+    } else {
         echo "file doesn't exist: " . $fileName;
         return false;
-        }
     }
+}
 
 //Create new registry object
 $registry = new registry();
 //$this->registry->Database->connect();
-
-
 ?>

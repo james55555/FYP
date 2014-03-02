@@ -24,7 +24,7 @@ class Project_Model
     public
             function __construct($row)
         {
-        $this->acc_id = Account_Model::getUser($row->acc_id);
+        //$this->acc_id = Account_Model::getUser($row->acc_id);
         $this->proj_id = $row->proj_id;
         $this->proj_nm = $row->proj_nm;
         $this->proj_descr = $row->proj_descr;
@@ -66,7 +66,8 @@ class Project_Model
         $db = new Database();
         $db->connect();
 
-        $query = "SELECT DISTINCT * FROM project WHERE proj_id='$proj_id'";
+        $query = "SELECT DISTINCT proj_id, proj_nm, proj_descr, proj_dpnd"
+                . " FROM project WHERE proj_id='$proj_id'";
 
         if ($db->querySuccess($query))
             {
@@ -91,9 +92,12 @@ class Project_Model
         $db = new Database();
         $db->connect();
 
-        $query = "SELECT * FROM project
-                WHERE acc_id='" . $acc_id . "'";
-
+        $query = "SELECT PR.proj_id, PR.proj_nm, PR.proj_descr, PR.proj_dpnd"
+                . " FROM PROJECT PR"
+                . " WHERE PR.proj_id IN"
+                . " (SELECT PROJ_ID FROM USER_PROJECT UP"
+                . " WHERE UP.user_id='" . $acc_id . "')";
+        
         $result = mysql_query($query) or die("error: " . mysql_error());
 
         $projects = array();
@@ -110,9 +114,10 @@ class Project_Model
         $db = new Database();
         $db->connect();
         //Archive project 
-        $archiveQuery = "INSERT INTO archived_project "
-                . "SELECT * FROM projects "
-                . "WHERE proj_id='" . $proj_id . "'";
+        $archiveQuery = "INSERT INTO archived_project"
+                . " SELECT proj_id, proj_nm, proj_descr, proj_dpnd"
+                . " FROM projects"
+                . " WHERE proj_id='" . $proj_id . "'";
         $archiveResult = mysql_query($archiveQuery);
 
 

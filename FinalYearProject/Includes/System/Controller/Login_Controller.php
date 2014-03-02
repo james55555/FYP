@@ -4,33 +4,42 @@
  *  Controller to log the user into the system.
  *  @author James Graham
  */
+
 class Login_Controller extends Main_Controller
     {
 
-private $invalidLogin = true;
+    protected $success;
+    protected $user;
+    protected $pwd;
+
     public
             function main()
         {
-        //if the username/password are set then the form has been submitted.
-        if (isset($_POST['username']) && isset($_POST['password']))
+//if the username/password are set then the form has been submitted.
+        //only attempt to log in if user id and pwd are set.
+        if (isset($_POST['username']))
             {
-            $user = $_POST['username'];
-            $pass = $_POST['password'];
-            $this->login($user, $pass);
+            $this->user = $_POST['username'];
+            if (isset($_POST['password']))
+                {
+                $this->pwd = $_POST['password'];
+
+                $this->login($this->user, $this->pwd);
+                }
+            if ($this->success)
+                {
+                header('Location: .');
+                } else
+                {
+                ?>
+                <script type="text/javascript">
+                    alert("Username or Password are not valid!!");
+                </script>
+                <?php
+
+                }
             }
 
-        // Double negative - if login isn't invalid then log them in.
-        if ($this->invalidLogin === false)
-            {
-            ?>
-<script type="text/javascript">
-alert("Username/ Password isn\'t valid!!");
-</script>
-<?php
-
-            header('Location: .');
-                        }
-            
         $this->registry->View_Template->show('login');
         }
 
@@ -41,25 +50,22 @@ alert("Username/ Password isn\'t valid!!");
     private
             function login($user, $password)
         {
-        // Get the account from the database
+        $this->success = false;
+// Get the account from the database
         $acc = Account_Model::getUser($user);
-
-        //Ensure password is correct
-        if (isset($acc) && $acc->password() == $password)
+//Ensure password is correct
+        if ($acc !== null && $acc->password() === $password)
             {
-            //Log in successful, set up new session and set boolean to false
+//Log in successful, set up new session and set boolean to false
             $_SESSION['user'] = $acc;
-            $this->invalidLogin = false;
-            
-            }
-        else
+            $this->success = true;
+            } else
             {
-            //unsuccessful login, reset session id and set boolean to true
+//unsuccessful login, reset session id and set boolean to true
             $_SESSION['user'] = null;
-            $this->invalidLogin = true;
             }
+        return $this->success;
         }
-        
-    }
 
+    }
 ?>

@@ -20,7 +20,7 @@ class Database {
     private
             $DB_user = 'root';
     private
-            $DB_pwd = '';
+            $DB_pwd = 'password';
     private
             $DB_nm = 'FYP';
 

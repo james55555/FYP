@@ -120,12 +120,31 @@ class Account_Model
         }
 
     /*
-     * Function to add new user to the database
+     * Function to validate registration server side and 
+     * add new user to the database
+     * @return String
      */
 
     public static
-            function addUser($userId, $password, $first_nm, $last_nm, $email_addr)
+            function addUser($registrationFields)
         {
+        /*
+         * Assign array variables to abbreviations for later use
+         */
+        $user_id = $registrationFields['user_id'];
+        $password = $registrationFields['password'];
+        $password2 = $registrationFields['password2'];
+        $fName = $registrationFields['fname'];
+        $lName = $registrationFields['lname'];
+        $email = $registrationFields['email'];
+
+        foreach($registrationFields as $field){
+            //look to loop through fields and validate similar fields.
+            }
+
+        /*
+         * After validation, run the insert query into the database.
+         */
         $db = new Database();
         $db->connect();
 
@@ -133,17 +152,56 @@ class Account_Model
                 "(`user_id`, `acc_create_ts`, `password`, `first_nm`, "
                 . "`last_nm`, `  email_addr`)"
                 . "VALUES ("
-                . $userId . "','"
+                . $user_id . "','"
                 . "CURRENT_TIMESTAMP,'"
                 . $password . "','"
-                . $first_nm . "','"
-                . $last_nm . "','"
-                . $email_addr . "')";
+                . $fName . "','"
+                . $lName . "','"
+                . $email . "')";
 
         $result = mysql_query($query);
         if (!$db->querySuccess($result))
             {
             return "Error inserting data into database.";
+            }
+        }
+
+    /*
+     * This function can be used to validate a variable
+     * @access private
+     * 
+     * @param String $string    : This is the name of the variable
+     * @param String $type      : This is the variable type
+     * @param int $length       : This is the maximum length of a variable
+     * 
+     * @return boolean
+     * 
+     *  (Waterson, 2013)
+     */
+
+   protected static function variableCheck($string, $type, $length)
+        {
+
+        // assign the type
+        $type = 'is_' . $type;
+
+        if (!$type($string))
+            {
+            return FALSE;
+            }
+        // now we see if there is anything in the string
+        elseif (empty($string))
+            {
+            return FALSE;
+            }
+        // then we check how long the string is
+        elseif (strlen($string) > $length)
+            {
+            return FALSE;
+            } else
+            {
+            // if all is well, we return TRUE
+            return TRUE;
             }
         }
 

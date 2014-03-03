@@ -39,7 +39,6 @@ class Account_Model
         $this->accCreate_ts = $row->acc_create_ts;
         }
 
-       
     public
             function userId()
         {
@@ -87,34 +86,37 @@ class Account_Model
         {
         $db = new Database();
         $db->connect();
+
+
+        $query = "SELECT user_id, acc_create_ts, password,"
+                . " first_nm, last_nm, email_addr"
+                . " FROM ACCOUNT"
+                . " WHERE user_id='" . $accId . "'";
+
+
+        /* Run query against database
+         * @var $result type 
+         */
+        $qResult = mysql_query($query);
+
+        //Verify that the query has returned a user
+        if (mysql_num_rows($qResult) === 1)
             {
-            $query = "SELECT * FROM ACCOUNT
-                     WHERE user_id='" . $accId . "'";
-            if ($db->querySuccess($query))
-                {
-                // var_dump('vardump db:' .$db);
-
-                /* @var $result type */
-                $qResult = mysql_query($query);
-                }
-            else
-                {
-                return $db->querySuccess($query);
-                }
-            if (mysql_num_rows($qResult) === 1)
-                {
-                //var_dump('vardump qresult: ' . $qResult);
-
-                $row = mysql_fetch_object($qResult);
-                $acc = new Account_Model($row);
-                }
-            else
-                {
-                return null;
-                }
+            //Assign object to @var $row
+            $row = mysql_fetch_object($qResult);
+            //Create new Account_Model using information in the database.
+            $accId = new Account_Model($row);
             }
+
+        //If query is doesn't query successfully or doesn't return a user then return false.
+        else
+            {
+            $accId = null;
+            }
+
+        //Close databse and return the user object.
         $db->close();
-        return $acc;
+        return $accId;
         }
 
     /*

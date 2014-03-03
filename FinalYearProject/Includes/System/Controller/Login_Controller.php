@@ -17,18 +17,13 @@ class Login_Controller extends Main_Controller
         {
 //if the username/password are set then the form has been submitted.
         //only attempt to log in if user id and pwd are set.
-        if (isset($_POST['username']))
+        if (isset($_POST['username']) && isset($_POST['password']))
             {
-            $this->user = $_POST['username'];
-            if (isset($_POST['password']))
-                {
-                $this->pwd = $_POST['password'];
-
-                $this->login($this->user, $this->pwd);
-                }
+            //If authentication was successful
+            $this->login($_POST['username'], $_POST['password']);
             if ($this->success)
                 {
-                header('Location: .');
+               header('Location: .');
                 } else
                 {
                 ?>
@@ -39,7 +34,6 @@ class Login_Controller extends Main_Controller
 
                 }
             }
-
         $this->registry->View_Template->show('login');
         }
 
@@ -51,18 +45,18 @@ class Login_Controller extends Main_Controller
             function login($user, $password)
         {
         $this->success = false;
+
 // Get the account from the database
         $acc = Account_Model::getUser($user);
 //Ensure password is correct
-        if ($acc !== null && $acc->password() === $password)
+        if (isset($acc) && $acc !== '')
             {
+            if ($acc->password() === $password)
+                {
 //Log in successful, set up new session and set boolean to false
-            $_SESSION['user'] = $acc;
-            $this->success = true;
-            } else
-            {
-//unsuccessful login, reset session id and set boolean to true
-            $_SESSION['user'] = null;
+                $_SESSION['user'] = $acc;
+                $this->success = true;
+                }
             }
         return $this->success;
         }

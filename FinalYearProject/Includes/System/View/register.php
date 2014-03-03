@@ -18,27 +18,30 @@
 
     </head>
     <body>
-    <legend>Registration Form</legend>
-    <div id="registration">
-        <form id="register" action="Register_Controller.php" method="post" onsubmit="return Validation()">
-            <input type="hidden" id="submitted" value="false"/>
-            <input type="hidden" id="return" value="true"/>
-            <label>First Name: <input type="text" name="fname"/></label><br/>
-            <label>Last Name: <input type="text" name="lname"/></label><br/>
-            <label>Email: <input type="text" name="email"/></label><br/>
-            <label>Username: <input type="text" name="user_id"/></label>
-            <br/>
-            <label>Password: <input type="password" name="password"/></label>
-            <label>Re-Enter Password: <input type="password" name="password2"/></label>
+        <div id="container">
+            <h1>Registration Form</h1>
+            <div id="registration">
+                <form id="register" action="Register_Controller.php" method="post" onsubmit="return Validation()">
+                    <input type="hidden" id="submitted" value="false"/>
+                    <input type="hidden" id="return" value="true"/>
+                    <label>First Name: <input type="text" name="fname"/></label><br/>
+                    <label>Last Name: <input type="text" name="lname"/></label><br/>
+                    <label>Email: <input type="text" name="email"/></label><br/>
+                    <label>Username: <input type="text" name="user_id"/></label>
+                    <br/>
+                    <label>Password: <input type="password" name="password"/></label>
+                    <label>Re-Enter Password: <input type="password" name="password2"/></label>
 
-            <br/>
-            <input type="submit" value="Back" class="button" id="prevPge"/>
-            <input type="submit" value="Submit" class="button" id="newUser"/>
-        </form>
-        <?php
-        include("footer.php");
-        ?>
-    </div>
-</body>
+                    <br/>
+                    <input type="submit" value="Back" class="button" id="prevPge"/>
+                    <input type="submit" value="Submit" class="button" id="newUser"/>
+
+                </form>
+            </div>
+            <?php
+            include("footer.php");
+            ?>
+        </div>
+    </body>
 </html>
 

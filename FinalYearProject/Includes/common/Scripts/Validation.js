@@ -2,10 +2,22 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-
+/*
+ * This form is to provide client-side form validation prior to submitting
+ * to server-side.
+ * The input will also be validated server-side to ensure it can be added to 
+ * the database without failing.
+ * @returns {Boolean}
+ */
 
 function Validation() {
 
+/*
+ * 
+ * @type @exp;documentformsregister
+ * @pro;fName
+ * @pro;value
+ */
 
     var fn = document.forms["register"]["fName"].value;
     var ln = document.forms["register"]["lName"].value;
@@ -14,6 +26,7 @@ function Validation() {
     var pw = document.forms["register"]["password"].value;
     var pw2 = document.forms["register"]["password2"].value;
 
+
     if (fieldEmpty(fn, ln, ui, pw)) {
         if (validEmail(em)) {
             if (validPwd(pw, pw2)) {
@@ -21,7 +34,7 @@ function Validation() {
                     /*
                      * Submit the form
                      */
-                    document.getElementById("register").submit();
+                    document.getElementById("register").main();
                 }
             }
         }
@@ -51,6 +64,7 @@ function Validation() {
      * @returns {Boolean}
      */
     function validEmail(em) {
+        
         var atpos = em.indexOf("@");
         var dotpos = em.lastIndexOf(".");
         if (atpos < 1 || dotpos < atpos + 2 || dotpos + 2 >= em.length)

@@ -7,7 +7,7 @@ class Account_ModelTest extends PHPUnit_Framework_TestCase
     {
 
     /**
-     * @var Account_Model
+     * @var Account_ModelTest
      */
     protected $object;
 
@@ -17,7 +17,7 @@ class Account_ModelTest extends PHPUnit_Framework_TestCase
      */
     protected function setUp()
         {
-        $this->object = new Account_Model;
+        $this->object = new Account_ModelTest;
         }
 
     /**

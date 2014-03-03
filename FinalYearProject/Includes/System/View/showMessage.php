@@ -16,7 +16,17 @@
     </head>
     <body>
         <div id="headerWrapper">
-<?php include 'header.php'; ?>
+            <?php
+            if (isset($_SESSION['user']))
+                {
+                include 'header.php';
+                }
+                else    {
+                    ?>
+            <a href="?page=login" value="Log into your new account"/>
+            <?php
+                    }
+            ?>
         </div>
         <div id="container">
             <h1><?php echo $this->registry->heading; ?></h1>

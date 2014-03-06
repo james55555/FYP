@@ -30,8 +30,8 @@
                     <?php 
                     foreach($this->registry->projects as $proj){
                                                 
-                        echo "<input type=\"checkbox\" name=\"pDpnd\" "
-                        . "value=\"{$proj->proj_id()}\">{$proj->proj_nm()}<br/>";
+                        echo "<label><input type=\"checkbox\" name=\"pDpnd\" "
+                        . "id=\"{$proj->proj_id()}\"/>{$proj->proj_nm()}</label><br/>";
                         }  
                         ?>
                     <br>

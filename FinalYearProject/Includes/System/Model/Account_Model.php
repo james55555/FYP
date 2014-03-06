@@ -6,7 +6,7 @@
  * 
  *      @author James Graham
  */
-class Account_Model extends Validator_Model
+class Account_Model //extends Validator_Model
     {
 
     //instantiate variables from ACCOUNT
@@ -87,18 +87,15 @@ class Account_Model extends Validator_Model
         $db = new Database();
         $db->connect();
 
-
         $query = "SELECT user_id, acc_create_ts, password,"
                 . " first_nm, last_nm, email_addr"
                 . " FROM ACCOUNT"
                 . " WHERE user_id='" . $accId . "'";
 
-
         /* Run query against database
          * @var $result type 
          */
         $qResult = mysql_query($query);
-
         //Verify that the query has returned a user
         if (mysql_num_rows($qResult) === 1)
             {
@@ -128,6 +125,11 @@ class Account_Model extends Validator_Model
     public static
             function addUser($registrationFields)
         {
+  
+                //Set up the database connection and validate the user entered fields.
+        $db = new Database();
+        $db->connect();
+        $db->filterParameters($registrationFields);
         /*
          * Assign array variables to abbreviations for later use
          */
@@ -141,10 +143,7 @@ class Account_Model extends Validator_Model
         //filter email for special characters (other fields shouldn't contain these)
         $email = Validator_Model::htmlChar($em);
 
-        //Set up the database connection and validate the user entered fields.
-        $db = new Database();
-        $db->connect();
-        $db->filterParameters($registrationFields);
+
         /*
          * Store errors in error array
          */
@@ -163,6 +162,8 @@ class Account_Model extends Validator_Model
             array(Validator_Model::variableCheck($lName, 'string', 30)),
             //Email Address Validation
             //String length needs to be between 1 and 50
+            
+            //This needs to be double-checked against validator_model as it currently has pregmatches for onl 0-9 and a-z chars
             array(Validator_Model::variableCheck($email, 'string', 50)),
         );
        

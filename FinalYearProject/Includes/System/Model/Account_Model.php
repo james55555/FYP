@@ -131,39 +131,68 @@ class Account_Model
         /*
          * Assign array variables to abbreviations for later use
          */
+        $registrationFields = array();
+
         $user_id = $registrationFields['user_id'];
         $password = $registrationFields['password'];
-        $password2 = $registrationFields['password2'];
         $fName = $registrationFields['fname'];
         $lName = $registrationFields['lname'];
         $email = $registrationFields['email'];
 
-        foreach($registrationFields as $field){
-            //look to loop through fields and validate similar fields.
-            }
-
         /*
-         * After validation, run the insert query into the database.
+         * Field Validation
          */
-        $db = new Database();
-        $db->connect();
 
-        $query = "INSERT INTO account" .
-                "(`user_id`, `acc_create_ts`, `password`, `first_nm`, "
-                . "`last_nm`, `  email_addr`)"
-                . "VALUES ("
-                . $user_id . "','"
-                . "CURRENT_TIMESTAMP,'"
-                . $password . "','"
-                . $fName . "','"
-                . $lName . "','"
-                . $email . "')";
-
-        $result = mysql_query($query);
-        if (!$db->querySuccess($result))
+        $arrayError = array(
+            //User ID Validation
+            //String length needs to be between 1 and 25
+            $this->variableCheck($user_id, 'string', 25),
+            //Password Validation
+            //String length needs to be between 1 and 25
+            $this->variableCheck($password, 'string', 25),
+            //First Name Validation
+            //String length needs to be between 1 and 30
+            $this->variableCheck($fName, 'string', 30),
+            //Last Name Validation
+            //String length needs to be between 1 and 30
+            $this->variableCheck($lName, 'string', 30),
+            //Email Address Validation
+            //String length needs to be between 1 and 50
+            $this->variableCheck($email, 'string', 50),
+        );
+        //Strip array of all null values (i.e. those inserted by variableCheck)
+        $errors = array_filter($arrayError, 'strlen');
+        //If no erros have been logged in the array then add the user to the database
+        if (count($errors) === 0)
             {
-            return "Error inserting data into database.";
+            /*
+             * After validation, run the insert query into the database.
+             */
+            $db = new Database();
+            $db->connect();
+
+            $query = "INSERT INTO account" .
+                    "(`user_id`, `acc_create_ts`, `password`, `first_nm`, "
+                    . "`last_nm`, `  email_addr`)"
+                    . "VALUES ("
+                    . $user_id . "','"
+                    . "CURRENT_TIMESTAMP,'"
+                    . $password . "','"
+                    . $fName . "','"
+                    . $lName . "','"
+                    . $email . "')";
+
+            $result = mysql_query($query);
+            if (!$db->querySuccess($result))
+                {
+                echo "Error inserting data into database."
+                . "MYSQL Error: " . mysql_error();
+                                }
+            } else
+            {
+            return true;
             }
+            return $errors;
         }
 
     /*
@@ -179,29 +208,37 @@ class Account_Model
      *  (Waterson, 2013)
      */
 
-   protected static function variableCheck($string, $type, $length)
+    protected static function variableCheck($string, $type, $length)
         {
 
         // assign the type
         $type = 'is_' . $type;
+        $errors = array();
 
         if (!$type($string))
             {
-            return FALSE;
+            $errors[] = "String and type don't match for: " . $string;
             }
         // now we see if there is anything in the string
-        elseif (empty($string))
+        elseif (empty($string) || $string === '')
             {
-            return FALSE;
+            $errors[] = "Ensure " . $string . " is filled in!";
             }
         // then we check how long the string is
         elseif (strlen($string) > $length)
             {
-            return FALSE;
-            } else
+            $errors[] = $string . "cannot be more than " . $length . " characters long!";
+            }
+        //then check if the values contain any unwanted characters
+        elseif (preg_match("/[0-9A-Za-z]/", $string) === 0)
+            {
+            $errors[] = $string . " can only contain letters and numbers.";
+            }
+        //if there are no errors don't insert value
+        else
             {
             // if all is well, we return TRUE
-            return TRUE;
+            return null;
             }
         }
 

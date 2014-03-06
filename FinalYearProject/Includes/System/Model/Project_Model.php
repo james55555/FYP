@@ -76,8 +76,7 @@ class Project_Model
             $project = new Project_Model($row);
             // var_dump('vardump db:' .$db);
             /* @var $result type */
-            }
-        else
+            } else
             {
             var_dump($project);
             die("object is false");
@@ -97,7 +96,7 @@ class Project_Model
                 . " WHERE PR.proj_id IN"
                 . " (SELECT PROJ_ID FROM USER_PROJECT UP"
                 . " WHERE UP.user_id='" . $acc_id . "')";
-        
+
         $result = mysql_query($query) or die("error: " . mysql_error());
 
         $projects = array();
@@ -128,8 +127,7 @@ class Project_Model
         if ($db->querySuccess($archiveResult) && $db->querySuccess($result))
             {
             $del = true;
-            }
-        else
+            } else
             {
             $del = false;
             }
@@ -139,37 +137,28 @@ class Project_Model
 
     public static function addProject($fields)
         {
+
         $db = new Database();
         $db->connect();
+        $db->filterParameters($fields);
+        //This will be a multi-dimensional array due to the checkbox field.
+        $proj_nm = $fields['pName'];
+        $proj_descr = $fields['pDescr'];
+        //This is the checkbox field. It will be passed as an array
+        $proj_dpnd = $fields['pDpnd'];
+        $proj_start = $fields['pStart'];
+        $proj_deadline = $fields['pDeadline'];
 
-        $errors = array();
+        
+
         //validation
         //Check if the user session is active
-        if (empty($fields['acc_id']))
-            {
-            $errors[] = 'Need to be signed in to create project!';
-            }
-//Get project name and validate it for insert
-        $project_name = $fields['proj_nm'];
-        if (!isset($project_name))
-            {
-            $errors[] = "Project Name needs to be filled in";
-            }
-        if (strlen($project_name) > 30)
-            {
-            $errors[] = "Check Project Name length! It can't be longer than 30 characters.";
-            }
-            
-            $project_description = htmlspecialchars($fields['proj_descr']);
-            if (strlen($project_description > 200)){
-                $errors[] = "Description can't be long than 200 characters!";
-                }
-                //Need to resolve acc_id issue in mysql
-                $query = "INSERT INTO PROJECT VALUES("
-                        . "'". $_SESSION['user']->userId() . "'"
-                        . ", null,"
-                        . "'" . $project_name . "',"
-                        . "'" . $project_description . "')";
+        //Need to resolve acc_id issue in mysql
+        $query = "INSERT INTO PROJECT VALUES("
+                . "'" . $_SESSION['user']->userId() . "'"
+                . ", null,"
+                . "'" . $project_name . "',"
+                . "'" . $project_description . "')";
         }
 
     }

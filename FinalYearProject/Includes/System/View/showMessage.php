@@ -20,17 +20,23 @@
             if (isset($_SESSION['user']))
                 {
                 include 'header.php';
+                } else
+                {
+
+                echo "<a href=\"?page=login\" value=\"Log into your new account\"/><a/>";
                 }
-                else    {
-                    ?>
-            <a href="?page=login" value="Log into your new account"/>
-            <?php
-                    }
-            ?>
+            ?>            
         </div>
         <div id="container">
             <h1><?php echo $this->registry->heading; ?></h1>
-            <p><?php echo $this->registry->message; ?></p>
+            <p><?php 
+            if(is_array($this->registry->message)){
+            var_dump($this->registry->message);    
+                }
+                else{
+            echo $this->registry->message;         
+                    }
+            ?></p>
         </div>
     </body>
 </html>

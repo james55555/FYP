@@ -6,7 +6,7 @@
  * 
  *      @author James Graham
  */
-class Account_Model
+class Account_Model extends Validator_Model
     {
 
     //instantiate variables from ACCOUNT
@@ -131,50 +131,52 @@ class Account_Model
         /*
          * Assign array variables to abbreviations for later use
          */
-        $registrationFields = array();
+
 
         $user_id = $registrationFields['user_id'];
         $password = $registrationFields['password'];
         $fName = $registrationFields['fname'];
         $lName = $registrationFields['lname'];
-        $email = $registrationFields['email'];
+        $em = $registrationFields['email'];
+        //filter email for special characters (other fields shouldn't contain these)
+        $email = Validator_Model::htmlChar($em);
 
         //Set up the database connection and validate the user entered fields.
-            $db = new Database();
-            $db->connect();
-            $db->filterParameters($registrationFields);
+        $db = new Database();
+        $db->connect();
+        $db->filterParameters($registrationFields);
         /*
-         * Field Validation
+         * Store errors in error array
          */
-
         $arrayError = array(
             //User ID Validation
             //String length needs to be between 1 and 25
-            $this->variableCheck($user_id, 'string', 25),
+            array(Validator_Model::variableCheck($user_id, 'string', 25)),
             //Password Validation
             //String length needs to be between 1 and 25
-            $this->variableCheck($password, 'string', 25),
+            array(Validator_Model::variableCheck($password, 'string', 25)),
             //First Name Validation
             //String length needs to be between 1 and 30
-            $this->variableCheck($fName, 'string', 30),
+            array(Validator_Model::variableCheck($fName, 'string', 30)),
             //Last Name Validation
             //String length needs to be between 1 and 30
-            $this->variableCheck($lName, 'string', 30),
+            array(Validator_Model::variableCheck($lName, 'string', 30)),
             //Email Address Validation
             //String length needs to be between 1 and 50
-            $this->variableCheck($email, 'string', 50),
+            array(Validator_Model::variableCheck($email, 'string', 50)),
         );
-        //Strip array of all null values (i.e. those inserted by variableCheck)
-        $errors = array_filter($arrayError, 'strlen');
+       
+//Strip array of all null values (i.e. those inserted by variableCheck)
+
         //If no erros have been logged in the array then add the user to the database
-        if (count($errors) === 0)
+        if (sizeof($arrayError) === 0)
             {
-           
+
             $query = "INSERT INTO account" .
                     " (`user_id`, `acc_create_ts`, `password`, `first_nm`, "
-                    . " `last_nm`, `  email_addr`)"
-                    . " VALUES ("
-                    . $user_id . "','"
+                    . " `last_nm`, `email_addr`)"
+                    . " VALUES ('"
+                    . $user_id . "',"
                     . "CURRENT_TIMESTAMP,'"
                     . $password . "','"
                     . $fName . "','"
@@ -186,59 +188,12 @@ class Account_Model
                 {
                 echo "Error inserting data into database."
                 . "MYSQL Error: " . mysql_error();
-                                }
+                }
             } else
             {
-            return $errors;
+            return $arrayError;
             }
-            return true;
-        }
-
-    /*
-     * This function can be used to validate a variable
-     * @access private
-     * 
-     * @param String $string    : This is the name of the variable
-     * @param String $type      : This is the variable type
-     * @param int $length       : This is the maximum length of a variable
-     * 
-     * @return boolean
-     * 
-     *  (Waterson, 2013)
-     */
-
-    protected static function variableCheck($string, $type, $length)
-        {
-
-        // assign the type
-        $type = 'is_' . $type;
-        $errors = array();
-
-        if (!$type($string))
-            {
-            $errors[] = "String and type don't match for: " . $string;
-            }
-        // now we see if there is anything in the string
-        elseif (empty($string) || $string === '')
-            {
-            $errors[] = "Ensure " . $string . " is filled in!";
-            }
-        // then we check how long the string is
-        elseif (strlen($string) > $length)
-            {
-            $errors[] = $string . "cannot be more than " . $length . " characters long!";
-            }
-        //then check if the values contain any unwanted characters
-        elseif (preg_match("/[0-9A-Za-z]/", $string) === 0)
-            {
-            $errors[] = $string . " can only contain letters and numbers.";
-            }
-        //if there are no errors don't insert value
-        else
-            {
-            // if all is well, we return TRUE
-            return null;
-            }
+        return true;
         }
 
     }

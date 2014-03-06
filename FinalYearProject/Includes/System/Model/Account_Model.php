@@ -139,6 +139,10 @@ class Account_Model
         $lName = $registrationFields['lname'];
         $email = $registrationFields['email'];
 
+        //Set up the database connection and validate the user entered fields.
+            $db = new Database();
+            $db->connect();
+            $db->filterParameters($registrationFields);
         /*
          * Field Validation
          */
@@ -165,16 +169,11 @@ class Account_Model
         //If no erros have been logged in the array then add the user to the database
         if (count($errors) === 0)
             {
-            /*
-             * After validation, run the insert query into the database.
-             */
-            $db = new Database();
-            $db->connect();
-
+           
             $query = "INSERT INTO account" .
-                    "(`user_id`, `acc_create_ts`, `password`, `first_nm`, "
-                    . "`last_nm`, `  email_addr`)"
-                    . "VALUES ("
+                    " (`user_id`, `acc_create_ts`, `password`, `first_nm`, "
+                    . " `last_nm`, `  email_addr`)"
+                    . " VALUES ("
                     . $user_id . "','"
                     . "CURRENT_TIMESTAMP,'"
                     . $password . "','"
@@ -190,9 +189,9 @@ class Account_Model
                                 }
             } else
             {
-            return true;
-            }
             return $errors;
+            }
+            return true;
         }
 
     /*

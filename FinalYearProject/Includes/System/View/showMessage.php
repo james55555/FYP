@@ -22,8 +22,7 @@
                 include 'header.php';
                 } else
                 {
-
-                echo "<a href=\"?page=login\" value=\"Log into your new account\"/><a/>";
+                echo "<a href=\"?page=register\">Return to registration<a/>";
                 }
             ?>            
         </div>
@@ -38,5 +37,8 @@
                     }
             ?></p>
         </div>
+        <?php
+        include("footer.php");
+        ?>
     </body>
 </html>

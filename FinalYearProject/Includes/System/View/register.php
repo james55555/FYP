@@ -33,7 +33,8 @@
                     <label>Re-Enter Password: <input type="password" name="password2"/></label>
 
                     <br/>
-                    <input type="button" value="Back" class="button" id="prevPge"/>
+                    <input type="button" value="Back" class="button" id="prevPge"
+                           onclick="history.go(-1);"/>
                     <input type="submit" value="Submit" class="button" id="newUser"/>
 
                 </form>

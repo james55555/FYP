@@ -31,9 +31,9 @@ class Register_Controller extends Main_Controller
                 $this->registry->message = "You are now a registered user.";
                 } else
                 {
-                $this->registry->title = "Error adding new user...";
+                $this->registry->heading = "Error adding new user...";
                      //Print errors as a list                 
-                    $this->registry->message = implode("</br>", $this->newUser);
+                    $this->registry->message = array_values($this->newUser);
                 }
 
             $this->registry->View_Template->show('showMessage');
@@ -48,10 +48,8 @@ class Register_Controller extends Main_Controller
         {
         $valid = false;
 
-        //Create publically available array
-        $this->registry->registrationFields = array();
-        //assign to an easier to use variable.
-        $registrationFields = $this->registry->registrationFields;
+        //assign to an array.
+        $registrationFields = array();
 
 
         $registrationFields['fname'] = $_POST['fname'];
@@ -61,37 +59,19 @@ class Register_Controller extends Main_Controller
         $registrationFields['password'] = $_POST['password'];
         $registrationFields['password2'] = $_POST['password2'];
 
-        foreach ($registrationFields as $field)
-            {
-            //look to loop through fields and validate similar fields.
-            $this->filterVars($field);
-            $registrationFields[$field] = $field;
-            }
-
         if ($registrationFields['password'] === $registrationFields['password2'])
             {
             $this->newUser = Account_Model::addUser($registrationFields);
+            
             if (is_bool($this->newUser))
                 {
                 $valid = true;
-                } else
-                {
-                $valid = false;
-
-                }
-            } else
-            {
-            $valid = false;
-            echo("The two passwords provided do not match.");
+                } 
             }
         return $valid;
         }
 
-    protected function filterVars($value)
-        {
-        $htmlVal = htmlspecialchars($value);
-        return $htmlVal;
-        }
+
 
     }
 

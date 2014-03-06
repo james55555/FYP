@@ -12,12 +12,12 @@
 
 function Validation() {
 
-/*
- * 
- * @type @exp;documentformsregister
- * @pro;fName
- * @pro;value
- */
+    /*
+     * 
+     * @type @exp;documentformsregister
+     * @pro;fName
+     * @pro;value
+     */
 
     var fn = document.forms["register"]["fName"].value;
     var ln = document.forms["register"]["lName"].value;
@@ -31,6 +31,9 @@ function Validation() {
         if (validEmail(em)) {
             if (validPwd(pw, pw2)) {
                 if (validName(fn, ln, 30)) {
+                    if (usernameLength(ui, 25)) {
+
+                    }
                     /*
                      * Submit the form
                      */
@@ -64,7 +67,7 @@ function Validation() {
      * @returns {Boolean}
      */
     function validEmail(em) {
-        
+
         var atpos = em.indexOf("@");
         var dotpos = em.lastIndexOf(".");
         if (atpos < 1 || dotpos < atpos + 2 || dotpos + 2 >= em.length)
@@ -105,28 +108,31 @@ function Validation() {
 
         }
         /*
-         * Function to check username name length
+         * Function to check first and last name length name length
          */
         function validName(fn, ln, mx) {
+            var valid = true;
             if (fn.length > mx) {
                 alert("First name must be less than 30 characters");
-                return false;
+                valid = false;
                 if (ln.legnth > mx) {
                     alert(
                             "Last name too long must be less than 30 characters");
-                    return false;
+                    valid = false;
                 }
             }
-            else {
-                return true;
-            }
-
+            return valid;
         }
-
-
-
-
-
+        /*
+         * Function to check username length
+         */
+        function usernameLength(ui, mx) {
+            if (ui.length > mx) {
+                alert("Username is too long. Must be less than 25 characters!");
+                return false;
+            }
+            return true;
+        }
     }
 }
 

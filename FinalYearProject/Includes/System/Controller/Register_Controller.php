@@ -23,8 +23,7 @@ class Register_Controller extends Main_Controller
 
     public function submitForm()
         {
-        if (isset($_POST['submit']))
-            {
+     
             $valid = $this->checkForm();
             if ($valid)
                 {
@@ -38,7 +37,7 @@ class Register_Controller extends Main_Controller
                 }
 
             $this->registry->View_Template->show('showMessage');
-            }
+            
         }
 
     /*
@@ -91,7 +90,7 @@ class Register_Controller extends Main_Controller
     protected function filterVars($value)
         {
         $htmlVal = htmlspecialchars($value);
-        return mysqli_real_escape_string($htmlVal);
+        return $htmlVal;
         }
 
     }

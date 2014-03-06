@@ -18,8 +18,12 @@ class Register_Controller extends Main_Controller
     public
             function main()
         {
+        $this->registry->View_Template->show('register');
+        }
 
-        if ($_POST['submit'])
+    public function submitForm()
+        {
+        if (isset($_POST['submit']))
             {
             $valid = $this->checkForm();
             if ($valid)
@@ -29,12 +33,12 @@ class Register_Controller extends Main_Controller
                 } else
                 {
                 $this->registry->title = "Error adding new user...";
-                $this->registry->message = $this->newUser;
+                     //Print errors as a list                 
+                    $this->registry->message = implode("</br>", $this->newUser);
                 }
 
             $this->registry->View_Template->show('showMessage');
             }
-        $this->registry->View_Template->show('register');
         }
 
     /*
@@ -45,8 +49,12 @@ class Register_Controller extends Main_Controller
         {
         $valid = false;
 
-        //add the fields in register.php to an array
-        $registrationFields = array();
+        //Create publically available array
+        $this->registry->registrationFields = array();
+        //assign to an easier to use variable.
+        $registrationFields = $this->registry->registrationFields;
+
+
         $registrationFields['fname'] = $_POST['fname'];
         $registrationFields['lname'] = $_POST['lname'];
         $registrationFields['email'] = $_POST['email'];
@@ -54,15 +62,36 @@ class Register_Controller extends Main_Controller
         $registrationFields['password'] = $_POST['password'];
         $registrationFields['password2'] = $_POST['password2'];
 
-        $this->newUser = Account_Model::addUser($registrationFields);
-
-        if (!is_string($this->newUser))
+        foreach ($registrationFields as $field)
             {
-            $valid = true;
+            //look to loop through fields and validate similar fields.
+            $this->filterVars($field);
+            $registrationFields[$field] = $field;
             }
 
+        if ($registrationFields['password'] === $registrationFields['password2'])
+            {
+            $this->newUser = Account_Model::addUser($registrationFields);
+            if (is_bool($this->newUser))
+                {
+                $valid = true;
+                } else
+                {
+                $valid = false;
 
+                }
+            } else
+            {
+            $valid = false;
+            echo("The two passwords provided do not match.");
+            }
         return $valid;
+        }
+
+    protected function filterVars($value)
+        {
+        $htmlVal = htmlspecialchars($value);
+        return mysqli_real_escape_string($htmlVal);
         }
 
     }

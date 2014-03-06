@@ -21,7 +21,7 @@
         <div id="container">
             <h1>Registration Form</h1>
             <div id="registration">
-                <form id="register" action="Register_Controller.php" method="post" onsubmit="return Validation()">
+                <form id="register" action="?page=Register&action=submitForm" method="post" onsubmit="return Validation()">
                     <input type="hidden" id="submitted" value="false"/>
                     <input type="hidden" id="return" value="true"/>
                     <label>First Name: <input type="text" name="fname"/></label><br/>
@@ -33,7 +33,7 @@
                     <label>Re-Enter Password: <input type="password" name="password2"/></label>
 
                     <br/>
-                    <input type="submit" value="Back" class="button" id="prevPge"/>
+                    <input type="button" value="Back" class="button" id="prevPge"/>
                     <input type="submit" value="Submit" class="button" id="newUser"/>
 
                 </form>

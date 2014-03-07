@@ -25,15 +25,14 @@
             <div id="addProjForm">
                 <form id="addProject" action="?page=addProject&action=submitForm" method="post" onsubmit="return projectValidation()">
                     <label>Name: <input type="text" name="pName"/></label><br/>
-                    <label>Description: <input type="text" name="pDescr"/></label><br/>
+                    <label>Description:  <textarea 
+                                                form="addProject"
+                                               rows="4"
+                                               coles="50"
+                                               maxlength="200"
+                                               name="pDescr"/></label><br/>
                     <label>Choose any Project Dependencies: </label>
-                    <?php 
-                    foreach($this->registry->projects as $proj){
-                                                
-                        echo "<label><input type=\"checkbox\" name=\"pDpnd\" "
-                        . "id=\"{$proj->proj_id()}\"/>{$proj->proj_nm()}</label><br/>";
-                        }  
-                        ?>
+                   
                     <br>
                     <h2>Project Dates</h2>
                     <label>Start Date: <input type="date" name="pStart"</label>

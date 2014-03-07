@@ -17,8 +17,7 @@
         -->
         <link rel="stylesheet" href="Includes/CSS/main.css"/>
         <link rel="stylesheet" href="Includes/CSS/login.css"/>
-        <link typ="text/javascript" href="Includes/common/Scripts/loginCheck.js"/>
-        <title>Time Management System for Professionals - Log in Page</title>
+       <title>Time Management System for Professionals - Log in Page</title>
     </head>
     <body>
         <div id="container">
@@ -37,9 +36,9 @@
             <div id="login_div">
                 <p>To access your profile enter your login details or create an account</p>
                 <!--Form to retrieve user login details-->
-                <form method="post" action="?page=login">
+                <form method="post" action="?page=Login">
 
-                    <div id="error"></div>
+       
                     <label>Username: <br><input type="text" name="username" id="uid"/></label><br>
                     <label>Password: <br><input type="password" name="password" id="pwd"/></label><br>
 
@@ -51,7 +50,7 @@
                     <a href="?page=Register" id="NU">Don't have an account?</a>
 
                     <!--Send user to password reset page-->
-                    <a href="?page=newPass" id="NP">Forgot Password?</a>
+                    <!--<a href="?page=newPass" id="NP">Forgot Password?</a>-->
 
 
                 </div>

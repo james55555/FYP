@@ -6,7 +6,7 @@
  * 
  *      @author James Graham
  */
-class Account_Model //extends Validator_Model
+class Account_Model extends Validator_Model
     {
 
     //instantiate variables from ACCOUNT
@@ -108,6 +108,7 @@ class Account_Model //extends Validator_Model
         //If query is doesn't query successfully or doesn't return a user then return false.
         else
             {
+            echo "acc id is null";
             $accId = null;
             }
 
@@ -125,8 +126,8 @@ class Account_Model //extends Validator_Model
     public static
             function addUser($registrationFields)
         {
-  
-                //Set up the database connection and validate the user entered fields.
+
+        //Set up the database connection and validate the user entered fields.
         $db = new Database();
         $db->connect();
         $db->filterParameters($registrationFields);
@@ -142,6 +143,20 @@ class Account_Model //extends Validator_Model
         $em = $registrationFields['email'];
         //filter email for special characters (other fields shouldn't contain these)
         $email = Validator_Model::htmlChar($em);
+        $emailErr = array();
+
+        if (strlen($email) > 50)
+            {
+            array_push($emailErr, "Email address too long! Must be less than 50 characters");
+            } elseif (empty($email) || $email === '' || strlen($email))
+            {
+            $email = null;
+            }
+            //Check if email contains only usable chars
+            if (preg_match("/^([0-9a-zA-Z_.-])+@(([0-9a-zA-z-])+.)+(a-zA-Z])+$/",
+                    $email) === 0){
+                array_push($emailErr, "Ensure email contains correct characters!");
+                            }
 
 
         /*
@@ -160,15 +175,13 @@ class Account_Model //extends Validator_Model
             //Last Name Validation
             //String length needs to be between 1 and 30
             array(Validator_Model::variableCheck($lName, 'string', 30)),
-            //Email Address Validation
-            //String length needs to be between 1 and 50
-            
-            //This needs to be double-checked against validator_model as it currently has pregmatches for onl 0-9 and a-z chars
-            array(Validator_Model::variableCheck($email, 'string', 50)),
+                //Email Address Validation
+                //String length needs to be between 1 and 50
+                //This needs to be double-checked against validator_model as it currently has pregmatches for onl 0-9 and a-z chars
+            $emailErr
         );
-       
-//Strip array of all null values (i.e. those inserted by variableCheck)
 
+//Strip array of all null values (i.e. those inserted by variableCheck)
         //If no erros have been logged in the array then add the user to the database
         if (sizeof($arrayError) === 0)
             {

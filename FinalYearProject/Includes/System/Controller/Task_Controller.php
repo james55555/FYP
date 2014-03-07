@@ -5,6 +5,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
+
 /**
  * Description of taskList_Controller
  *
@@ -18,11 +19,10 @@ class Task_Controller extends Main_Controller
         {
 
         $this->registry->project_tasks = Task_Model::getAllTasks($_GET['proj_id']);
-
-     //   $this->registry->estimations = Estimation_Model::getAllEstimates($_GET['id']);
-   
-            
-     //   $this->registry->staffMembers = Staff_Model::getStaffForProject($_GET['id']);
+        $this->registry->user_tasks = Task_Model::getallUserTasks
+                ($_SESSION['user']->userId());
+        //   $this->registry->estimations = Estimation_Model::getAllEstimates($_GET['id']);
+        //   $this->registry->staffMembers = Staff_Model::getStaffForProject($_GET['id']);
 
         /*
          * Test Statements

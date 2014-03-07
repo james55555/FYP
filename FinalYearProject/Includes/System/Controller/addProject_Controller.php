@@ -16,5 +16,11 @@ class addProject_Controller extends Main_Controller
     public function main()  {
         $this->registry->projects = Project_Model::getAllUserProj($_SESSION['user']->userId());
         
+        
+        $this->registry->View_Template->show('addProject');
         }
+        
+        public function submitForm(){
+            
+            }
     }

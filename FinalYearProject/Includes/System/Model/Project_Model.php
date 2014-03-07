@@ -5,7 +5,7 @@
  *
  * @author James
  */
-class Project_Model
+class Project_Model extends Validator_Model
     {
 
     private
@@ -24,7 +24,7 @@ class Project_Model
     public
             function __construct($row)
         {
-        //$this->acc_id = Account_Model::getUser($row->acc_id);
+//$this->acc_id = Account_Model::getUser($row->acc_id);
         $this->proj_id = $row->proj_id;
         $this->proj_nm = $row->proj_nm;
         $this->proj_descr = $row->proj_descr;
@@ -66,7 +66,7 @@ class Project_Model
         $db = new Database();
         $db->connect();
 
-        $query = "SELECT DISTINCT proj_id, proj_nm, proj_descr, proj_dpnd"
+        $query = "SELECT DISTINCT proj_id, proj_nm, proj_descr"
                 . " FROM project WHERE proj_id='$proj_id'";
 
         if ($db->querySuccess($query))
@@ -74,7 +74,7 @@ class Project_Model
             $qResult = mysql_query($query);
             $row = mysql_fetch_object($qResult);
             $project = new Project_Model($row);
-            // var_dump('vardump db:' .$db);
+// var_dump('vardump db:' .$db);
             /* @var $result type */
             } else
             {
@@ -91,7 +91,7 @@ class Project_Model
         $db = new Database();
         $db->connect();
 
-        $query = "SELECT PR.proj_id, PR.proj_nm, PR.proj_descr, PR.proj_dpnd"
+        $query = "SELECT PR.proj_id, PR.proj_nm, PR.proj_descr"
                 . " FROM PROJECT PR"
                 . " WHERE PR.proj_id IN"
                 . " (SELECT PROJ_ID FROM USER_PROJECT UP"
@@ -112,15 +112,15 @@ class Project_Model
         {
         $db = new Database();
         $db->connect();
-        //Archive project 
+//Archive project
         $archiveQuery = "INSERT INTO archived_project"
-                . " SELECT proj_id, proj_nm, proj_descr, proj_dpnd"
+                . " SELECT proj_id, proj_nm, proj_descr"
                 . " FROM projects"
                 . " WHERE proj_id='" . $proj_id . "'";
         $archiveResult = mysql_query($archiveQuery);
 
 
-        //Delete project from projects
+//Delete project from projects
         $query = "DELETE FROM projects where proj_id='" . $proj_id . "'";
         $result = mysql_query($query);
 
@@ -141,24 +141,54 @@ class Project_Model
         $db = new Database();
         $db->connect();
         $db->filterParameters($fields);
-        //This will be a multi-dimensional array due to the checkbox field.
+//This will be a multi-dimensional array due to the checkbox field.
         $proj_nm = $fields['pName'];
-        $proj_descr = $fields['pDescr'];
-        //This is the checkbox field. It will be passed as an array
-        $proj_dpnd = $fields['pDpnd'];
-        $proj_start = $fields['pStart'];
-        $proj_deadline = $fields['pDeadline'];
+        $htmlDescr = $fields['pDescr'];
+        $proj_descr = Validator_Model::htmlChar($htmlDescr);
 
-        
+        $arrayError = array(
+//Project name validation
+//String length needs to be between 1 and 30
+            array(Validator_Model::variableCheck($proj_nm, 'string', 30)),
+            //Project description validation
+//string length needs to be between 1 and 200
+            array(Validator_Model::variableCheck($proj_descr, 'string', 200)),
+                //Project start date errors
+//Project deadline date errors
+        );
 
-        //validation
-        //Check if the user session is active
-        //Need to resolve acc_id issue in mysql
-        $query = "INSERT INTO PROJECT VALUES("
-                . "'" . $_SESSION['user']->userId() . "'"
-                . ", null,"
-                . "'" . $project_name . "',"
-                . "'" . $project_description . "')";
+
+        if (sizeof($arrayError) === 0)
+            {
+            $projInsert = 
+                    "BEGIN;"
+                    //Insert into project table
+                    . "INSERT INTO  `fyp`.`project` ("
+                    . " `proj_id` ,"
+                    . " `proj_nm` ,"
+                    . " `proj_descr`"
+                    . ") VALUES ("
+                    . "NULL,"
+                    . " '" . $proj_nm . "',"
+                    . " '" . $proj_descr . "');"
+                    //Insert new project into user_project table
+                    . " INSERT INTO `fyp`.`user_project` ("
+                    . " `proj_id` , "
+                    . " `user_id`)"
+                    . " VALUES ("
+                    . " LAST_INSERT_ID(),"
+                    . " `". $_SESSION['user']->userId() . "`);"
+                    . "COMMIT;"
+                    ;
+
+            $result = mysql_query($projInsert);
+            if (!$db->querySuccess($result))
+                {
+                echo "Error inserting data into database."
+                . "MYSQL Error: " . mysql_error();
+                }
+            }
+            
         }
 
     }

@@ -38,17 +38,17 @@ abstract class Validator_Model
             array_push($errors, "String and type don't match for: $string");
             }
         // now we see if there is anything in the string
-        if (empty($string) || $string === '' || strlen($string === 0))
+        elseif (empty($string) || $string === '' || strlen($string === 0))
             {
             array_push($errors, "Ensure  $string is filled in!");
             }
         // then we check how long the string is
-        if (strlen($string) > $length)
+        elseif (strlen($string) > $length)
             {
             array_push($errors, "$string cannot be more than $length characters long!");
             }
         //then check if the values contain any unwanted characters
-        if (preg_match("/[0-9A-Za-z]/", $string) === 0)
+        elseif (preg_match("/[0-9A-Za-z]/", $string) === 0)
             {
             array_push($errors, "$string can only contain letters and numbers.");
             }

@@ -23,7 +23,6 @@ class Login_Controller extends Main_Controller
                 $success = $this->login($_POST['username'], $_POST['password']);
                 if ($success)
                     {
-                    
                     header('Location: ?page=home');
                     } else
                     {

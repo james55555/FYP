@@ -27,8 +27,10 @@
         <div id="container">
 
             <h1>My Projects</h1>
-            <input class="button" id="addProj" type="button" value="Add"
-                   onlcick="add()"/>
+            
+                    <a href="?page=addProject" id="NU">Add New</a>
+            <!--<input class="button" id="addProj" type="button" value="Add"
+                   onlcick="location.href='?page=addProject'"/>-->
             <table id="myProjects" class="table">
                 <tr>
                     <th>Project Id</th>

@@ -12,7 +12,6 @@
         <script tpye="text/javascript" src="Includes/common/Scripts/Validation.js"></script>
         <link rel="stylesheet" type="text/css" href="CSS/reset.css"/>
         <link rel="stylesheet" type="text/css" href="CSS/main.css"/>
-        <link rel="stylesheet" type="text/css" href="CSS/register.css"/>
         <title>Time Management System for Professionals - Add New Project page</title>
 
     </head>
@@ -30,8 +29,7 @@
                                                rows="4"
                                                coles="50"
                                                maxlength="200"
-                                               name="pDescr"/></label><br/>
-                    <label>Choose any Project Dependencies: </label>
+                                               name="pDescr"></textarea></label><br/>
                    
                     <br>
                     <h2>Project Dates</h2>

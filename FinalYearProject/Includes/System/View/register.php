@@ -10,7 +10,7 @@
 ?>
 <html>
     <head>
-        <script tpye="text/javascript" src="Includes/common/Scripts/Validation.js"></script>
+        <script type="text/javascript" src="Includes/common/Scripts/Validation.js"></script>
         <link rel="stylesheet" type="text/css" href="CSS/reset.css"/>
         <link rel="stylesheet" type="text/css" href="CSS/main.css"/>
         <link rel="stylesheet" type="text/css" href="CSS/register.css"/>

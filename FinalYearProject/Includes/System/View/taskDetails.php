@@ -19,7 +19,7 @@
     <body>
         <?php include("header.php"); ?>
         <div id="container">
-            <h1>Tasks for project: <?echo htmlspecialchars($_GET['proj_id']);?></h1>
+            <h1>Project is... **<?php echo "**" . htmlentities($_GET['proj_id']) . "**";?>**</h1>
             <input type="button" id="addTask" class="button" value="Add"/>
             <table id="myTasks" class="table">
                 <tr>

@@ -35,7 +35,8 @@
                         {
                         foreach ($this->registry->project_tasks as $task)
                             {
-
+                            //Collect estimate for each task
+                            $estimate = Estimation_Model::get($task->estimation());
 
                             echo "<td>{$task->proj_id()}</td>" .
                             "<td>{$task->tsk_id()}</td>" .
@@ -47,6 +48,7 @@
                         ?>           
 
                 </table>
+            <?php var_dump($task); ?>
                 <table id="myTaskTimes" class="table"><tr>
                         <th>Expected Finish</th>
                         <th>Actual Finish</th>
@@ -54,17 +56,24 @@
                         <th>Action</th>
                     </tr>
                     <?php
-                    echo "<tr>".
-                    "<td>{$task->estimation->est_id()}</td>" .
-                    "<td>{$task->estimation->est_end_dt()}</td>" .
+                    echo "<tr>";
+                    if ($estimate !== false)
+                        {
+                        echo "<td>{$estimate->est_end_dt()}</td>" .
+                        "<td>{$estimate->act_end_dt()}</td>";
+                        } else
+                        {
+                        echo "<td>No estimate found!</td>" .
+                        "<td>No estimate found!</td>";
+                        }
                     "<td>task->staff-></td>" .
-                    "<td>add or delete</td>".
-                    "</tr>";
+                            "<td>add or delete</td>" .
+                            "</tr>";
                     }
                 ?>
 
 
             </table>
-<?php include("footer.php"); ?>
+            <?php include("footer.php"); ?>
     </body>
 </html>

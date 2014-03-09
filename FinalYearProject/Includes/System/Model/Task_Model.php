@@ -5,6 +5,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
+
 /**
  * Description of Task_Model
  *
@@ -25,6 +26,7 @@ class Task_Model
             $web_addr;
     private
             $tsk_dscr;
+    private $estimation;
 
     /*
      * construct new task object
@@ -43,6 +45,7 @@ class Task_Model
         $this->task_nm = $row->TASK_NM;
         $this->web_addr = $row->WEB_ADDR;
         $this->tsk_dscr = $row->TSK_DESCR;
+        $this->estimation = TaskEstimation_Model::getEstimation($row->TSK_ID);
         }
 
     public
@@ -82,6 +85,11 @@ class Task_Model
         return $this->tsk_dscr;
         }
 
+    public function estimation()
+        {
+        return $this->estimation;
+        }
+
     /*
      * method to get a task by its id.
      * Task is to be returned. If task is null then there are no task for @param tsk_id
@@ -95,7 +103,9 @@ class Task_Model
         $db = new Database();
         $db->connect();
 
-        $query = "SELECT DISTINCT TSK_ID, PROJ_ID, STATUS, TASK_NM, WEB_ADDR, TSK_DESCR  FROM TASK WHERE tsk_id='$tsk_id'";
+        $query = "SELECT DISTINCT TSK_ID, PROJ_ID, STATUS, TASK_NM, WEB_ADDR, TSK_DESCR"
+                . " FROM TASK "
+                . "WHERE tsk_id='$tsk_id'";
 
         if ($db->querySuccess($query))
             {
@@ -104,12 +114,11 @@ class Task_Model
             $task = new Task_Model($row);
             // var_dump('vardump db:' .$db);
             /* @var $result type */
+            } else
+            {
+            var_dump($task);
+            die("object is false");
             }
-         else
-          {
-          var_dump($task);
-         die("object is false");
-          } 
         $db->close();
         return $task;
         }
@@ -120,9 +129,9 @@ class Task_Model
         $db = new Database();
         $db->connect();
 
-        $query = "SELECT DISTINCT TSK_ID, PROJ_ID, STATUS, TASK_NM, WEB_ADDR,                   TSK_DESCR "
-                . "FROM task "
-                . "WHERE proj_id = '$proj_id'";
+        $query = "SELECT DISTINCT TSK_ID, PROJ_ID, STATUS, TASK_NM, WEB_ADDR, TSK_DESCR"
+                . " FROM task"
+                . " WHERE proj_id = '$proj_id'";
         $result = mysql_query($query);
 
         $project_tasks = array();
@@ -134,14 +143,14 @@ class Task_Model
         $db->close();
         return $project_tasks;
         }
-
+        
     /*
      * Function to edit/update a task given the provided parameters
      * @param int tsk_id, int proj_id, int status_id, String tsk_nm, String web_addr, String tsk_descr, obj Model estimation, obj Model dependency
      */
 
     public static
-            function editTask($tsk_id, $proj_id, $status_id, $tsk_nm, $web_addr, $tsk_descr, $estimation, $dependency)
+            function editTask($fields)
         {
         
         }

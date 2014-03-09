@@ -53,32 +53,34 @@ class Estimation_Model
 
     public function act_end_dt()
         {
-        return $this->act_end_hr;
+        return $this->act_end_dt;
         }
 
     public function est_end_dt()
         {
-        return $this->est_end_hr;
+        return $this->est_end_dt;
         }
 
     public static function get($est_id)
         {
         $db = new Database();
         $db->connect();
-
-        $query = "SELECT EST_ID, ACT_HR, PLN_HR, START_DT, ACT_END_DT, EST_END_DT"
+       
+        $query = "SELECT est_id, act_hr, pln_hr, start_dt, act_end_dt, est_end_dt"
                 . " FROM ESTIMATION"
                 . " WHERE est_id='" . $est_id . "'";
-        $result = mysql_query($query);
+        
 
-        if ($db->querySuccess($result) && mysql_num_rows($result) === 1)
+        if ($db->querySuccess($query))
             {
+            $result = mysql_query($query);
             $row = mysql_fetch_object($result);
             $estimation = new Estimation_Model($row);
             } else
             {
-            return false;
+            throw new Exception("QUERY ISSUE!!");
             }
+            $db->close();
         return $estimation;
         }
 

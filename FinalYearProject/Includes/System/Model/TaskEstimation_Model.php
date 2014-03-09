@@ -14,8 +14,8 @@ class TaskEstimation_Model
 
     public function __construct($row)
         {
+
         $this->tsk_id = $row->tsk_id;
-        $this->est_id = $row->est_id;
         }
 
     public function tsk_id()
@@ -33,21 +33,28 @@ class TaskEstimation_Model
         $db = new Database();
         $db->connect();
 
-        $query = "SELECT est_id FROM task_estimation"
+        $query = "SELECT distinct est_id FROM task_estimation"
                 . " WHERE tsk_id='" . $tsk_id . "'";
-        
-        $result = mysql_query($query);
-        
-        if ($db->querySuccess($result) && mysql_num_rows($result) === 1)
+
+
+        if ($db->querySuccess($query))
             {
+            $result = mysql_query($query);
+
             $row = mysql_fetch_object($result);
-            
-            $estimation = new TaskEstimation_Model($row);
-            }
-            else    {
-                return false;
+            $est_id = $row->est_id;
+            if (mysql_num_rows($result) !== 1)
+                {
+                throw new Exception("Why isn't this 1??");
                 }
-        return $estimation;
+            } else
+            {
+            throw new Exception("invalid query");
+            }
+        $db->close();
+
+
+        return $est_id;
         }
 
     }

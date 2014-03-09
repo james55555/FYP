@@ -6,13 +6,13 @@
 #Document: Task_Estimation
 #@author: James
 
-class Task_Estimation
+class TaskEstimation_Model
     {
 
     private $tsk_id;
     private $est_id;
 
-    public static function __construct($row)
+    public function __construct($row)
         {
         $this->tsk_id = $row->tsk_id;
         $this->est_id = $row->est_id;
@@ -28,15 +28,16 @@ class Task_Estimation
         return $this->est_id;
         }
 
-    public function getEstimation($tsk_id)
+    public static function getEstimation($tsk_id)
         {
         $db = new Database();
         $db->connect();
 
         $query = "SELECT est_id FROM task_estimation"
                 . " WHERE tsk_id='" . $tsk_id . "'";
-        $result = mysql_result($query);
-
+        
+        $result = mysql_query($query);
+        
         if ($db->querySuccess($result) && mysql_num_rows($result) === 1)
             {
             $row = mysql_fetch_object($result);

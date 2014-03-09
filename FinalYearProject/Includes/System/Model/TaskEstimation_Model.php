@@ -28,7 +28,7 @@ class TaskEstimation_Model
         return $this->est_id;
         }
 
-    public static function getEstimation($tsk_id)
+    public static function getEstimationId($tsk_id)
         {
         $db = new Database();
         $db->connect();
@@ -41,7 +41,8 @@ class TaskEstimation_Model
         if ($db->querySuccess($result) && mysql_num_rows($result) === 1)
             {
             $row = mysql_fetch_object($result);
-            $estimation = Estimation_Model::get($row);
+            
+            $estimation = new TaskEstimation_Model($row);
             }
             else    {
                 return false;

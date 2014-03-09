@@ -66,12 +66,15 @@ class Staff_Model
      */
 
     public
-           static function getStaffMember($staff_id)
+           static function get($staff_id)
         {
         $db = new Database();
         $db->connect();
 
-        $query = "SELECT * FROM STAFF WHERE STAFF_ID=" . $staff_id;
+        $query = "SELECT staff_id, staff_first_nm, staff_last_nm,"
+                . " staff_phone, staff_email"
+                . " FROM STAFF "
+                . " WHERE STAFF_ID='" . $staff_id."'";
         if ($db->querySuccess($query))
             {
             $result = mysql_query($query);
@@ -80,7 +83,7 @@ class Staff_Model
             }
         else
             {
-            return false;
+            throw new Exception("query error");
             }
         $db->close();
         return $staff;

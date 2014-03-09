@@ -33,24 +33,23 @@ class StaffTask_Model
         return $this->staff_id;
         }
 
-        public static function getStaffId($tsk_id){
-            $db = new Database();
-            $db->connect();
-            
-            $query = "SELECT distinct staff_id"
-                    . " FROM staff_task"
-                    . " WHERE tsk_id='".$tsk_id."'";
-            
-            if ($db->querySuccess($query))
+    public static function getStaffId($tsk_id)
+        {
+        $db = new Database();
+        $db->connect();
+
+        $query = "SELECT distinct STAFF_ID"
+                . " FROM staff_task"
+                . " WHERE TSK_ID='" . $tsk_id . "'";
+
+        if ($db->querySuccess($query))
             {
             $result = mysql_query($query);
 
             $row = mysql_fetch_object($result);
-            $staff_id = $row->staff_id;
-            if (mysql_num_rows($result) !== 1)
-                {
-                throw new Exception("Why isn't this 1??");
-                }
+            print_r($row);
+            $staff_id = $row->STAFF_ID;
+            echo "staff id is... " . $staff_id;
             } else
             {
             throw new Exception("invalid query");
@@ -59,6 +58,6 @@ class StaffTask_Model
 
 
         return $staff_id;
-            }
-        
+        }
+
     }

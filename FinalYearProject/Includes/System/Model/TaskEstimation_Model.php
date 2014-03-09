@@ -33,7 +33,8 @@ class TaskEstimation_Model
         $db = new Database();
         $db->connect();
 
-        $query = "SELECT distinct est_id FROM task_estimation"
+        $query = "SELECT distinct est_id"
+                . " FROM task_estimation"
                 . " WHERE tsk_id='" . $tsk_id . "'";
 
 

@@ -27,6 +27,7 @@ class Task_Model
     private
             $tsk_dscr;
     private $estimation;
+    private $staff;
 
     /*
      * construct new task object
@@ -47,6 +48,7 @@ class Task_Model
         $this->tsk_dscr = $row->TSK_DESCR;
         
         $this->estimation = TaskEstimation_Model::getEstimationId($row->TSK_ID);
+        $this->staff = StaffTask_Model::getStaffId($row->TSK_ID);
         }
 
     public
@@ -90,6 +92,9 @@ class Task_Model
         {
         return $this->estimation;
         }
+        public function staff(){
+            return $this->staff;
+            }
 
     /*
      * method to get a task by its id.

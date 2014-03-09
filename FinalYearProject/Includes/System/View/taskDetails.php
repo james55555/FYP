@@ -41,8 +41,7 @@
                             "<td>{$task->tsk_id()}</td>" .
                             "<td>{$task->tsk_nm()}</td>" .
                             "<td>{$task->tsk_dscr()}</td>" .
-                            "<td>{$task->tsk_status()}</td>".
-                            "<td>{$task->estimation->est_id()}</td><tr/>";
+                            "<td>{$task->tsk_status()}</td></tr>";
                             }
                         }
                     ?>           

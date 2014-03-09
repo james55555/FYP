@@ -42,7 +42,9 @@
                         <?php
                         //for every task obtain it's estimate information
                         $estimate = Estimation_Model::get($task->estimation());
-
+                        //for every task obtain the staff member
+                        $staff = Staff_Model::get($task->staff());
+                        echo "***this is vdump staff.. " . var_dump($staff);
                         echo "<td>{$task->proj_id()}</td>" .
                         "<td>{$task->tsk_id()}</td>" .
                         "<td>{$task->tsk_nm()}</td>" .
@@ -67,8 +69,17 @@
                                 echo "<td>No estimate found!</td>" .
                                 "<td>No estimate found!</td>";
                                 }
-                            echo "<td>task->staff-></td>" .
-                            "<td>add or delete</td>" .
+                            if ($staff !== false)
+                                {
+                                $staffName = $staff->staff_first_nm() . 
+                                        $staff->staff_last_nm();
+
+                                echo "<td>{$staffName}</td>";
+                                }
+                                else    {
+                                    echo "<td>No staff member found!</td>";
+                                    }
+                            echo "<td>add or delete</td>" .
                             "</tr>";
                             }
                         }
@@ -76,6 +87,6 @@
                 </table>
 
             </table>
-            <?php include("footer.php"); ?>
+<?php include("footer.php"); ?>
     </body>
 </html>

@@ -65,11 +65,11 @@ class Estimation_Model
         {
         $db = new Database();
         $db->connect();
-       
+
         $query = "SELECT est_id, act_hr, pln_hr, start_dt, act_end_dt, est_end_dt"
                 . " FROM ESTIMATION"
                 . " WHERE est_id='" . $est_id . "'";
-        
+
 
         if ($db->querySuccess($query))
             {
@@ -80,7 +80,7 @@ class Estimation_Model
             {
             throw new Exception("QUERY ISSUE!!");
             }
-            $db->close();
+        $db->close();
         return $estimation;
         }
 
@@ -136,4 +136,5 @@ class Estimation_Model
         }
 
     }
+
 ?>

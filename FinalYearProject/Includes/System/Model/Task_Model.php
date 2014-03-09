@@ -113,11 +113,9 @@ class Task_Model
             $qResult = mysql_query($query);
             $row = mysql_fetch_object($qResult);
             $task = new Task_Model($row);
-            // var_dump('vardump db:' .$db);
-            /* @var $result type */
             } else
             {
-            var_dump($task);
+            echo "task is...  " . var_dump($task);
             die("object is false");
             }
         $db->close();

@@ -45,7 +45,8 @@ class Task_Model
         $this->task_nm = $row->TASK_NM;
         $this->web_addr = $row->WEB_ADDR;
         $this->tsk_dscr = $row->TSK_DESCR;
-        $this->estimation = TaskEstimation_Model::getEstimation($row->TSK_ID);
+        
+        $this->estimation = TaskEstimation_Model::getEstimationId($row->TSK_ID);
         }
 
     public

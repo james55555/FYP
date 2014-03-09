@@ -4,6 +4,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
+
 class Estimation_Model
     {
 
@@ -28,7 +29,11 @@ class Estimation_Model
         $this->start_dt = $row->start_dt;
         $this->act_end_dt = $row->act_end_dt;
         $this->est_end_dt = $row->est_end_dt;
-        $this->tsk_id = Task_Model::getTask($row->tsk_id());
+        }
+
+    public function est_id()
+        {
+        return $this->est_id;
         }
 
     public function act_hr()
@@ -56,9 +61,36 @@ class Estimation_Model
         return $this->est_end_hr;
         }
 
-    public function est_id()
+    public static function get($est_id)
         {
-        return $this->est_id;
+        $db = new Database();
+        $db->connect();
+
+        $query = "SELECT EST_ID, ACT_HR, PLN_HR, START_DT, ACT_END_DT, EST_END_DT"
+                . " FROM ESTIMATION"
+                . " WHERE est_id='" . $est_id . "'";
+        $result = mysql_result($query);
+
+        if ($db->querySuccess($result) && mysql_num_rows($result) === 1)
+            {
+            $row = mysql_fetch_object($result);
+            $estimation = new Estimation_Model($row);
+            } else
+            {
+            return false;
+            }
+        return $estimation;
+        }
+
+    /*
+     * Function to set an estimation date
+     * @param int $est_id
+     * @return bool $success
+     */
+
+    public static function set($est_id)
+        {
+        
         }
 
     /*
@@ -93,8 +125,7 @@ class Estimation_Model
                 {
                 array_push($estimations, new Estimation_Model($row));
                 }
-            }
-        else
+            } else
             {
             echo "no estimation for proj id";
             }
@@ -103,5 +134,4 @@ class Estimation_Model
         }
 
     }
-
 ?>

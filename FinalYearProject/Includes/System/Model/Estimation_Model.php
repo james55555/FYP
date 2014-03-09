@@ -69,7 +69,7 @@ class Estimation_Model
         $query = "SELECT EST_ID, ACT_HR, PLN_HR, START_DT, ACT_END_DT, EST_END_DT"
                 . " FROM ESTIMATION"
                 . " WHERE est_id='" . $est_id . "'";
-        $result = mysql_result($query);
+        $result = mysql_query($query);
 
         if ($db->querySuccess($result) && mysql_num_rows($result) === 1)
             {

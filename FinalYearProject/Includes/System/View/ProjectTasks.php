@@ -35,7 +35,7 @@
                         {
                         foreach ($this->registry->project_tasks as $task)
                             {
-                            //Issue with status
+
 
                             echo "<td>{$task->proj_id()}</td>" .
                             "<td>{$task->tsk_id()}</td>" .
@@ -44,19 +44,27 @@
                             "<td>{$task->tsk_status()}</td><tr/>";
                             //temp
                             }
-                        }
-                    ?>           
+                        ?>           
+
+                </table>
+                <table id="myTaskTimes" class="table"><tr>
+                        <th>Expected Finish</th>
+                        <th>Actual Finish</th>
+                        <th>Assigned to</th>
+                        <th>Action</th>
+                    </tr>
+                    <?php
+                    echo "<tr>".
+                    "<td>{$task->estimation->est_id()}</td>" .
+                    "<td>{$task->estimation->est_end_dt()}</td>" .
+                    "<td>task->staff-></td>" .
+                    "<td>add or delete</td>".
+                    "</tr>";
+                    }
+                ?>
+
 
             </table>
-            <table id="myTaskTimes" class="table"><tr>
-                    <th>Expected Finish</th>
-                    <th>Actual Finish</th>
-                    <th>Assigned to</th>
-                    <th>Action</th>
-                </tr>
-
-
-            </table>
-            <?php include("footer.php"); ?>
+<?php include("footer.php"); ?>
     </body>
 </html>

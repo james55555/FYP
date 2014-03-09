@@ -115,8 +115,7 @@ class Task_Model
             $task = new Task_Model($row);
             } else
             {
-            echo "task is...  " . var_dump($task);
-            die("object is false");
+            throw new Exception("query error... " . mysql_error());
             }
         $db->close();
         return $task;

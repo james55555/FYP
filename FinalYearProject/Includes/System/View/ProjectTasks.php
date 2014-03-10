@@ -9,12 +9,12 @@
  */
 ?>
 <html>
-    <!--DOCTYPE HTML-->
+    <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"> 
+<html xmlns="http://www.w3.org/1999/xhtml">
     <head>
         <link rel="stylesheet" type="text/css" href="Includes/CSS/reset.css"/>
-
         <link rel="stylesheet" type="text/css" href="Includes/CSS/main.css"/>
-        <link rel="stylesheet" type="text/css" href="Includes/CSS/home.css"/>
+        <link rel="stylesheet" type="text/css" href="Includes/CSS/projectTasks.css"/>
     </head>
     <body>
         <?php include("header.php"); ?>
@@ -28,9 +28,9 @@
             <br/>
             <input type="button" id="addTask" class="button" value="Add"/>
             
-            <div class="details" id="task">
+            <div id="tasks">
             <?php
-            if (is_object($this->registry->project_tasks))
+            if ($this->registry->project_tasks !== false)
                 {
                 foreach ($this->registry->project_tasks as $task)
                     {
@@ -57,7 +57,7 @@
                         "<td>{$task->tsk_status()}</td><tr/>";
                         ?>           
 
-                        <table id="myTaskTimes" class="table"><tr>
+                        <table id="myTaskInfo" class="table"><tr>
                                 <th>Expected Finish</th>
                                 <th>Actual Finish</th>
                                 <th>Assigned to</th>
@@ -82,7 +82,7 @@
                                 echo "<td>{$staffName}</td>";
                                 } else
                                 {
-                                echo "<td>This task isn't assigned to anyone.'</td>";
+                                echo "<td>This task isn't assigned to anyone.</td>";
                                 }
                             echo "<td>add or delete</td>" .
                             "</tr>";
@@ -98,6 +98,7 @@
 
             </table>
             </div>
+        </div>
             <?php include("footer.php"); ?>
     </body>
 </html>

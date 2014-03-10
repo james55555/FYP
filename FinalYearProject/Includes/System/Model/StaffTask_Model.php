@@ -47,13 +47,13 @@ class StaffTask_Model
             $result = mysql_query($query);
 
             $row = mysql_fetch_object($result);
-            print_r($row);
+            if(is_object($row)){
             $staff_id = $row->STAFF_ID;
-            echo "staff id is... " . $staff_id;
-            } else
-            {
-            throw new Exception("invalid query");
             }
+            else{
+                $staff_id = null;
+                }
+            } 
         $db->close();
 
 

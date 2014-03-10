@@ -48,7 +48,7 @@ class Estimation_Model
 
     public function start_dt()
         {
-        return $this->start_hr;
+        return $this->start_dt;
         }
 
     public function act_end_dt()
@@ -133,6 +133,18 @@ class Estimation_Model
             }
         $db->close();
         return $estimations;
+        }
+
+    public static function getEst_Id($row)
+        {
+        if (is_object($row) && is_string($row->est_id))
+            {
+            $est_id = $row->est_id;
+            } else
+            {
+            return null;
+            }
+            return $est_id;
         }
 
     }

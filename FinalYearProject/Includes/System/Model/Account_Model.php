@@ -108,7 +108,6 @@ class Account_Model extends Validator_Model
         //If query is doesn't query successfully or doesn't return a user then return false.
         else
             {
-            echo "acc id is null";
             $accId = null;
             }
 

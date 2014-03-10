@@ -18,12 +18,15 @@
         <link rel="stylesheet" type="text/css" href="Includes/CSS/main.css"/>
         <link rel="stylesheet" type="text/css" href="Includes/CSS/home.css"/>
         <title>Time Management System for Professionals - Home Page</title>
+        
     </head>
+    
     <body>
-        <!--Information Body-->
         <?php
         include("header.php");
         ?> 
+        <!--Information Body-->
+        
         <div id="container">
 
             <h1>My Projects</h1>

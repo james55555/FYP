@@ -20,7 +20,10 @@
         <?php include("header.php"); ?>
         <div id="container">
             <div id="title">
-            <h1>Tasks for project: <?php echo $_GET['proj_id'];?></h1>
+            <h1>Tasks for project: <?php echo $_GET['proj_id'];?></h1><br/>
+            <?php $projEstimate = $this->registry->projectEstimation;?>
+            <p>Project Start Date: <?php echo $projEstimate->start_dt();?></p><br/>
+            <p>Project Deadline: <?php echo $projEstimate->est_end_dt();?></p>
             </div>
             <br/>
             <input type="button" id="addTask" class="button" value="Add"/>

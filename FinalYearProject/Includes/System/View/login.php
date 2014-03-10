@@ -10,13 +10,9 @@
 ?>
 <html>
     <head>
-        <!-- Include header (not developed yet)
-        <?php
-        include("header.php");
-        ?> 
-        -->
-        <link rel="stylesheet" href="Includes/CSS/main.css"/>
-        <link rel="stylesheet" href="Includes/CSS/login.css"/>
+        <link rel="stylesheet" type="text/css" href="Includes/CSS/reset.css"/>
+        <link rel="stylesheet" type="text/css" href="Includes/CSS/main.css"/>
+        <link rel="stylesheet" type="text/css" href="Includes/CSS/login.css"/>
        <title>Time Management System for Professionals - Log in Page</title>
     </head>
     <body>
@@ -24,7 +20,7 @@
             <!--Information Body-->
             <div id="intro">
                 <h1> <!--Centre this text-->
-                    Small-scale Project Management<br>
+                    CS3010 - Task Management System<br>
                     Login
                 </h1>
                 <p>This venture looks to deliver small-scale project management to 

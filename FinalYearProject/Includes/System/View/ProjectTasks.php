@@ -19,13 +19,15 @@
     <body>
         <?php include("header.php"); ?>
         <div id="container">
-            <h1>Tasks for project: </h1>
+            <div id="title">
+            <h1>Tasks for project: <?php echo $_GET['proj_id'];?></h1>
+            </div>
+            <br/>
             <input type="button" id="addTask" class="button" value="Add"/>
-
-
-
+            
+            <div class="details" id="task">
             <?php
-            if ($this->registry->project_tasks !== false)
+            if (is_object($this->registry->project_tasks))
                 {
                 foreach ($this->registry->project_tasks as $task)
                     {
@@ -44,7 +46,7 @@
                         $estimate = Estimation_Model::get($task->estimation());
                         //for every task obtain the staff member
                         $staff = Staff_Model::get($task->staff());
-                        echo "***this is vdump staff.. " . var_dump($staff);
+
                         echo "<td>{$task->proj_id()}</td>" .
                         "<td>{$task->tsk_id()}</td>" .
                         "<td>{$task->tsk_nm()}</td>" .
@@ -60,7 +62,7 @@
                             </tr>
                             <?php
                             echo "<tr>";
-                            if ($estimate !== false)
+                            if (is_object($estimate))
                                 {
                                 echo "<td>{$estimate->est_end_dt()}</td>" .
                                 "<td>{$estimate->act_end_dt()}</td>";
@@ -69,24 +71,30 @@
                                 echo "<td>No estimate found!</td>" .
                                 "<td>No estimate found!</td>";
                                 }
-                            if ($staff !== false)
+                            if (is_object($staff))
                                 {
-                                $staffName = $staff->staff_first_nm() . 
-                                        $staff->staff_last_nm();
+                                $staffName = $staff->staff_first_nm() .
+                                        " " . $staff->staff_last_nm();
 
                                 echo "<td>{$staffName}</td>";
+                                } else
+                                {
+                                echo "<td>This task isn't assigned to anyone.'</td>";
                                 }
-                                else    {
-                                    echo "<td>No staff member found!</td>";
-                                    }
                             echo "<td>add or delete</td>" .
                             "</tr>";
                             }
+                        } else
+                        {
+                        ?>
+                        <p>There are no tasks assigned to this project<p/>
+                        <?php
                         }
                     ?>
                 </table>
 
             </table>
-<?php include("footer.php"); ?>
+            </div>
+            <?php include("footer.php"); ?>
     </body>
 </html>

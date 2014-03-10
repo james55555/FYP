@@ -29,14 +29,16 @@
                     <label>Email: <input type="text" name="email"/></label><br/>
                     <label>Username: <input type="text" name="user_id"/></label>
                     <br/>
+                    <div id="passwords">
                     <label>Password: <input type="password" name="password"/></label>
                     <label>Re-Enter Password: <input type="password" name="password2"/></label>
-
+                    </div>
                     <br/>
+                    <div id="navigation">
                     <input type="button" value="Back" class="button" id="prevPge"
                            onclick="history.go(-1);"/>
                     <input type="submit" value="Submit" class="button" id="newUser"/>
-
+</div>
                 </form>
             </div>
             <?php

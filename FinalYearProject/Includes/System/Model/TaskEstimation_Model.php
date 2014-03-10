@@ -6,7 +6,7 @@
 #Document: Task_Estimation
 #@author: James
 
-class TaskEstimation_Model
+class TaskEstimation_Model extends Estimation_Model
     {
 
     private $tsk_id;
@@ -14,7 +14,7 @@ class TaskEstimation_Model
 
     public function __construct($row)
         {
-
+        $this->est_id = $row->est_id;
         $this->tsk_id = $row->tsk_id;
         }
 
@@ -43,19 +43,20 @@ class TaskEstimation_Model
             $result = mysql_query($query);
 
             $row = mysql_fetch_object($result);
-            $est_id = $row->est_id;
-            if (mysql_num_rows($result) !== 1)
+            
+            if (is_object($row))
                 {
-                throw new Exception("Why isn't this 1??");
+                $est_id = $row->est_id;
+                } else
+                {
+                return null;
                 }
-            } else
-            {
-            throw new Exception("invalid query");
+
+            $db->close();
+
+
+            return $est_id;
             }
-        $db->close();
-
-
-        return $est_id;
         }
 
     }

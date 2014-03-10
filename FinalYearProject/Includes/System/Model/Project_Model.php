@@ -28,6 +28,7 @@ class Project_Model extends Validator_Model
         $this->proj_id = $row->proj_id;
         $this->proj_nm = $row->proj_nm;
         $this->proj_descr = $row->proj_descr;
+        $this->estimation = ProjectEstimation_Model::getEstimationId($row->proj_id);
         }
 
     public
@@ -160,8 +161,7 @@ class Project_Model extends Validator_Model
 
         if (sizeof($arrayError) === 0)
             {
-            $projInsert = 
-                    "BEGIN;"
+            $projInsert = "BEGIN;"
                     //Insert into project table
                     . "INSERT INTO  `fyp`.`project` ("
                     . " `proj_id` ,"
@@ -177,9 +177,9 @@ class Project_Model extends Validator_Model
                     . " `user_id`)"
                     . " VALUES ("
                     . " LAST_INSERT_ID(),"
-                    . " `". $_SESSION['user']->userId() . "`);"
+                    . " `" . $_SESSION['user']->userId() . "`);"
                     . "COMMIT;"
-                    ;
+            ;
 
             $result = mysql_query($projInsert);
             if (!$db->querySuccess($result))
@@ -188,7 +188,6 @@ class Project_Model extends Validator_Model
                 . "MYSQL Error: " . mysql_error();
                 }
             }
-            
         }
 
     }

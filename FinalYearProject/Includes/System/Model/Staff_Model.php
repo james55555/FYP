@@ -5,6 +5,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
+
 class Staff_Model
     {
 
@@ -18,15 +19,24 @@ class Staff_Model
             $staff_phone;
     private
             $staff_email;
+    private $fields = array();
 
     public
             function __construct($row)
         {
-        $this->staff_id = $row->STAFF_ID;
-        $this->staff_first_nm = $row->STAFF_FIRST_NM;
-        $this->staff_last_nm = $row->STAFF_LAST_NM;
-        $this->staff_phone = $row->STAFF_PHONE;
-        $this->staff_email = $row->STAFF_EMAIL;
+        if ($row === null)
+            {
+            foreach ($this->fields as $this->field)
+                {
+                $this->field = null;
+                }
+            }
+
+        $this->staff_id = $row->staff_id;
+        $this->staff_first_nm = $row->staff_first_nm;
+        $this->staff_last_nm = $row->staff_last_nm;
+        $this->staff_phone = $row->staff_phone;
+        $this->staff_email = $row->staff_email;
         }
 
     public
@@ -66,34 +76,31 @@ class Staff_Model
      */
 
     public
-           static function get($staff_id)
+    static function get($staff_id)
         {
         $db = new Database();
         $db->connect();
-        echo "**Staff model staff id.... " .var_dump($staff_id);
         $query = "SELECT staff_id, staff_first_nm, staff_last_nm,"
                 . " staff_phone, staff_email"
                 . " FROM STAFF"
-                . " WHERE STAFF_ID='" . $staff_id."'";
+                . " WHERE STAFF_ID='$staff_id'";
+        //echo "<br/><br/>the query running is... ".$query;
         if ($db->querySuccess($query))
             {
-            $result = mysql_query($query);
-            $row = mysql_fetch_object($result);
-            
-            echo "num rows is... " . var_dump($row);
-            
-            $staff = new Staff_Model($row);
-            echo "what is happening.. " .var_dump($staff);
-            }
-        else
-            {
-            throw new Exception("query error");
-            }
-        $db->close();
-        return $staff;
-        }
+            $qResult = mysql_query($query);
 
-    
+            $row = mysql_fetch_object($qResult);
+            if (is_object($row))
+                {
+                $staff = new Staff_Model($row);
+                } else
+                {
+                return null;
+                }
+            $db->close();
+            return $staff;
+            }
+        }
 
     public static function getStaffForProject($proj_id)
         {
@@ -115,8 +122,7 @@ class Staff_Model
             $result = mysql_query($query);
             $row = mysql_fetch_object($result);
             $staff = new Staff_Model($row);
-            }
-        else
+            } else
             {
             return false;
             }

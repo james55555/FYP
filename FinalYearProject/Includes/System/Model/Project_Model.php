@@ -16,6 +16,7 @@ class Project_Model extends Validator_Model
             $proj_nm;
     private
             $proj_descr;
+    private $estimate;
 
     /*
      * construct new project object
@@ -28,7 +29,7 @@ class Project_Model extends Validator_Model
         $this->proj_id = $row->proj_id;
         $this->proj_nm = $row->proj_nm;
         $this->proj_descr = $row->proj_descr;
-        $this->estimation = ProjectEstimation_Model::getEstimationId($row->proj_id);
+        $this->estimate = ProjectEstimation_Model::getEstimationId($row->proj_id);
         }
 
     public
@@ -53,6 +54,11 @@ class Project_Model extends Validator_Model
             function proj_descr()
         {
         return $this->proj_descr;
+        }
+
+    public function estimation()
+        {
+        return $this->estimate;
         }
 
     /*

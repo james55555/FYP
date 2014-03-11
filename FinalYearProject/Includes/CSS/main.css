@@ -7,7 +7,7 @@
  * 
  */ 
 
-//Set body default
+/*Set body default*/
 body 
 { 
     font-family: Calibri, sans-serif;
@@ -15,18 +15,21 @@ body
     margin:auto;
     padding: 10px;
     vertical-align: middle;
+    
 }
 p
 {
     padding: 5px;
     text-align: left;
     margin: 5px;
+    font-size: 1em;
 }
-//Set heading defaults
+/*Set heading defaults*/
 h1
 {
     font-size: 2em;
     margin-top: auto;
+    text-align: center;
 }
 
 h2
@@ -46,14 +49,12 @@ table, th, td
     vertical-align: middle;
     border: 1px solid black;
 }
-//Set #container defaults
+/*Set #container defaults*/
 #container
 {
     width: 760px;
     margin: 0 auto;
     border: 2px solid black;
-    position: relative;
-    margin-top: -90px;
 }
 
 #footer 

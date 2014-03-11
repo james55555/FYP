@@ -34,8 +34,8 @@
                 <p>To access your profile enter your login details or create an account</p>
                 <!--Form to retrieve user login details-->
                 <form method="post" action="?page=Login">
-                    <label>Username: <br><input type="text" name="username" size="25"/></label><br>
-                    <label>Password: <br><input type="password" name="password" size="25"/></label><br>
+                    <label>Username: <br><input type="text" name="username" maxlength="25"/></label><br>
+                    <label>Password: <br><input type="password" name="password" maxlength="25"/></label><br>
                     <input type="submit" value="Login" class="button"/>
                 </form>
                 <div id="loginIssue">

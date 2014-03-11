@@ -8,12 +8,13 @@
  * 
  */
 ?>
+<!DOCTYPE html>
 <html>
     <head>
         <link rel="stylesheet" type="text/css" href="Includes/CSS/reset.css"/>
         <link rel="stylesheet" type="text/css" href="Includes/CSS/main.css"/>
         <link rel="stylesheet" type="text/css" href="Includes/CSS/login.css"/>
-       <title>Time Management System for Professionals - Log in Page</title>
+        <title>Time Management System for Professionals - Log in Page</title>
     </head>
     <body>
         <div id="container">
@@ -33,12 +34,8 @@
                 <p>To access your profile enter your login details or create an account</p>
                 <!--Form to retrieve user login details-->
                 <form method="post" action="?page=Login">
-
-       
                     <label>Username: <br><input type="text" name="username" id="uid"/></label><br>
                     <label>Password: <br><input type="password" name="password" id="pwd"/></label><br>
-
-
                     <input type="submit" value="Login" class="button"/>
                 </form>
                 <div id="loginIssue">

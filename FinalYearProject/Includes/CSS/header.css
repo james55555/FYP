@@ -13,6 +13,7 @@ div#wrapperHeader{
     height:100px; /*Height of background image*/
     text-align:center;
     border-bottom: solid black;
+    background-color: #0047CC; 
 }
 div#wrapperHeader div#header{
     width:100%;
@@ -37,7 +38,7 @@ div#wrapperHeader div#header li a
     text-decoration: none;
     font-weight: bold;
     color: #E0E0E0;
-    background-color: #000;
+    background-color: #0048CC;
     float: left;
 }
 div#wrapperHeader div#header img {

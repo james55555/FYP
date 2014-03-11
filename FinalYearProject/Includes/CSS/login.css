@@ -46,8 +46,8 @@ http://www.mycodezone.com/simple-screen-centered-login-box/
     float:left;
     margin-bottom:5px;
 }
-#login_div input[type=text],#wraper input[type=password]{
-    width:240px;
+#login_div input[type=text],#login_div input[type=password]{
+    width:200px;
     height:20px;
     float:left;
     padding:4px;

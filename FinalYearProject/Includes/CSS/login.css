@@ -3,7 +3,7 @@
  *  File name       : login 
  *  File extension  : css
  *  Author          : James Graham
- *  Description     : Administer inline styling to: 
+ *  Description     : Administer styling to: 
  *                    /Include/System/View/login.php
  * 
  */    
@@ -11,10 +11,11 @@
  //Format introduction container holding title and introductory information
 #intro
 {
+    position: relative;
     width: 700px;
-    margin-left: auto;
-    margin-right: auto;
-    border:2px solid black;
+    margin: 0 auto;
+    
+    
 }
 
 #intro h1
@@ -22,14 +23,17 @@
     text-transform : uppercase;
     text-align: center;
 }
+#intro p{
+    text-align: center;
+}
 
 #login_div
 {
-    width: 700px;
-    margin-left: auto;
-    margin-right: auto;
-    border:2px solid black;
-    text-align:center;
+    position:relative;
+    margin: 0 auto;
+    padding: 20px 20px 20px;
+    width: 500px;
+    
 }
 #login_div p
 {

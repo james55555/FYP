@@ -5,7 +5,9 @@ Author: Richard Clark - http://richclarkdesign.com
 */
 
 /*
-*   CSS Reset sheet to reset all values, supporting styling across multiple browsers
+ *   Reset all styles to website defaults
+ *    Although this has initially been taken from the above source, I have added
+ *    my own defaults into the sheet.
 */
 html, body, div, span, object, iframe,
 h1, h2, h3, h4, h5, h6, p, blockquote, pre,
@@ -28,7 +30,7 @@ time, mark, audio, video {
     background:transparent;
 }
 body {
-    line-height:1;
+    line-height:1.25;
     color:black;
     background:white;
 }
@@ -53,6 +55,7 @@ a {
     font-size:100%;
     vertical-align:baseline;
     background:transparent;
+    text-decoration: none;
 }
 /* change colours to suit your needs */
 ins {
@@ -77,6 +80,9 @@ abbr[title], dfn[title] {
 table {
     border-collapse:collapse;
     border-spacing:0;
+    margin:0;
+    padding:0;
+    width: 100%;
 }
 /* change border colour to suit your needs */
 hr {

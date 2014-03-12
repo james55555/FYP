@@ -70,8 +70,8 @@
                                         <th>Assigned to</th>
                                         <th>Action</th>
                                     </tr>
+                                    <tr>
                                     <?php
-                                    echo "<tr>";
                                     if (is_object($estimate))
                                         {
                                         echo "<td>{$estimate->est_end_dt()}</td>" .

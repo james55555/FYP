@@ -3,15 +3,37 @@
     Author     : James
 */
 
-#footer 
+/*Style the footer container*/
+#wrapperFooter 
 {
     width:100%;
     bottom:0;
     height:10%;
-    position: relative;
     margin-top: 2.5%;
     border-top: 1px solid black;
 }
-#footer p{
+
+/*Style Footer class and components*/
+.footer{
+    display: block-inline;
+}
+#left{
+    width: 25%;
+    float:left;
+    margin-top: -10px;
+}
+#right{
+    width: 25%;
+    float:right;
+    margin-top: -10px;
+}
+#right p {
+    text-align: right;
+    font-weight: bold;
+}
+#middle {
+    text-align: center;
+}
+#middle p{
     text-align: center;
 }

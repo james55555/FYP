@@ -42,7 +42,10 @@ table
     margin:0;
     padding:0;
     width: 100%;
-
+    table-layout: fixed;
+}
+td {
+    word-wrap: break-word;
 }
 table, th, td
 {
@@ -64,4 +67,26 @@ table, th, td
     height:10%;
     margin: 0 auto;
     border-top: 1px solid black;
+}
+/*Formatting for all button class items*/
+.button{
+
+    padding:6px 10px;
+    outline:none;
+    border:none;
+    margin-bottom:15px;
+    cursor:pointer;
+    color:#fff;
+    background-image: linear-gradient(bottom, #0047CC, #0085CC);
+    background-image: -o-linear-gradient(bottom, #0047CC, #0085CC);
+    background-image: -moz-linear-gradient(bottom, #0047CC, #0085CC);
+    background-image: -webkit-linear-gradient(bottom, #0047CC, #0085CC);
+    background-image: -ms-linear-gradient(bottom, #0047CC, #0085CC);
+    border-radius:3px;
+    -moz-border-radius:3px;
+    -ms-border-radius:3px;
+    -o-border-radius:3px;
+    -webkit-border-radius:3px;
+    text-shadow: 1px 1px #0047CC;
+    font-size:16px;
 }

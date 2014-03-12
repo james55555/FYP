@@ -31,12 +31,9 @@
             ?>`
             <h1>My Projects</h1>
             <!--Image button to represent add new project-->
-            <button type="image" id="addP"
-                    action="?page=Home&action=add">
-                <img src="Includes/CSS/img/Icons/addNew.png" 
-                                     alt="add new" title="Add New Project"
-                                     width="20" height="20"/>
-            </button>
+            <input type="button" class="button" value="Add New"
+                    action="?page=Home&action=add"/>
+                            
 
             <table id="myProjects" class="table">
                 <tr>

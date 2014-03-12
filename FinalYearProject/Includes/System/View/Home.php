@@ -28,14 +28,14 @@
         <div id="container">
             <?php
             include("header.php");
-            ?>
+            ?>`
             <h1>My Projects</h1>
             <!--Image button to represent add new project-->
-            <button type="submit" id="addP"
-                    action="?page=Home&action=delete">
+            <button type="image" id="addP"
+                    action="?page=Home&action=add">
                 <img src="Includes/CSS/img/Icons/addNew.png" 
-                     alt="edit" title="Delete Project"
-                     width="20" height="20"/>
+                                     alt="add new" title="Add New Project"
+                                     width="20" height="20"/>
             </button>
 
             <table id="myProjects" class="table">

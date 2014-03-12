@@ -24,6 +24,7 @@
 }
 #wrapperHeader #header ul li{
     list-style: none;
+    padding: 3px;
     display:inline-block;
 }
 /*Set values for each box in header*/

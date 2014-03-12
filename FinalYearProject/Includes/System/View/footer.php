@@ -11,8 +11,17 @@
 
 <link rel="stylesheet" type="text/css" href="Includes/CSS/footer.css"/> 
 
-<div id="footer">
-    <p>Individual Project - CS3010<br/></p>
-    <p>SUN: 101781411</p>
-
+<div id="wrapperFooter">
+    <div id="left" class="footer">
+        <p>Candidate Number: 522511</p>
+    </div>
+    
+    <div id="right" class="footer">
+        <p>&copy 2014, James Graham</p>
+    </div>
+    
+    <div id="middle" class="footer">
+        <a href="#top">Back to Top</a></br>
+        <p>Individual Project - CS3010</p>
+    </div>
 </div>

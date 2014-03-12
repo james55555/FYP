@@ -9,10 +9,10 @@
  */
 ?>
 <html>
-    <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"> 
+    <!DOCTYPE html> 
     <html xmlns="http://www.w3.org/1999/xhtml">
         <head>
-            <script src=http://cdn.jquerytools.org/1.2.7/full/jquery.tools.min.js"/>
+            <script src="http://cdn.jquerytools.org/1.2.7/full/jquery.tools.min.js"/>
             <link rel="stylesheet" type="text/css" href="Includes/CSS/reset.css"/>
             <link rel="stylesheet" type="text/css" href="Includes/CSS/main.css"/>
             <link rel="stylesheet" type="text/css" href="Includes/CSS/projectTasks.css"/>
@@ -21,7 +21,6 @@
             <div id="container">
 
                 <?php include("header.php"); ?>
-                <div style="clear: both;"></div>
                 <div class="Proj_Details">
                     <h1>Tasks for project: <?php echo $_GET['proj_id']; ?></h1><br/>
                     <?php $projEstimate = $this->registry->projectEstimation; ?>

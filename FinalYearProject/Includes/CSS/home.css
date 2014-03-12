@@ -16,17 +16,13 @@ h1{
     text-align:center;
     /*border: none;*/
 }
-#editP, #delP, #addP{
+#editP, #delP{
     background:transparent;
 }
 
 /*Set the properties of the button*/
 #addP{
     
-    padding: 1%;
-   /*position button*/
-    float:right;
-    margin-right: 10%;
 }
 /*Set the size of the image in the button*/
 

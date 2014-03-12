@@ -1,0 +1,13 @@
+/* 
+    Created on : 12-Mar-2014, 12:22:23
+    Author     : James
+*/
+
+#footer 
+{
+    width:100%;
+    bottom:0;
+    height:10%;
+    position: fixed;
+    border-top: 1px solid black;
+}

@@ -12,6 +12,7 @@
     <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"> 
     <html xmlns="http://www.w3.org/1999/xhtml">
         <head>
+            <script src=http://cdn.jquerytools.org/1.2.7/full/jquery.tools.min.js"/>
             <link rel="stylesheet" type="text/css" href="Includes/CSS/reset.css"/>
             <link rel="stylesheet" type="text/css" href="Includes/CSS/main.css"/>
             <link rel="stylesheet" type="text/css" href="Includes/CSS/projectTasks.css"/>
@@ -30,10 +31,10 @@
                     <div class="Proj_Details" id="end">
                         <p>Project Deadline: <?php echo $projEstimate->est_end_dt(); ?></p>
                     </div>
-                <input type="button" class="button" value="Add New"/>
+                    <input type="button" class="button" value="Add New"/>
                 </div>
                 <br/>
-                
+
 
                 <div id="tasks">
                     <?php
@@ -45,7 +46,6 @@
 
                             <table id="myTasks" class="table">
                                 <tr>
-                                    <th>Project ID</th>
                                     <th>Task ID</th>
                                     <th>Task Name</th>
                                     <th>Task Description</th>
@@ -57,8 +57,9 @@
                                 //for every task obtain the staff member
                                 $staff = Staff_Model::get($task->staff());
 
-                                echo "<td>{$task->proj_id()}</td>" .
-                                "<td>{$task->tsk_id()}</td>" .
+                                echo "<td>"
+                                        . "{$task->tsk_id()}"
+                                        . "</td>" .
                                 "<td>{$task->tsk_nm()}</td>" .
                                 "<td>{$task->tsk_dscr()}</td>" .
                                 "<td>{$task->tsk_status()}</td><tr/>";
@@ -91,8 +92,26 @@
                                         {
                                         echo "<td>This task isn't assigned to anyone.</td>";
                                         }
-                                    echo "<td>add or delete</td>" .
-                                    "</tr>";
+                                    ?> <td>
+                                        <!--Buttons to take users to edit or delete for each project-->
+                                        <button type="submit" id="editP">
+                                            <a href="?page=Home&action=edit(<?php $projid ?>)">
+                                                <img src="Includes/CSS/img/Icons/edit.png" 
+                                                     alt="edit" title="Edit Project"
+                                                     width="20" height="20"/>
+                                            </a>
+                                        </button>
+
+                                        <button type="submit" id="delP">                                
+                                            <a href="?page=Home&action=delete(<?php $projid ?>)">
+                                                <img src="Includes/CSS/img/Icons/delete.png" 
+                                                     alt="edit" title="Delete Project"
+                                                     width="20" height="20"/>
+                                            </a>
+                                        </button>                    
+                                    </td>
+                                    </tr>
+                                    <?php
                                     }
                                 } else
                                 {
@@ -101,7 +120,7 @@
                                     <?php
                                     }
                                 ?>
-                        </table>
+                                </table><br/>
 
                     </table>
                 </div>

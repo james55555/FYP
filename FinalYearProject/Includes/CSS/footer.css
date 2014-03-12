@@ -11,11 +11,13 @@
     height:10%;
     margin-top: 2.5%;
     border-top: 1px solid black;
+    text-align: center;
 }
 
 /*Style Footer class and components*/
 .footer{
     display: block-inline;
+    text-align: center;
 }
 #left{
     width: 25%;
@@ -31,9 +33,10 @@
     text-align: right;
     font-weight: bold;
 }
-#middle {
-    text-align: center;
+#middle{
+    float: left;
+    width: 50%;
 }
-#middle p{
-    text-align: center;
+#middle p {
+    text-align: center;   
 }

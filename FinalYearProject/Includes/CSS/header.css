@@ -6,7 +6,7 @@
 
 #wrapperHeader{
     width:100%; 
-    height:100px; /*Height of background image*/
+    height:10%; /*Height of background image*/
     text-align:center;
     border-bottom: solid black;
     background-color: #0047CC;
@@ -14,7 +14,7 @@
 }
 #wrapperHeader #header{
     width:100%;
-    height:100px;
+    height:75px;
     margin:0 auto;
 }
 
@@ -29,20 +29,19 @@
 /*Set values for each box in header*/
 #wrapperHeader #header li a
 {
-    padding: 15px;
-    margin-right: 10px;
+    padding: 20px;
+    margin-top: 5%;
+    margin-right: 5%;
     text-decoration: none;
     font-weight: bold;
     color: #fff;
-    background-color: #0048CC;
     float: left;
-    margin-top: 15%;
+    
     
 }
-#wrapperHeader #header img {
+#wrapperHeader #header #logo {
     width:25%;
-    height:100px;
-    margin-right:10px;
+    height: 75px;
     float:left;
 }
 

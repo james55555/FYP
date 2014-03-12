@@ -8,6 +8,10 @@
     width:100%;
     bottom:0;
     height:10%;
-    position: fixed;
+    position: relative;
+    margin-top: 2.5%;
     border-top: 1px solid black;
+}
+#footer p{
+    text-align: center;
 }

@@ -12,8 +12,11 @@ http://www.mycodezone.com/simple-screen-centered-login-box/
 #intro{
     margin-left: auto;
     margin-right: auto;
-    width: 500px;
+    position: relative;
+    width: 600px;
+    height: 25%;
     padding: 20px;
+    display: block;
     
 }
 #intro h1{
@@ -36,9 +39,9 @@ http://www.mycodezone.com/simple-screen-centered-login-box/
     -webkit-border-radius:3px;
     top:50%;
     left:50%;
-    margin-left:-145px;
-    margin-top:-145px;
-    position:fixed;
+    margin-left: -145px; 
+    margin-top: auto;
+    position:relative;
 }
 
 #login_div label{

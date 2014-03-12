@@ -52,6 +52,7 @@ table, th, td
 {
     vertical-align: middle;
     border: 1px solid black;
+    text-align: center;
 }
 /*Set #container defaults*/
 #container

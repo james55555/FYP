@@ -17,7 +17,7 @@
                 <a href="?page=Home">
                     <!--Aston University, UK Logo 
                     (Copyrighted official logo for Aston University, 2007) -->
-                        <img 
+                        <img id="logo"
                             src="http://upload.wikimedia.org/wikipedia/commons/b/b5/Aston_University_Logo.png" 
                             alt="University Logo"/>
                         </a>

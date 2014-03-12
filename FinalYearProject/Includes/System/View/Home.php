@@ -18,22 +18,27 @@
         <link rel="stylesheet" type="text/css" href="Includes/CSS/main.css"/>
         <link rel="stylesheet" type="text/css" href="Includes/CSS/home.css"/>
         <title>Time Management System for Professionals - Home Page</title>
-        
+
     </head>
-    
+
     <body>
         <?php
         include("header.php");
         ?> 
         <!--Information Body-->
-        
+
         <div id="container">
 
             <h1>My Projects</h1>
-            
-                    <a href="?page=addProject" id="NU">Add New</a>
-            <!--<input class="button" id="addProj" type="button" value="Add"
-                   onlcick="location.href='?page=addProject'"/>-->
+
+            <button type="submit" id="addP"
+                                action="?page=Home&action=delete">
+                            <img src="Includes/CSS/img/Icons/addNew.png" 
+                                 alt="edit" title="Delete Project"
+                                 width="20" height="20"/>
+            </button>
+    <!--<input class="button" id="addProj" type="button" value="Add"
+           onlcick="location.href='?page=addProject'"/>-->
             <table id="myProjects" class="table">
                 <tr>
                     <th>Project Id</th>
@@ -59,11 +64,19 @@
                     ?>
                     <td>
                         <!--Buttons to prompt user with javascript edit/delete screen (see use cases)-->
-                        <form action='?page=Home&action=edit' method='post'>
-                            <input type='button' id='editP' value='Edit' onclick="return confirmAction()"/></form>
-                        <form action='?page=Home&action=delete' method='post'>
-                            <input type='button' id='delP' value='Delete' onclick="return confirmAction()"/>
-                        </form>
+                        <button type="submit" id="editP"
+                                action='?page=Home&action=edit'>
+                            <img src="Includes/CSS/img/Icons/edit.png" 
+                                 alt="edit" title="Edit Project"
+                                 width="20" height="20"/>
+                        </button>
+
+                        <button type="submit" id="delP" 
+                                action="?page=Home&action=delete">
+                            <img src="Includes/CSS/img/Icons/delete.png" 
+                                 alt="edit" title="Delete Project"
+                                 width="20" height="20"/>
+                        </button>
                     </td>
 
 

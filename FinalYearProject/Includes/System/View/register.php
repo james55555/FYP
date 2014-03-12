@@ -11,16 +11,16 @@
 <html>
     <head>
         <script type="text/javascript" src="Includes/common/Scripts/Validation.js"></script>
-        <link rel="stylesheet" type="text/css" href="CSS/reset.css"/>
-        <link rel="stylesheet" type="text/css" href="CSS/main.css"/>
-        <link rel="stylesheet" type="text/css" href="CSS/register.css"/>
+        <link rel="stylesheet" type="text/css" href="Includes/CSS/reset.css"/>
+        <link rel="stylesheet" type="text/css" href="Includes/CSS/main.css"/>
+        <link rel="stylesheet" type="text/css" href="Includes/CSS/register.css"/>
         <title>Time Management System for Professionals - Registration page</title>
 
     </head>
     <body>
         <div id="container">
             <h1>Registration Form</h1>
-            <div id="registration">
+            <div id="content" class="centralBox">
                 <form id="register" action="?page=Register&action=submitForm" method="post" onsubmit="return Validation()">
                     <input type="hidden" id="submitted" value="false"/>
                     <input type="hidden" id="return" value="true"/>
@@ -30,21 +30,22 @@
                     <label>Username: <input type="text" name="user_id"/></label>
                     <br/>
                     <div id="passwords">
-                    <label>Password: <input type="password" name="password"/></label>
-                    <label>Re-Enter Password: <input type="password" name="password2"/></label>
+                        <label>Password: <input type="password" name="password"/></label><br/>
+                        <label>Re-Enter Password: <input type="password" name="password2"/></label>
                     </div>
-                    <br/>
-                    <div id="navigation">
-                    <input type="button" value="Back" class="button" id="prevPge"
-                           onclick="history.go(-1);"/>
-                    <input type="submit" value="Submit" class="button" id="newUser"/>
-</div>
-                </form>
+            
+            <br/>
+            <div id="navigation">
+                <input type="button" value="Back" class="button" id="prevPge"
+                       onclick="?page=Login"/>
+                <input type="submit" value="Submit" class="button" id="newUser"/>
             </div>
-            <?php
-            include("footer.php");
-            ?>
-        </div>
-    </body>
+            </div>
+        </form>
+        <?php
+        include("footer.php");
+        ?>
+    </div>
+</body>
 </html>
 

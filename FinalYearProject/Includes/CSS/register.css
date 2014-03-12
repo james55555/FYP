@@ -9,7 +9,21 @@
  */ 
 
 
-root { 
-    display: block;
+#content{
+    /*Position block*/
+    margin-top: 2%;
+    width: 400px;
+}
+#content label{
+    /*Position block*/
+    float: left;
+    /*Style block*/
+}
+#content input{
+    float: right;
+    clear:both;
+}
+#navigation{
+    text-align: center;
 }
 

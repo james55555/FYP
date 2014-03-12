@@ -30,7 +30,7 @@
                     Designed by James Graham</p>
             </div>
 
-            <div id="login_div">
+            <div id="login_div" class="centralBox">
                 <p>To access your profile enter your login details or create an account</p>
                 <!--Form to retrieve user login details-->
                 <form method="post" action="?page=Login">

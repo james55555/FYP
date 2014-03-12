@@ -90,3 +90,22 @@ table, th, td
     background-image: -webkit-linear-gradient(bottom, #0047CC, #0085CC);
     background-image: -ms-linear-gradient(bottom, #0047CC, #0085CC);
 }
+.centralBox{
+    width:250px;
+    height:250px;	
+    padding:20px;
+    box-shadow:2px 2px 10px 10px #ccc;
+    -webkit-box-shadow:2px 2px 10px 10px #ccc;
+    -moz-box-shadow:2px 2px 10px 10px #ccc;
+    font-size:16px;
+    border-radius:3px;
+    -moz-border-radius:3px;
+    -ms-border-radius:3px;
+    -o-border-radius:3px;
+    -webkit-border-radius:3px;
+    top:50%;
+    left:50%;
+    margin-left: -145px; 
+    margin-top: auto;
+    position:relative;
+}

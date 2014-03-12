@@ -4,12 +4,22 @@
  *   Author     : James Graham
  */
 
-#container{
+.Proj_Details{
+    font-weight: bold;
+    text-align: center;
+}
 
+.Proj_Details #start{
+    color: green;
+    float:left;
+    margin-top: -20px;
 }
-#title{
-display: block;
+.Proj_Details #end{
+    margin-top: -20px;
+    color: red;
+    float:right;
 }
+
 #task{
 
 }

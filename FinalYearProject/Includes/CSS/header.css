@@ -1,50 +1,48 @@
-/*
-To change this license header, choose License Headers in Project Properties.
-To change this template file, choose Tools | Templates
-and open the template in the editor.
-*/
+
 /* 
     Created on : 10-Mar-2014, 17:00:57
     Author     : James
 */
 
-div#wrapperHeader{
+#wrapperHeader{
     width:100%; 
     height:100px; /*Height of background image*/
     text-align:center;
     border-bottom: solid black;
-    background-color: #0047CC; 
+    background-color: #0047CC;
+    margin-top: -10px;
 }
-div#wrapperHeader div#header{
+#wrapperHeader #header{
     width:100%;
     height:100px;
     margin:0 auto;
 }
 
 /*Set list style type*/
-div#header ul{
-    margin:auto;
-    
+#header ul{
+       
 }
-div#wrapperHeader div#header ul li{
+#wrapperHeader #header ul li{
     list-style: none;
     display:inline-block;
 }
 /*Set values for each box in header*/
-div#wrapperHeader div#header li a
+#wrapperHeader #header li a
 {
     padding: 15px;
     margin-right: 10px;
     text-decoration: none;
     font-weight: bold;
-    color: #E0E0E0;
+    color: #fff;
     background-color: #0048CC;
     float: left;
+    margin-top: 15%;
+    
 }
-div#wrapperHeader div#header img {
-    width:20%;
+#wrapperHeader #header img {
+    width:25%;
     height:100px;
-    margin:0 auto;
+    margin-right:10px;
     float:left;
 }
 

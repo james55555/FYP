@@ -22,23 +22,22 @@
     </head>
 
     <body>
-        <?php
-        include("header.php");
-        ?> 
+
         <!--Information Body-->
 
         <div id="container">
-
+            <?php
+            include("header.php");
+            ?>
             <h1>My Projects</h1>
-
+            <!--Image button to represent add new project-->
             <button type="submit" id="addP"
-                                action="?page=Home&action=delete">
-                            <img src="Includes/CSS/img/Icons/addNew.png" 
-                                 alt="edit" title="Delete Project"
-                                 width="20" height="20"/>
+                    action="?page=Home&action=delete">
+                <img src="Includes/CSS/img/Icons/addNew.png" 
+                     alt="edit" title="Delete Project"
+                     width="20" height="20"/>
             </button>
-    <!--<input class="button" id="addProj" type="button" value="Add"
-           onlcick="location.href='?page=addProject'"/>-->
+
             <table id="myProjects" class="table">
                 <tr>
                     <th>Project Id</th>
@@ -63,20 +62,22 @@
                     <td>{$project->proj_descr()}</td>";
                     ?>
                     <td>
-                        <!--Buttons to prompt user with javascript edit/delete screen (see use cases)-->
-                        <button type="submit" id="editP"
-                                action='?page=Home&action=edit'>
-                            <img src="Includes/CSS/img/Icons/edit.png" 
-                                 alt="edit" title="Edit Project"
-                                 width="20" height="20"/>
+                        <!--Buttons to take users to edit or delete for each project-->
+                        <button type="submit" id="editP">
+                            <a href="?page=Home&action=edit(<?php $projid ?>)">
+                                <img src="Includes/CSS/img/Icons/edit.png" 
+                                     alt="edit" title="Edit Project"
+                                     width="20" height="20"/>
+                            </a>
                         </button>
 
-                        <button type="submit" id="delP" 
-                                action="?page=Home&action=delete">
-                            <img src="Includes/CSS/img/Icons/delete.png" 
-                                 alt="edit" title="Delete Project"
-                                 width="20" height="20"/>
-                        </button>
+                        <button type="submit" id="delP">                                
+                            <a href="?page=Home&action=delete(<?php $projid ?>)">
+                                <img src="Includes/CSS/img/Icons/delete.png" 
+                                     alt="edit" title="Delete Project"
+                                     width="20" height="20"/>
+                            </a>
+                        </button>                    
                     </td>
 
 
@@ -86,11 +87,11 @@
                     }
                 ?>
             </table>
-
+            <?php
+            include("footer.php");
+            ?> 
         </div>
-        <?php
-        include("footer.php");
-        ?> 
+
     </body>
 </html>
 

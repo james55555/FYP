@@ -6,12 +6,11 @@ http://www.mycodezone.com/simple-screen-centered-login-box/
 
 /*Override container to remove the border for this page*/
 #container{
-    border: none;
+    border: solid black;
 }
 /*Introduction section*/
 #intro{
-    margin-left: auto;
-    margin-right: auto;
+    margin: 0 auto;
     position: relative;
     width: 600px;
     height: 25%;
@@ -20,7 +19,13 @@ http://www.mycodezone.com/simple-screen-centered-login-box/
     
 }
 
-/*Code for design sourced from Sachin (2013)*/
+#login_div p{
+    margin-top: -10px;
+}
+/*Code for design sourced from Sachin (2013)
+ *  #login_div label
+ *  #login_div input[text, password, submit]
+*/
 #login_div label{
     width:100%;
     float:left;

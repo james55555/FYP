@@ -8,22 +8,22 @@
  * 
  */ 
 
-
+#personal h2{
+    margin-top: -10px;
+    font-size: 18px;
+    text-shadow: 1px 1px #0047CC;
+}
 #content{
     /*Position block*/
     margin-top: 2%;
-    width: 400px;
-}
-#content label{
-    /*Position block*/
-    float: left;
-    /*Style block*/
-}
-#content input{
-    float: right;
-    clear:both;
-}
-#navigation{
+    height: 55%;
     text-align: center;
+    display: block;
+    margin-right: 400px;
 }
+.regInput input[type=text], .regInput input[type=password]{
+    width: 200px;
+    padding: 4px;
+    }
+
 

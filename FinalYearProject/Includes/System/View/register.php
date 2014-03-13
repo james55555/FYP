@@ -40,7 +40,7 @@
 
                     <br/>
                     <div id="navigation">
-                        <input type="button" value="Login" class="button"
+                        <input type="button" value="Back" class="button"
                                 onclick="location.href='?page=Login'"/>
                         <input type="submit" value="Submit" class="button"/>
                     </div>

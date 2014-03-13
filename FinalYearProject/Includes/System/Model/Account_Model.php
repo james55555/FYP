@@ -140,72 +140,106 @@ class Account_Model extends Validator_Model
         $fName = $registrationFields['fname'];
         $lName = $registrationFields['lname'];
         $em = $registrationFields['email'];
-        //filter email for special characters (other fields shouldn't contain these)
-        $email = Validator_Model::htmlChar($em);
-        $emailErr = array();
-
-        if (strlen($email) > 50)
+        $type = "String";
+        foreach ($registrationFields as $field => $content)
             {
-            array_push($emailErr, "Email address too long! Must be less than 50 characters");
-            } elseif (empty($email) || $email === '' || strlen($email))
-            {
-            $email = null;
+            if ($field === "user_id")
+                {
+                $length = 25;
+                $field = "Username";
+                } elseif ($field === "password")
+                {
+                $length = 25;
+                $field = "Password";
+                } elseif ($field === "fname")
+                {
+                $length = 30;
+                $field = "first name";
+                } elseif ($field === "lname")
+                {
+                $length = 30;
+                $field = "last name";
+                } elseif ($field === "email")
+                {
+                $email = Validator_Model::htmlChar($em);
+                $emailError = array();
+                if (strlen($email) > 50)
+                    {
+                    array_push($emailError, "Email address too long! Must be less than 50 characters");
+                    } elseif (empty($email) || $email === '' || strlen($email))
+                    {
+                    $email = null;
+                    }
+                //Check if email contains only usable chars
+                if (preg_match("/^([0-9a-zA-Z_.-])+@(([0-9a-zA-z-])+.)+(a-zA-Z])+$/", $email) === 0)
+                    {
+                    array_push($emailError, "Ensure email contains correct characters!");
+                    }
+                return $emailError;
+                }
+            $validated = Validator_Model::variableCheck($field, $content, $type, $length);
+            if ($validated !== null)
+                {
+                return $validated;
+                }
             }
-            //Check if email contains only usable chars
-            if (preg_match("/^([0-9a-zA-Z_.-])+@(([0-9a-zA-z-])+.)+(a-zA-Z])+$/",
-                    $email) === 0){
-                array_push($emailErr, "Ensure email contains correct characters!");
-                            }
-
 
         /*
          * Store errors in error array
          */
-        $arrayError = array(
-            //User ID Validation
-            //String length needs to be between 1 and 25
-            array(Validator_Model::variableCheck($user_id, 'string', 25)),
-            //Password Validation
-            //String length needs to be between 1 and 25
-            array(Validator_Model::variableCheck($password, 'string', 25)),
-            //First Name Validation
-            //String length needs to be between 1 and 30
-            array(Validator_Model::variableCheck($fName, 'string', 30)),
-            //Last Name Validation
-            //String length needs to be between 1 and 30
-            array(Validator_Model::variableCheck($lName, 'string', 30)),
-                //Email Address Validation
-                //String length needs to be between 1 and 50
-                //This needs to be double-checked against validator_model as it currently has pregmatches for onl 0-9 and a-z chars
-            $emailErr
-        );
+        //User ID Validation
+        //String length needs to be between 1 and 25
+        //$usernameError = Validator_Model::variableCheck($user_id, $type, 25);
+        //Password Validation
+        //String length needs to be between 1 and 25
+        //$passwordError = Validator_Model::variableCheck($password, $type, 25);
+        //First Name Validation
+        //String length needs to be between 1 and 30
+        //$fNameError = Validator_Model::variableCheck($fName, $type, 30);
+        //Last Name Validation 
+        ////Email Address Validation
+        //String length needs to be between 1 and 30
+        //String length needs to be between 1 and 50
+//Return errors array if errors exist
+        /* if ($fNameError !== null)
+          {
+          return $fNameError;
+          }
+          if ($lNameError !== null)
+          {
+          return $lNameError;
+          }
+          if ($emailError !== null)
+          {
+          return $emailError;
+          }
+          if ($usernameError !== null)
+          {
+          return $usernameError;
+          }
+          if ($passwordError !== null)
+          {
+          return $passwordError;
+          }
+         */
+        $query = "INSERT INTO account" .
+                " (`user_id`, `acc_create_ts`, `password`, `first_nm`, "
+                . " `last_nm`, `email_addr`)"
+                . " VALUES ('"
+                . $user_id . "',"
+                . "CURRENT_TIMESTAMP,'"
+                . $password . "','"
+                . $fName . "','"
+                . $lName . "','"
+                . $email . "')";
 
-//Strip array of all null values (i.e. those inserted by variableCheck)
-        //If no erros have been logged in the array then add the user to the database
-        if (sizeof($arrayError) === 0)
+        $result = mysql_query($query);
+        if (!$db->querySuccess($result))
             {
-
-            $query = "INSERT INTO account" .
-                    " (`user_id`, `acc_create_ts`, `password`, `first_nm`, "
-                    . " `last_nm`, `email_addr`)"
-                    . " VALUES ('"
-                    . $user_id . "',"
-                    . "CURRENT_TIMESTAMP,'"
-                    . $password . "','"
-                    . $fName . "','"
-                    . $lName . "','"
-                    . $email . "')";
-
-            $result = mysql_query($query);
-            if (!$db->querySuccess($result))
-                {
-                echo "Error inserting data into database."
-                . "MYSQL Error: " . mysql_error();
-                }
-            } else
-            {
-            return $arrayError;
+            echo "Error inserting data into database."
+            . "MYSQL Error: " . mysql_error();
             }
+
         return true;
         }
 

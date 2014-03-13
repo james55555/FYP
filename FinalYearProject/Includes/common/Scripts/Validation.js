@@ -1,7 +1,3 @@
-/* 
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 /*
  * This form is to provide client-side form validation prior to submitting
  * to server-side.
@@ -11,7 +7,6 @@
  */
 
 function Validation() {
-
     /*
      * 
      * @type @exp;documentformsregister
@@ -19,8 +14,8 @@ function Validation() {
      * @pro;value
      */
 
-    var fn = document.forms["register"]["fName"].value;
-    var ln = document.forms["register"]["lName"].value;
+    var fn = document.forms["register"]["fname"].value;
+    var ln = document.forms["register"]["lname"].value;
     var em = document.forms["register"]["email"].value;
     var ui = document.forms["register"]["user_id"].value;
     var pw = document.forms["register"]["password"].value;
@@ -50,8 +45,8 @@ function Validation() {
      */
     function fieldEmpty(fn, ln, ui, pw) {
         if (fn === null || fn === "" || ln === null || ln === ""
-                || ui === null || ui === "" || pw === null || pw === ""
-                || pw2 === null || pw2 === "") {
+                || ui === null || ui === "" || pw === null || 
+                pw === "" || pw2 === null || pw2 === "") {
             alert("A field is missing");
             return false;
         }

@@ -19,34 +19,38 @@
     </head>
     <body>
         <div id="container">
-
+      
             <h1>Registration Form</h1>
             <div id="content" class="centralBox">
                 <form id="register" name="register" action="?page=Register&action=submitForm" 
                       method="post" onsubmit="return Validation()">
 
-                    <h2>Your Details</h2>
-                    <input type="text" name="fname" placeholder="Your first name"/><br/>
-                    <input type="text" name="lname" placeholder="Your last name"/><br/>
-                    <input type="text" name="email" placeholder="Your email address (optional)"/><br/>
-                    <input type="text" name="user_id" placeholder="New Username"/>
+                    <div id="personal" class="regInput">
+                        <h2>Your Details</h2>
+                        <input type="text" name="fname" placeholder="Your first name"/><br/>
+                        <input type="text" name="lname" placeholder="Your last name"/><br/>
+                        <input type="text" name="email" placeholder="Your email address (optional)"/><br/>
+                        <input type="text" name="user_id" placeholder="New Username"/>
+                    </div>
                     <br/>
-
-                    <input type="password" name="password" placeholder="New Password "/><br/>
-                    <input type="password" name="password2" placeholder="Re-enter password"/>
+                    <div id="passwords" class="regInput">
+                        <input type="password" name="password" placeholder="New Password "/><br/>
+                        <input type="password" name="password2" placeholder="Re-enter password"/>
+                    </div>
 
                     <br/>
-                    <input type="button" value="Back" class="button" id="prevPge"
-                           action="?page=Login"/>
-                    <input type="submit" value="Submit" class="button" 
-                           id="newUser"/>
-                </form>
+                    <div id="navigation">
+                        <input type="button" value="Login" class="button"
+                                onclick="location.href='?page=Login'"/>
+                        <input type="submit" value="Submit" class="button"/>
+                    </div>
+                    </form>
             </div>
-
-            <?php
-            include("footer.php");
-            ?>
-        </div>
-    </body>
+        
+        <?php
+        include("footer.php");
+        ?>
+    </div>
+</body>
 </html>
 

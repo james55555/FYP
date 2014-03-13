@@ -28,7 +28,7 @@ class Login_Controller extends Main_Controller
                     {
                     ?>
                     <script type="text/javascript">
-                        alert("Username or Password are not valid!!");
+                      alert("Username or Password are not valid!!");
                     </script>
                     <?php
 

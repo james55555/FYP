@@ -12,7 +12,6 @@
     <!DOCTYPE html> 
     <html xmlns="http://www.w3.org/1999/xhtml">
         <head>
-            <script src="http://cdn.jquerytools.org/1.2.7/full/jquery.tools.min.js"/>
             <link rel="stylesheet" type="text/css" href="Includes/CSS/reset.css"/>
             <link rel="stylesheet" type="text/css" href="Includes/CSS/main.css"/>
             <link rel="stylesheet" type="text/css" href="Includes/CSS/projectTasks.css"/>

@@ -4,10 +4,6 @@ http://www.mycodezone.com/simple-screen-centered-login-box/
 *
 */
 
-/*Override container to remove the border for this page*/
-#container{
-    border: solid black;
-}
 /*Introduction section*/
 #intro{
     margin: 0 auto;

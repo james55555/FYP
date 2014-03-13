@@ -159,69 +159,20 @@ class Account_Model extends Validator_Model
                 {
                 $length = 30;
                 $field = "last name";
-                } elseif ($field === "email")
-                {
-                $email = Validator_Model::htmlChar($em);
-                $emailError = array();
-                if (strlen($email) > 50)
+                } 
+                $validated = Validator_Model::variableCheck($field, $content, $type, $length);
+                if ($field === "email")
                     {
-                    array_push($emailError, "Email address too long! Must be less than 50 characters");
-                    } elseif (empty($email) || $email === '' || strlen($email))
-                    {
-                    $email = null;
+                    $field = "Email";
+                    $validated = Validator_Model::validateEmail($content, $field);
                     }
-                //Check if email contains only usable chars
-                if (preg_match("/^([0-9a-zA-Z_.-])+@(([0-9a-zA-z-])+.)+(a-zA-Z])+$/", $email) === 0)
-                    {
-                    array_push($emailError, "Ensure email contains correct characters!");
-                    }
-                return $emailError;
-                }
-            $validated = Validator_Model::variableCheck($field, $content, $type, $length);
+            
             if ($validated !== null)
                 {
                 return $validated;
                 }
             }
-
-        /*
-         * Store errors in error array
-         */
-        //User ID Validation
-        //String length needs to be between 1 and 25
-        //$usernameError = Validator_Model::variableCheck($user_id, $type, 25);
-        //Password Validation
-        //String length needs to be between 1 and 25
-        //$passwordError = Validator_Model::variableCheck($password, $type, 25);
-        //First Name Validation
-        //String length needs to be between 1 and 30
-        //$fNameError = Validator_Model::variableCheck($fName, $type, 30);
-        //Last Name Validation 
-        ////Email Address Validation
-        //String length needs to be between 1 and 30
-        //String length needs to be between 1 and 50
-//Return errors array if errors exist
-        /* if ($fNameError !== null)
-          {
-          return $fNameError;
-          }
-          if ($lNameError !== null)
-          {
-          return $lNameError;
-          }
-          if ($emailError !== null)
-          {
-          return $emailError;
-          }
-          if ($usernameError !== null)
-          {
-          return $usernameError;
-          }
-          if ($passwordError !== null)
-          {
-          return $passwordError;
-          }
-         */
+            
         $query = "INSERT INTO account" .
                 " (`user_id`, `acc_create_ts`, `password`, `first_nm`, "
                 . " `last_nm`, `email_addr`)"
@@ -231,7 +182,7 @@ class Account_Model extends Validator_Model
                 . $password . "','"
                 . $fName . "','"
                 . $lName . "','"
-                . $email . "')";
+                . $em . "')";
 
         $result = mysql_query($query);
         if (!$db->querySuccess($result))
@@ -244,3 +195,4 @@ class Account_Model extends Validator_Model
         }
 
     }
+    ?>

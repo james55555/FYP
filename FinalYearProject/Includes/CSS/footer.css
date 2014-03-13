@@ -33,7 +33,7 @@
     text-align: right;
     font-weight: bold;
 }
-#middle{
+#middle, #middleRegister{
     float: left;
     width: 50%;
 }
@@ -41,8 +41,6 @@
     text-align: center;   
 }
 #middleRegister{
-    float: left;
-    width: 50%;
     margin-top: -10px;
     text-align: center;
 }

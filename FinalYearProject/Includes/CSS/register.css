@@ -7,11 +7,13 @@
  *                    /Include/System/View/registration.php
  * 
  */ 
-
+#personal h2{
+    margin-bottom: 5%;
+}
 #content{
     /*Position block*/
     margin-top: 2%;
-    height: 55%;
+    height: 40%;
     text-align: center;
     display: block;
     margin-right: 400px;
@@ -19,6 +21,7 @@
 .regInput input[type=text], .regInput input[type=password]{
     width: 200px;
     padding: 4px;
+    margin-bottom: 2.5%;
     }
 
 

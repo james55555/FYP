@@ -133,8 +133,6 @@ class Account_Model extends Validator_Model
         /*
          * Assign array variables to abbreviations for later use
          */
-
-
         $user_id = $registrationFields['user_id'];
         $password = $registrationFields['password'];
         $fName = $registrationFields['fname'];
@@ -142,30 +140,45 @@ class Account_Model extends Validator_Model
         $em = $registrationFields['email'];
 
 //Validate variables
-        $valid = $this->validateArray($registrationFields);
-        
-        if(is_array($valid)){
+        $valid = Account_Model::validateArray($registrationFields);
+
+        if (is_array($valid))
+            {
             return $valid;
             }
-        
-        $query = "INSERT INTO account" .
-                " (`user_id`, `acc_create_ts`, `password`, `first_nm`, "
-                . " `last_nm`, `email_addr`)"
-                . " VALUES ('"
-                . $user_id . "',"
-                . "CURRENT_TIMESTAMP,'"
-                . $password . "','"
-                . $fName . "','"
-                . $lName . "','"
-                . $em . "')";
 
-        $result = mysql_query($query);
-        if (!$db->querySuccess($result))
+        $existingQuery = "SELECT COUNT(*)"
+                . " FROM account"
+                . " WHERE user_id='" . $user_id . "'";
+
+        if (!$db->querySuccess($existingQuery))
             {
-            echo "Error inserting data into database."
-            . "MYSQL Error: " . mysql_error();
-            }
+//Number of entries with that username
+            $numExisting = mysql_num_rows(mysql_query($existingQuery));
+            if ($numExisting !== 0)
+                {
+                return "This user already exists!";
+                } else
+                {
+                $query = "INSERT INTO account" .
+                        " (`user_id`, `acc_create_ts`, `password`, `first_nm`, "
+                        . " `last_nm`, `email_addr`)"
+                        . " VALUES ('"
+                        . $user_id . "',"
+                        . "CURRENT_TIMESTAMP,'"
+                        . $password . "','"
+                        . $fName . "','"
+                        . $lName . "','"
+                        . $em . "')";
 
+                $result = mysql_query($query);
+                if (!$db->querySuccess($result))
+                    {
+                    echo "Error inserting data into database."
+                    . "MYSQL Error: " . mysql_errno();
+                    }
+                }
+            }
         return true;
         }
 
@@ -174,7 +187,7 @@ class Account_Model extends Validator_Model
      * @param registration fields
      */
 
-    protected function validateArray($registrationFields)
+    private static function validateArray($registrationFields)
         {
         //Set var validation variables
         $type = "String";
@@ -201,7 +214,7 @@ class Account_Model extends Validator_Model
                 } elseif ($field === "email")
                 {
                 $field = "Email";
-                $validated = Validator_Model::validateEmail($content, $field);
+                //$validated = Validator_Model::validateEmail($content, $field);
                 }
             if (!isset($validated))
                 {

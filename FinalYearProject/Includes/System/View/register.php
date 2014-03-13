@@ -10,7 +10,7 @@
 ?>
 <html>
     <head>
-        <script type="text/javascript" src="Includes/common/Scripts/Validation.js"></script>
+        <script type="text/javascript" src="Includes/common/Scripts/Validation.js"/>
         <link rel="stylesheet" type="text/css" href="Includes/CSS/reset.css"/>
         <link rel="stylesheet" type="text/css" href="Includes/CSS/main.css"/>
         <link rel="stylesheet" type="text/css" href="Includes/CSS/register.css"/>
@@ -22,16 +22,17 @@
             <h1>Registration Form</h1>
             <div id="content" class="centralBox">
                 <form id="register" action="?page=Register&action=submitForm" method="post" onsubmit="return Validation()">
-                    <input type="hidden" id="submitted" value="false"/>
-                    <input type="hidden" id="return" value="true"/>
-                    <label>First Name: <input type="text" name="fname"/></label><br/>
-                    <label>Last Name: <input type="text" name="lname"/></label><br/>
-                    <label>Email: <input type="text" name="email"/></label><br/>
-                    <label>Username: <input type="text" name="user_id"/></label>
+                    
+                    <div id="personal">
+                        <h2>Your Details</h2>
+                    <input type="text" name="fname" placeholder="Your first name"/><br/>
+                    <input type="text" name="lname" placeholder="Your last name"/><br/>
+                    <input type="text" name="email" placeholder="Your email address"/><br/>
+                    <input type="text" name="user_id" placeholder="New Username"/></label>
                     <br/>
                     <div id="passwords">
-                        <label>Password: <input type="password" name="password"/></label><br/>
-                        <label>Re-Enter Password: <input type="password" name="password2"/></label>
+                        <input type="password" name="password" placeholder="New Password "/><br/>
+                        <input type="password" name="password2" placeholder="Re-enter password"/>
                     </div>
             
             <br/>

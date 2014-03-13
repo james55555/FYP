@@ -37,7 +37,7 @@ abstract class Validator_Model
         // now we see if there is anything in the string
         if (empty($string) || $string === '' || strlen($string === 0))
             {
-            $emptyErr = "Ensure " . $field . " is filled in!";
+            $emptyErr = $field . " can't be empty";
             array_push($errors, $emptyErr);
             }
         // then we check how long the string is

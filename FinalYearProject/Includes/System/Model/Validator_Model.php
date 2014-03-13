@@ -1,11 +1,5 @@
 <?php
 
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
 /**
  * Description of Validator_Model
  *
@@ -26,7 +20,7 @@ abstract class Validator_Model
      *  (Waterson, 2013)
      */
 
-    public static function variableCheck($string, $type, $length)
+    public static function variableCheck($field, $string, $type, $length)
         {
 
         // assign the type
@@ -35,22 +29,28 @@ abstract class Validator_Model
 
         if (!$type($string))
             {
-            array_push($errors, "String and type don't match for: $string");
+            $typeErr = "String and type don't match! "
+                    . "<br/>Field is: " . $field .
+                    "<br/>Type: " . $type;
+            array_push($errors, $typeErr);
             }
         // now we see if there is anything in the string
-        elseif (empty($string) || $string === '' || strlen($string === 0))
+        if (empty($string) || $string === '' || strlen($string === 0))
             {
-            array_push($errors, "Ensure  $string is filled in!");
+            $emptyErr = "Ensure " . $field . " is filled in!";
+            array_push($errors, $emptyErr);
             }
         // then we check how long the string is
-        elseif (strlen($string) > $length)
+        if (strlen($string) > $length)
             {
-            array_push($errors, "$string cannot be more than $length characters long!");
+            $lengthErr = $field . " cannot be more than " . $length . " characters long!";
+            array_push($errors, $lengthErr);
             }
         //then check if the values contain any unwanted characters
-        elseif (preg_match("/[0-9A-Za-z]/", $string) === 0)
+        if (preg_match("/[0-9A-Za-z]/", $string) === 0)
             {
-            array_push($errors, "$string can only contain letters and numbers.");
+            $charErr = $field . " can only contain letters and numbers.";
+            array_push($errors, $charErr);
             }
         if (sizeof($errors) === 0)
             {

@@ -29,7 +29,6 @@
                     Final Year Project (CS3010) at Aston University. <br><br>
                     Designed by James Graham</p>
             </div>
-
             <div id="login_div" class="centralBox">
                 <p>To access your profile enter your login details or create an account</p>
                 <!--Form to retrieve user login details-->
@@ -41,11 +40,8 @@
                 <div id="loginIssue">
                     <!--Send user to registration form = ?page=Register-->
                     <a href="?page=Register" id="NU">Don't have an account?</a>
-
                     <!--Send user to password reset page-->
                     <!--<a href="?page=newPass" id="NP">Forgot Password?</a>-->
-
-
                 </div>
             </div>
         </div>

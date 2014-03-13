@@ -27,12 +27,14 @@ class Register_Controller extends Main_Controller
         if ($valid)
             {
             $this->registry->heading = "Registration success!";
-            $this->registry->message = "You are now a registered user.";
+            $this->registry->message = "You are now a registered user."
+                    . "<br/>"
+                    . "<a href=?page=Login>Return to login</a>";
             } else
             {
             $this->registry->heading = "Error adding new user...";
             //Print errors as a list             
-                $this->registry->message = implode("<br/>", $this->newUser);
+                $this->registry->message = $this->newUser;
                 
             }
 
@@ -65,7 +67,7 @@ class Register_Controller extends Main_Controller
                 {
                 $valid = true;
                 }
-                elseif(is_array($this->newUser)){
+                elseif(is_array($this->newUser) || is_string($this->newUser)){
                     $valid = false;
                     }
             }

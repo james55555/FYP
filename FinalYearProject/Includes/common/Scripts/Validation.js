@@ -87,7 +87,7 @@ function Validation() {
             /*
              * Validate the second password is the same as the first
              */
-            if (!pw !== pw2) {
+            if (pw !== pw2) {
                 alert("Passwords don't match!");
                 return false;
             }
@@ -95,12 +95,6 @@ function Validation() {
                 alert("Password too long! Must be less than 25 characters");
                 return false;
             }
-            else {
-
-                return true;
-
-            }
-
         }
         /*
          * Function to check first and last name length name length

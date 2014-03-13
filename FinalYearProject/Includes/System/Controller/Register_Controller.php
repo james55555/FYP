@@ -1,5 +1,4 @@
 <?php
-
 /*
  * Controller to validate form data and add user to database
  * @author James Graham
@@ -23,21 +22,21 @@ class Register_Controller extends Main_Controller
 
     public function submitForm()
         {
-     
-            $valid = $this->checkForm();
-            if ($valid)
-                {
-                $this->registry->heading = "Registration success!";
-                $this->registry->message = "You are now a registered user.";
-                } else
-                {
-                $this->registry->heading = "Error adding new user...";
-                     //Print errors as a list  
-                $this->registry->message = implode("<br/>", $this->newUser);
-                }
 
-            $this->registry->View_Template->show('showMessage');
-            
+        $valid = $this->checkForm();
+        if ($valid)
+            {
+            $this->registry->heading = "Registration success!";
+            $this->registry->message = "You are now a registered user.";
+            } else
+            {
+            $this->registry->heading = "Error adding new user...";
+            //Print errors as a list             
+                $this->registry->message = implode("<br/>", $this->newUser);
+                
+            }
+
+        $this->registry->View_Template->show('showMessage');
         }
 
     /*
@@ -62,17 +61,17 @@ class Register_Controller extends Main_Controller
         if ($registrationFields['password'] === $registrationFields['password2'])
             {
             $this->newUser = Account_Model::addUser($registrationFields);
-            
             if (is_bool($this->newUser))
                 {
                 $valid = true;
-                } 
+                }
+                elseif(is_array($this->newUser)){
+                    $valid = false;
+                    }
             }
         return $valid;
         }
 
-
-
     }
-
 ?>
+

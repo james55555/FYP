@@ -32,8 +32,8 @@ class Register_Controller extends Main_Controller
                 } else
                 {
                 $this->registry->heading = "Error adding new user...";
-                     //Print errors as a list                 
-                    $this->registry->message = array_values($this->newUser);
+                     //Print errors as a list  
+                $this->registry->message = implode("<br/>", $this->newUser);
                 }
 
             $this->registry->View_Template->show('showMessage');

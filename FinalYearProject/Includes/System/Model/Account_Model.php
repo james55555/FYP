@@ -140,39 +140,14 @@ class Account_Model extends Validator_Model
         $fName = $registrationFields['fname'];
         $lName = $registrationFields['lname'];
         $em = $registrationFields['email'];
-        $type = "String";
-        foreach ($registrationFields as $field => $content)
-            {
-            if ($field === "user_id")
-                {
-                $length = 25;
-                $field = "Username";
-                } elseif ($field === "password")
-                {
-                $length = 25;
-                $field = "Password";
-                } elseif ($field === "fname")
-                {
-                $length = 30;
-                $field = "first name";
-                } elseif ($field === "lname")
-                {
-                $length = 30;
-                $field = "last name";
-                } 
-                $validated = Validator_Model::variableCheck($field, $content, $type, $length);
-                if ($field === "email")
-                    {
-                    $field = "Email";
-                    $validated = Validator_Model::validateEmail($content, $field);
-                    }
-            
-            if ($validated !== null)
-                {
-                return $validated;
-                }
+
+//Validate variables
+        $valid = $this->validateArray($registrationFields);
+        
+        if(is_array($valid)){
+            return $valid;
             }
-            
+        
         $query = "INSERT INTO account" .
                 " (`user_id`, `acc_create_ts`, `password`, `first_nm`, "
                 . " `last_nm`, `email_addr`)"
@@ -194,5 +169,52 @@ class Account_Model extends Validator_Model
         return true;
         }
 
+    /*
+     * Helper method to loop through array and validate fields
+     * @param registration fields
+     */
+
+    protected function validateArray($registrationFields)
+        {
+        //Set var validation variables
+        $type = "String";
+        $validated = null;
+
+        foreach ($registrationFields as $field => $content)
+            {
+            if ($field === "user_id")
+                {
+                $length = 25;
+                $field = "Username";
+                } elseif ($field === "password")
+                {
+                $length = 25;
+                $field = "Password";
+                } elseif ($field === "fname")
+                {
+                $length = 30;
+                $field = "first name";
+                } elseif ($field === "lname")
+                {
+                $length = 30;
+                $field = "last name";
+                } elseif ($field === "email")
+                {
+                $field = "Email";
+                $validated = Validator_Model::validateEmail($content, $field);
+                }
+            if (!isset($validated))
+                {
+                $validated = Validator_Model::variableCheck($field, $content, $type, $length);
+                }
+
+            if ($validated !== null)
+                {
+                return $validated;
+                }
+            }
+        }
+
     }
-    ?>
+
+?>

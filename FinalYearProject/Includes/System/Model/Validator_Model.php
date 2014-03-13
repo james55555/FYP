@@ -60,12 +60,44 @@ abstract class Validator_Model
         }
 
     /*
-         * Function to filter variables using htmlspecialchars in order to keep their
-         * meaning when rendered in HTML.
-         * @param $array array
-         * @return $array array
-         */
-     public static function htmlChar($array)
+     * Function to validate email specifically as this has slightly 
+     * different characters than other methods.
+     */
+
+    public static function validateEmail($em, $field)
+        {
+        
+        $email = Validator_Model::htmlChar($em);
+        
+        $emailError = array();
+        if (strlen($email) > 50)
+            {
+            array_push($emailError, $field . "is too long! Must be less than 50 characters");
+            } elseif (empty($email) || $email === '' || strlen($email) === 0)
+            {
+            $email = null;
+            }
+        //Check if email contains only usable chars
+        if (!preg_match("/([\w\-]+\@[\w\-]+\.[\w\-]+)/",$email))
+            {
+            array_push($emailError, "Ensure " . $field . " contains correct characters!");
+            }
+        if (sizeof($emailError) === 0)
+            {
+            $emailError = null;
+            }
+        return $emailError;
+        }
+
+    /*
+     * Helper method to filter variables using htmlspecialchars in order to keep their
+     * meaning when rendered in HTML.
+     * @param $array array
+     * @return $array array
+     * (Based on Database::FilterParameters, potential for more dynamic method?)
+     */
+
+    public static function htmlChar($array)
         {
 
         // Check if the parameter is an array
@@ -97,7 +129,6 @@ abstract class Validator_Model
             return $array;
             }
         }
-       
-        
-        
+
     }
+   ?>

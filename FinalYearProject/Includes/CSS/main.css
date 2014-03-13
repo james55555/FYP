@@ -62,7 +62,13 @@ table, th, td
     margin: 0 auto;
 }
 
-/*Formatting for all button class items*/
+
+/*  Code for design sourced from Sachin (2013)
+ *      .button
+ *      .blockColour
+ *      .centralBox
+*/
+/*Style for buttons throughout the website*/
 .button{
 
     padding:6px 10px;
@@ -84,6 +90,7 @@ table, th, td
     text-shadow: 1px 1px #0047CC;
     font-size:16px;
 }
+/*Colouring for block elements throughout the website*/
 .blockColour{
     background-image: linear-gradient(bottom, #0047CC, #0085CC);
     background-image: -o-linear-gradient(bottom, #0047CC, #0085CC);
@@ -91,6 +98,7 @@ table, th, td
     background-image: -webkit-linear-gradient(bottom, #0047CC, #0085CC);
     background-image: -ms-linear-gradient(bottom, #0047CC, #0085CC);
 }
+/*Positioning and dimensions of block elements throughout the website*/
 .centralBox{
     width:250px;
     height:250px;	

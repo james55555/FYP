@@ -12,9 +12,10 @@
         </title> 
         <link rel="stylesheet" type="text/css" href="Includes/CSS/reset.css"/>
         <link rel="stylesheet" type="text/css" href="Includes/CSS/main.css"/>
-        <link rel="stylesheet" type="text/css" href="Includes/CSS/home.css"/>
+        <link rel="stylesheet" type="text/css" href="Includes/CSS/showMessage.css"/>
     </head>
     <body>
+        <div id="container">
         <div id="headerWrapper">
             <?php
             if (isset($_SESSION['user']))
@@ -26,19 +27,23 @@
                 }
             ?>            
         </div>
-        <div id="container">
+        
             <h1><?php echo $this->registry->heading; ?></h1>
-            <p><?php 
-            if(is_array($this->registry->message)){
-            var_dump($this->registry->message);    
-                }
-                else{
-            echo $this->registry->message;         
-                    }
-            ?></p>
-        </div>
+            <div id="showMsg">
+                <p><?php
+                    if (is_array($this->registry->message))
+                        {
+                        implode("<br/>", $this->registry->message);
+                        } else
+                        {
+                        echo $this->registry->message;
+                        }
+                    ?></p>
+            </div>
+        
         <?php
         include("footer.php");
         ?>
+            </div>
     </body>
 </html>

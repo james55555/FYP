@@ -16,8 +16,7 @@
     </head>
     <body>
         <div id="container">
-        <div id="headerWrapper">
-            <?php
+                    <?php
             if (isset($_SESSION['user']))
                 {
                 include 'header.php';
@@ -26,8 +25,7 @@
                 echo "<a href=\"?page=register\">Return to registration<a/>";
                 }
             ?>            
-        </div>
-        
+                
             <h1><?php echo $this->registry->heading; ?></h1>
             <div id="showMsg">
                 <p><?php

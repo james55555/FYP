@@ -12,50 +12,53 @@
     <!--DOCTYPE HTML-->
     <head>
         <link rel="stylesheet" type="text/css" href="Includes/CSS/reset.css"/>
-
         <link rel="stylesheet" type="text/css" href="Includes/CSS/main.css"/>
-        <link rel="stylesheet" type="text/css" href="Includes/CSS/home.css"/>
+        <link rel="stylesheet" type="text/css" href="Includes/CSS/taskDetails.css"/>
     </head>
     <body>
         <?php include("header.php"); ?>
         <div id="container">
-            <h1>Project is... **<?php echo "**" . htmlentities($_GET['proj_id']) . "**";?>**</h1>
-            <input type="button" id="addTask" class="button" value="Add"/>
-            <table id="myTasks" class="table">
-                <tr>
-                    <th>Project ID</th>
-                    <th>Task ID</th>
-                    <th>Task Name</th>
-                    <th>Task Description</th>
-                    <th>Status</th>
-                </tr>
-                <tr>
-                    <?php
-                    if ($this->registry->project_tasks !== false)
-                        {
-                        foreach ($this->registry->project_tasks as $task)
-                            {
-                            //Issue with status
+            <div class="details">
+                <?php
+                $task = $this->registry->task;
+                $taskEstimation = $this->registry->taskEstimation;
+                ?>
+                <h1>Task is... <?php echo $task->tsk_nm(); ?></h1>
+                <div class="details" id="start">
+                    <p>Task Start Date: <?php echo $taskEstimation->start_dt(); ?></p>
+                </div>
+                <div class="details" id="end">
+                    <p>Task Deadline: <?php echo $taskEstimation->end_dt(); ?></p>
+                </div>
 
-                            echo "<td>{$task->proj_id()}</td>" .
-                            "<td>{$task->tsk_id()}</td>" .
-                            "<td>{$task->tsk_nm()}</td>" .
-                            "<td>{$task->tsk_dscr()}</td>" .
-                            "<td>{$task->tsk_status()}</td></tr>";
-                            }
+            </div>
+            <br/>
+
+            <div id="taskDetails">
+                <div id="heading">
+                    <ul>
+                        <li>Status: </li>
+                        <li>Task Description: </li>
+                        <li>Staff Member Associated: </li>
+                        <div id="estimation">
+                            <li>Planned Hours: </li>
+                            <li>Actual Hours: </li>
+                            <?php
+                            if (isset($taskEstimation->act_end_dt))
+                                {
+                                echo "<li>Actual End Date: </li>";
+                                }
+                            ?>
+                        </div>
                         }
-                    ?>           
+                        <div id="dependencies">
+                            <li>Dependant on this task: </li>
+                            <li>This task is dependent on: </li>
+                        </div>
+                    </ul>
+                </div>
+            </div>
 
-            </table>
-            <table id="myTaskTimes" class="table"><tr>
-                    <th>Expected Finish</th>
-                    <th>Actual Finish</th>
-                    <th>Assigned to</th>
-                    <th>Action</th>
-                </tr>
-
-
-            </table>
-            <?php include("footer.php"); ?>
+<?php include("footer.php"); ?>
     </body>
 </html>

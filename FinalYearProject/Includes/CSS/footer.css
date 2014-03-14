@@ -37,10 +37,9 @@
     float: left;
     width: 50%;
 }
-#middle p {
+#middle p, #middleRegister p {
     text-align: center;   
 }
 #middleRegister{
     margin-top: -10px;
-    text-align: center;
 }

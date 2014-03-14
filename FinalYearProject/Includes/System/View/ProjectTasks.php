@@ -22,12 +22,34 @@
                 <?php include("header.php"); ?>
                 <div class="Proj_Details">
                     <h1>Tasks for project: <?php echo $_GET['proj_id']; ?></h1><br/>
-                    <?php $projEstimate = $this->registry->projectEstimation; ?>
+                    <?php
+                    $projEstimate = $this->registry->projectEstimation;
+                    $stCheck = $projEstimate->start_dt();
+                    $edCheck = $projEstimate->est_end_dt();
+                    $noEstimate = "No estimate set.";
+                    ?>
                     <div class="Proj_Details" id="start">
-                        <p>Project Start Date: <?php echo $projEstimate->start_dt(); ?></p>
+                        <p>Project Start Date: <?php
+                            if (isset($stCheck))
+                                {
+                                echo $projEstimate->start_dt();
+                                } else
+                                {
+                                echo $noEstimate;
+                                }
+                            ?>
+                        </p>
                     </div>
                     <div class="Proj_Details" id="end">
-                        <p>Project Deadline: <?php echo $projEstimate->est_end_dt(); ?></p>
+                        <p>Project Deadline: <?php
+                            if (isset($edCheck))
+                                {
+                                echo $projEstimate->est_end_dt();
+                                } else
+                                {
+                                echo $noEstimate;
+                                }
+                            ?></p>
                     </div>
                     <input type="button" class="button" value="Add New"/>
                 </div>
@@ -36,63 +58,64 @@
 
                 <div id="tasks">
                     <?php
-                    if ($this->registry->project_tasks !== false)
+                    if ($this->registry->project_tasks !== null)
                         {
-                        foreach ($this->registry->project_tasks as $task)
-                            {
-                            ?> 
+                        var_dump($this->registry->project_tasks);
+                        
+                            foreach ($this->registry->project_tasks as $task)
+                                {
+                                ?> 
 
-                            <table id="myTasks" class="table">
-                                <tr>
-                                    <th>Task ID</th>
-                                    <th>Task Name</th>
-                                    <th>Task Description</th>
-                                    <th>Status</th>
-                                </tr>
-                                <?php
-                                //for every task obtain the staff member
-                                $staff = Staff_Model::get($task->staff());
-                                $tsk_id = $task->tsk_id();
-                                echo "<tr><td>"
-                                . "<a href=\"?details=" . $tsk_id . "\" \">"
-                                . $tsk_id
-                                . "</a>"
-                                . "</td>" .
-                                "<td>{$task->tsk_nm()}</td>" .
-                                "<td>{$task->tsk_dscr()}</td>" .
-                                "<td>{$task->tsk_status()}</td><tr/>";
-                                ?>           
-                                <div id="actions">
-                                    <!--Buttons to take users to edit or delete for each project-->
-                                    <button type="submit" id="editP">
-                                        <a href="?page=Home&action=edit(<?php $projid ?>)">
-                                            <img src="Includes/CSS/img/Icons/edit.png" 
-                                                 alt="edit" title="Edit Project"
-                                                 width="20" height="20"/>
-                                        </a>
-                                    </button>
+                                <table id="myTasks" class="table">
+                                    <tr>
+                                        <th>Task ID</th>
+                                        <th>Task Name</th>
+                                        <th>Task Description</th>
+                                        <th>Status</th>
+                                    </tr>
+                                    <?php
+                                    //for every task obtain the staff member
+                                    $staff = Staff_Model::get($task->staff());
+                                    $tsk_id = $task->tsk_id();
+                                    echo "<tr><td>"
+                                    . "<a href=\"?details=" . $tsk_id . "\" \">"
+                                    . $tsk_id
+                                    . "</a>"
+                                    . "</td>" .
+                                    "<td>{$task->tsk_nm()}</td>" .
+                                    "<td>{$task->tsk_dscr()}</td>" .
+                                    "<td>{$task->tsk_status()}</td><tr/>";
+                                    ?>           
+                                    <div id="actions">
+                                        <!--Buttons to take users to edit or delete for each project-->
+                                        <button type="submit" id="editP">
+                                            <a href="?page=Home&action=edit(<?php $projid ?>)">
+                                                <img src="Includes/CSS/img/Icons/edit.png" 
+                                                     alt="edit" title="Edit Project"
+                                                     width="20" height="20"/>
+                                            </a>
+                                        </button>
 
-                                    <button type="submit" id="delP">                                
-                                        <a href="?page=Home&action=delete(<?php $projid ?>)">
-                                            <img src="Includes/CSS/img/Icons/delete.png" 
-                                                 alt="edit" title="Delete Project"
-                                                 width="20" height="20"/>
-                                        </a>
-                                    </button>    
-                                </div>
-                                <?php
-                                }
-                            } else
-                            {
-                            ?>
-                            <p>There are no tasks assigned to this project<p/>
-                                <?php
-                                }
-                            ?>
-                    </table><br/>
+                                        <button type="submit" id="delP">                                
+                                            <a href="?page=Home&action=delete(<?php $projid ?>)">
+                                                <img src="Includes/CSS/img/Icons/delete.png" 
+                                                     alt="edit" title="Delete Project"
+                                                     width="20" height="20"/>
+                                            </a>
+                                        </button>    
+                                    </div>
+                                    <?php
+                                    }
+                            } else {
+                                ?>
+                                <p>There are no tasks assigned to this project<p/>
+        <?php
+    }
+    ?>
+                        </table><br/>
 
-                </div>
-                <?php include("footer.php"); ?>
+                    </div>
+    <?php include("footer.php"); ?>
             </div>
 
         </body>

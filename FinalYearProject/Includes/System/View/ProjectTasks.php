@@ -54,10 +54,12 @@
                                 $estimate = Estimation_Model::get($task->estimation());
                                 //for every task obtain the staff member
                                 $staff = Staff_Model::get($task->staff());
-
+                                $tsk_id = $task->tsk_id();
                                 echo "<td>"
-                                        . "{$task->tsk_id()}"
-                                        . "</td>" .
+                                . "<a href=\"?details=" . $tsk_id . "\" \">"
+                                . $tsk_id
+                                . "</a>"
+                                . "</td>" .
                                 "<td>{$task->tsk_nm()}</td>" .
                                 "<td>{$task->tsk_dscr()}</td>" .
                                 "<td>{$task->tsk_status()}</td><tr/>";
@@ -70,44 +72,44 @@
                                         <th>Action</th>
                                     </tr>
                                     <tr>
-                                    <?php
-                                    if (is_object($estimate))
-                                        {
-                                        echo "<td>{$estimate->est_end_dt()}</td>" .
-                                        "<td>{$estimate->act_end_dt()}</td>";
-                                        } else
-                                        {
-                                        echo "<td>No estimate found!</td>" .
-                                        "<td>No estimate found!</td>";
-                                        }
-                                    if (is_object($staff))
-                                        {
-                                        $staffName = $staff->staff_first_nm() .
-                                                " " . $staff->staff_last_nm();
+                                        <?php
+                                        if (is_object($estimate))
+                                            {
+                                            echo "<td>{$estimate->est_end_dt()}</td>" .
+                                            "<td>{$estimate->act_end_dt()}</td>";
+                                            } else
+                                            {
+                                            echo "<td>No estimate found!</td>" .
+                                            "<td>No estimate found!</td>";
+                                            }
+                                        if (is_object($staff))
+                                            {
+                                            $staffName = $staff->staff_first_nm() .
+                                                    " " . $staff->staff_last_nm();
 
-                                        echo "<td>{$staffName}</td>";
-                                        } else
-                                        {
-                                        echo "<td>This task isn't assigned to anyone.</td>";
-                                        }
-                                    ?> <td>
-                                        <!--Buttons to take users to edit or delete for each project-->
-                                        <button type="submit" id="editP">
-                                            <a href="?page=Home&action=edit(<?php $projid ?>)">
-                                                <img src="Includes/CSS/img/Icons/edit.png" 
-                                                     alt="edit" title="Edit Project"
-                                                     width="20" height="20"/>
-                                            </a>
-                                        </button>
+                                            echo "<td>{$staffName}</td>";
+                                            } else
+                                            {
+                                            echo "<td>This task isn't assigned to anyone.</td>";
+                                            }
+                                        ?> <td>
+                                            <!--Buttons to take users to edit or delete for each project-->
+                                            <button type="submit" id="editP">
+                                                <a href="?page=Home&action=edit(<?php $projid ?>)">
+                                                    <img src="Includes/CSS/img/Icons/edit.png" 
+                                                         alt="edit" title="Edit Project"
+                                                         width="20" height="20"/>
+                                                </a>
+                                            </button>
 
-                                        <button type="submit" id="delP">                                
-                                            <a href="?page=Home&action=delete(<?php $projid ?>)">
-                                                <img src="Includes/CSS/img/Icons/delete.png" 
-                                                     alt="edit" title="Delete Project"
-                                                     width="20" height="20"/>
-                                            </a>
-                                        </button>                    
-                                    </td>
+                                            <button type="submit" id="delP">                                
+                                                <a href="?page=Home&action=delete(<?php $projid ?>)">
+                                                    <img src="Includes/CSS/img/Icons/delete.png" 
+                                                         alt="edit" title="Delete Project"
+                                                         width="20" height="20"/>
+                                                </a>
+                                            </button>                    
+                                        </td>
                                     </tr>
                                     <?php
                                     }
@@ -118,7 +120,7 @@
                                     <?php
                                     }
                                 ?>
-                                </table><br/>
+                        </table><br/>
 
                     </table>
                 </div>

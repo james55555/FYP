@@ -71,6 +71,10 @@ class Register_Controller extends Main_Controller
                     $valid = false;
                     }
             }
+            else{
+                $this->newUser = "Passwords didn't match...";
+                }
+            
         return $valid;
         }
 

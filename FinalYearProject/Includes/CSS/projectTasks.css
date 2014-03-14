@@ -19,16 +19,14 @@
     color: red;
     float:right;
 }
-
-#task{
-
+#actions{
+    text-align:center;
+    margin-top: 10px;
+    margin-bottom: 2.5px;
 }
-.table#myTasks{
-
+#actions #editP{
+    margin-right: 20px; 
 }
-.table#myTaskInfo{
-
-}
-.button#addTask{
-
-}
+#actions #delP{
+    margin-left: 20px;
+} 

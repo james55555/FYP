@@ -1,11 +1,5 @@
 <?php
 
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
 /**
  * Description of taskList_Controller
  *
@@ -24,5 +18,12 @@ class Task_Controller extends Main_Controller
         //Show the projectTasks view
         $this->registry->View_Template->show('projectTasks');
         }
+        public function details($id){
+            $this->registry->task = Task_Model::getTask($id);
+            $this->registry->taskEstimation = 
+                    Estimation_Model::get($this->registry->task->estimation());
+            
+            $this->registry->View_Template->show('taskDetails');
+            }
 
     }

@@ -13,9 +13,8 @@
 #content{
     /*Position block*/
     margin-top: 2%;
-    height: 40%;
+    height: 60%;
     text-align: center;
-    display: block;
     margin-right: 400px;
 }
 .regInput input[type=text], .regInput input[type=password]{

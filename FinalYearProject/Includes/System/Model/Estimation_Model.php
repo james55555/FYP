@@ -19,16 +19,18 @@ class Estimation_Model
     private
             $est_end_dt;
     private $est_id;
-
+    
     public
-            function __construct($row)
-        {
+            function __construct($row){
+        if(is_object($row)){
         $this->est_id = $row->est_id;
         $this->act_hr = $row->act_hr;
         $this->pln_hr = $row->pln_hr;
         $this->start_dt = $row->start_dt;
         $this->act_end_dt = $row->act_end_dt;
         $this->est_end_dt = $row->est_end_dt;
+        }
+       
         }
 
     public function est_id()

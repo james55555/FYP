@@ -20,17 +20,40 @@
         <div id="container">
             <div class="details">
                 <?php
+                //Set easier to use variables throughout the view
                 $task = $this->registry->task;
+                $taskStaff = $this->registry->taskStaff;
                 $taskEstimation = $this->registry->taskEstimation;
+                $noEstimate = "No estimate set!";
                 ?>
                 <h1>Task is... <?php echo $task->tsk_nm(); ?></h1>
                 <div class="details" id="start">
-                    <p>Task Start Date: <?php echo $taskEstimation->start_dt(); ?></p>
+                    <p>Task Start Date: 
+                        <?php
+                        if (is_object($taskEstimation))
+                            {
+                            echo $taskEstimation->start_dt();
+                            } else
+                            {
+                            echo $noEstimate;
+                            }
+                        ?>
+                    </p>
                 </div>
                 <div class="details" id="end">
-                    <p>Task Deadline: <?php echo $taskEstimation->end_dt(); ?></p>
+                    <p>Task Deadline: 
+                        <?php
+                        if (is_object($taskEstimation))
+                            {
+                            echo $taskEstimation->end_dt();
+                            } else
+                            {
+                            echo $noEstimate;
+                            }
+                        ?>
+                    </p>
                 </div>
-
+                <input type="button"
             </div>
             <br/>
 
@@ -39,20 +62,26 @@
                     <ul>
                         <li>Status: </li>
                         <li>Task Description: </li>
-                        <li>Staff Member Associated: </li>
-                        <div id="estimation">
-                            <li>Planned Hours: </li>
-                            <li>Actual Hours: </li>
-                            <?php
-                            if (isset($taskEstimation->act_end_dt))
-                                {
-                                echo "<li>Actual End Date: </li>";
-                                }
+                        <li>Staff Member Associated: $</li>
+                        <?php
+                        if (is_object($taskEstimation))
+                            {
                             ?>
-                        </div>
-                        }
+                            }
+                            <div id="estimation">
+                                <li>Planned Hours: </li>
+                                <li>Actual Hours: </li>
+                                <?php
+                                if (isset($taskEstimation->act_end_dt))
+                                    {
+                                    echo "<li>Actual End Date: </li>";
+                                    }
+                                ?>
+
+                            </div>
+<?php } ?>
                         <div id="dependencies">
-                            <li>Dependant on this task: </li>
+                            <li>Dependent on this task: </li>
                             <li>This task is dependent on: </li>
                         </div>
                     </ul>

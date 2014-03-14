@@ -39,5 +39,14 @@ class Task_Controller extends Main_Controller
                 Staff_Model::get($this->registry->task->staff());
         $this->registry->View_Template->show('taskDetails');
         }
+        
+        public function addTask(){
+            
+            $this->registry->View_Template->show('addTask');
+            }
+        public function editTask()
+            {
+            
+            }
 
     }

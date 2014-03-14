@@ -24,7 +24,7 @@
                     <h1>Tasks for project: <?php echo $_GET['proj_id']; ?></h1><br/>
                     <?php $projEstimate = $this->registry->projectEstimation; ?>
                     <div class="Proj_Details" id="start">
-                        <p>Project Start Date: <?php echo $projEstimate->start_dt(); ?></p><br/>
+                        <p>Project Start Date: <?php echo $projEstimate->start_dt(); ?></p>
                     </div>
                     <div class="Proj_Details" id="end">
                         <p>Project Deadline: <?php echo $projEstimate->est_end_dt(); ?></p>

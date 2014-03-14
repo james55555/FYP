@@ -47,7 +47,7 @@
 
                 foreach ($this->registry->projects as $project)
                     {
-                    $projid = ($project->proj_id());
+                    $projid = $project->proj_id();
 
                     echo "<!--Print out project information for each project into a table-->
                 <tr>

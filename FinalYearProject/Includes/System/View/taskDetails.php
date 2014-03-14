@@ -79,7 +79,7 @@
                                 ?>
 
                             </div>
-<?php } ?>
+                        <?php } ?>
                         <div id="dependencies">
                             <li>Dependent on this task: </li>
                             <li>This task is dependent on: </li>
@@ -88,6 +88,6 @@
                 </div>
             </div>
 
-<?php include("footer.php"); ?>
+            <?php include("footer.php"); ?>
     </body>
 </html>

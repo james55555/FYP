@@ -21,7 +21,7 @@
             <!--Information Body-->
             <div id="intro">
                 <h1> <!--Centre this text-->
-                    CS3010 - Task Management System<br>
+                    Small-Scale Project Management<br>
                     Login
                 </h1>
                 <p>This venture looks to deliver small-scale project management to 

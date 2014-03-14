@@ -59,9 +59,7 @@
                 <div id="tasks">
                     <?php
                     if ($this->registry->project_tasks !== null)
-                        {
-                        var_dump($this->registry->project_tasks);
-                        
+                        {                        
                             foreach ($this->registry->project_tasks as $task)
                                 {
                                 ?> 
@@ -78,7 +76,7 @@
                                     $staff = Staff_Model::get($task->staff());
                                     $tsk_id = $task->tsk_id();
                                     echo "<tr><td>"
-                                    . "<a href=\"?details=" . $tsk_id . "\" \">"
+                                    . "<a href=\"?page=?details=" . $tsk_id . "\" \">"
                                     . $tsk_id
                                     . "</a>"
                                     . "</td>" .

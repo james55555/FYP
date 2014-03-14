@@ -8,6 +8,10 @@
 class Task_Controller extends Main_Controller
     {
 
+    /*
+     * Function to set task variables based on project data and 
+     * display high-level task view
+     */
     public
             function main()
         {
@@ -18,12 +22,19 @@ class Task_Controller extends Main_Controller
         //Show the projectTasks view
         $this->registry->View_Template->show('projectTasks');
         }
-        public function details($id){
-            $this->registry->task = Task_Model::getTask($id);
-            $this->registry->taskEstimation = 
-                    Estimation_Model::get($this->registry->task->estimation());
-            
-            $this->registry->View_Template->show('taskDetails');
-            }
+
+        /*
+         * Function to set individual task variables and 
+         * show the task details page
+         */
+    public function details($id)
+        {
+        $this->registry->task = Task_Model::getTask($id);
+        $this->registry->taskEstimation = 
+                Estimation_Model::get($this->registry->task->estimation());
+        $this->registry->taskStaff = 
+                Staff_Model::get($this->registry->task->staff());
+        $this->registry->View_Template->show('taskDetails');
+        }
 
     }

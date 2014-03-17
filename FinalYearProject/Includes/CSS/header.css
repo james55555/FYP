@@ -3,20 +3,14 @@
     Created on : 10-Mar-2014, 17:00:57
     Author     : James
 */
-
+/*Set positioning for the header */
 #wrapperHeader{
     width:100%; 
-    height:7.5%; /*Height of background image*/
+    height:40px; /*Height of background image*/
+    max-height: 40px;
     text-align:center;
     margin-top: -10px;
-    display: inline-block;
 
-}
-#wrapperHeader #Buttons{
-    text-align: center;
-    width:100%;
-    height:100%;
-    margin:0 auto;
         /*(Odvarko, 2014)*/  
     /* IE10 Consumer Preview */ 
     background-image: -ms-radial-gradient(center top, circle farthest-side, #0047CC 0%, #FFFFFF 50%);
@@ -34,6 +28,12 @@
     background-image: -webkit-radial-gradient(center top, circle farthest-side, #0047CC 0%, #FFFFFF 50%);
 
 }
+#wrapperHeader #Buttons{
+    text-align: center;
+    width:100%;
+    height:100%;
+
+}
 
 /*Set list style type*/
 #wrapperHeader ul li{
@@ -43,7 +43,7 @@
 /*Set values for each box in header*/
 #wrapperHeader li a
 {   
-    margin-top: 5%;
+    margin-top: 7.5px;
     margin-right: 10px;
     padding: 3px;
     text-decoration: none;

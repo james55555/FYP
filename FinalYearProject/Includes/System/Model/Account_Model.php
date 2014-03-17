@@ -157,6 +157,7 @@ class Account_Model extends Validator_Model
             } else
             {
             return "query error... " . mysql_error();
+            }
             if ($numExisting === 0)
                 {
                 $insert = "INSERT INTO account" .
@@ -181,8 +182,7 @@ class Account_Model extends Validator_Model
                 {
                 return "This user already exists... " . var_dump($numExisting);
                 }
-            }
-        return true;
+           return true;
         }
 
     /*

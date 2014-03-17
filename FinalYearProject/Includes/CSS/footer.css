@@ -11,18 +11,11 @@
     height:10%;
     margin-top: 2.5%;
     border-top: 1px solid black;
-    text-align: center;
 }
 
 /*Style Footer class and components*/
 .footer{
     display: block-inline;
-    text-align: center;
-}
-#left{
-    width: 25%;
-    float:left;
-    margin-top: -10px;
 }
 #right{
     width: 25%;
@@ -33,13 +26,8 @@
     text-align: right;
     font-weight: bold;
 }
-#middle, #middleRegister{
-    float: left;
+#middle {
+    float: right;
     width: 50%;
-}
-#middle p, #middleRegister p {
-    text-align: center;   
-}
-#middleRegister{
-    margin-top: -10px;
+    text-align: center;
 }

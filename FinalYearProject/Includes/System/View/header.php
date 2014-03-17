@@ -10,24 +10,16 @@
 ?>
     <link rel="stylesheet" type="text/css" href="Includes/CSS/header.css"/>
     <div id="wrapperHeader">
-        <div id="header">
             <!--Set up logo header that if clicked on takes user to their home page-->
             
-            <ul class="blockColour">
-                <a href="?page=Home">
-                    <!--Aston University, UK Logo 
-                    (Copyrighted official logo for Aston University, 2007) -->
-                        <img id="logo"
-                            src="http://upload.wikimedia.org/wikipedia/commons/b/b5/Aston_University_Logo.png" 
-                            alt="University Logo"/>
-                        </a>
+            <ul>
+                <div id="Buttons">             
                 <li><a href="?page=Home">Projects</a></li>
                 <li><a href="?page=Reports">Reports</a></li>
                 <li><a href="?page=Calendar">Calendar</a></li>
-                <li><a href="?page=Timeline">Timeline</a></li>
                 <li><a href="?page=Logout">Logout</a></li>
+                </div>
             </ul>
-        </div>
     </div>
 
 

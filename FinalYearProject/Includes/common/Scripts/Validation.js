@@ -27,30 +27,28 @@ function Validation() {
             if (validPwd(pw, pw2)) {
                 if (validName(fn, ln, 30)) {
                     if (usernameLength(ui, 25)) {
-
+                        
                     }
-                    /*
-                     * Submit the form
-                     */
+                    //submit form for server-side validation
                     document.getElementById("register").main();
                 }
             }
         }
     }
     return false;
-
+    }
 
     /*
      * Ensure all fields are filled in
      */
     function fieldEmpty(fn, ln, ui, pw) {
         if (fn === null || fn === "" || ln === null || ln === ""
-                || ui === null || ui === "" || pw === null || 
+                || ui === null || ui === "" || pw === null ||
                 pw === "" || pw2 === null || pw2 === "") {
             alert("A field is missing");
             return false;
         }
-        else {
+        else{
             return true;
         }
 
@@ -65,20 +63,19 @@ function Validation() {
 
         var atpos = em.indexOf("@");
         var dotpos = em.lastIndexOf(".");
-        if (atpos < 1 || dotpos < atpos + 2 || dotpos + 2 >= em.length)
-        {
-            alert("Not a valid e-mail address");
-            return false;
+        if (!em === null || !em === "") {
+            if (atpos < 1 || dotpos < atpos + 2 || dotpos + 2 >= em.length)
+            {
+                alert("Not a valid e-mail address");
+                return false;
+            }
+            else if (em.length > 50) {
+                alert("Email address is too long!");
+                return false;
+            }
         }
-        else if (em.length > 50) {
-            alert("Email address is too long!");
-            return false;
-        }
-        else {
-
-            return true;
-
-        }
+        return true;
+    }
 
         /*
          * Function to validate field lengths
@@ -95,22 +92,26 @@ function Validation() {
                 alert("Password too long! Must be less than 25 characters");
                 return false;
             }
+            else {
+                return true;
+            }
         }
         /*
          * Function to check first and last name length name length
          */
         function validName(fn, ln, mx) {
-            var valid = true;
             if (fn.length > mx) {
                 alert("First name must be less than 30 characters");
-                valid = false;
+                return false;
                 if (ln.legnth > mx) {
                     alert(
                             "Last name too long must be less than 30 characters");
-                    valid = false;
+                    return false;
                 }
             }
-            return valid;
+            else {
+                return true;
+            }
         }
         /*
          * Function to check username length
@@ -120,9 +121,11 @@ function Validation() {
                 alert("Username is too long. Must be less than 25 characters!");
                 return false;
             }
-            return true;
+            else {
+                return true;
+            }
         }
-    }
-}
+    
+
 
 

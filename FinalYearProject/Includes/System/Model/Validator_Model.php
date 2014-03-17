@@ -73,15 +73,14 @@ abstract class Validator_Model
         if (strlen($email) > 50)
             {
             array_push($emailError, $field . "is too long! Must be less than 50 characters");
-            } elseif (empty($email) || $email === '' || strlen($email) === 0)
-            {
-            $email = null;
             }
         //Check if email contains only usable chars
+        if(strlen($email) !== 0){ 
         if (!preg_match("/([\w\-]+\@[\w\-]+\.[\w\-]+)/",$email))
             {
             array_push($emailError, "Ensure " . $field . " contains correct characters!");
             }
+        }
         if (sizeof($emailError) === 0)
             {
             $emailError = null;

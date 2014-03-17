@@ -19,7 +19,7 @@
     </head>
     <body>
         <div id="container">
-      
+
             <h1>Registration Form</h1>
             <div id="content" class="centralBox">
                 <form id="register" name="register" action="?page=Register&action=submitForm" 
@@ -41,16 +41,12 @@
                     <br/>
                     <div id="navigation">
                         <input type="button" value="Back" class="button"
-                                onclick="location.href='?page=Login'"/>
+                               onclick="location.href = '?page=Login'"/>
                         <input type="submit" value="Submit" class="button"/>
                     </div>
-                    </form>
+                </form>
             </div>
-        
-        <?php
-        include("footer.php");
-        ?>
-    </div>
-</body>
+        </div>
+    </body>
 </html>
 

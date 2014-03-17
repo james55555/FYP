@@ -4,15 +4,12 @@
     Author     : James Graham
 */
 h1{
-}
-#container{
-    border: none;
-    text-align: center;
+    margin-top: -20px;
 }
 #myProjects th, tr, td
 {
     width:1%;
-       height:20px;
+    height:20px;
     text-align:center;
     /*border: none;*/
 }

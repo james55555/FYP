@@ -22,9 +22,7 @@
     </head>
 
     <body>
-
         <!--Information Body-->
-
         <div id="container">
             <?php
             include("header.php");
@@ -33,8 +31,7 @@
             <!--Image button to represent add new project-->
             <input type="button" class="button" value="Add New"
                     action="?page=Home&action=add"/>
-                            
-
+           
             <table id="myProjects" class="table">
                 <tr>
                     <th>Project Id</th>

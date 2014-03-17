@@ -14,7 +14,7 @@
             
             <ul>
                 <div id="Buttons">             
-                <li><a href="?page=Home">Projects</a></li>
+                <li><a href="?page=Home">Home</a></li>
                 <li><a href="?page=Reports">Reports</a></li>
                 <li><a href="?page=Calendar">Calendar</a></li>
                 <li><a href="?page=Logout">Logout</a></li>

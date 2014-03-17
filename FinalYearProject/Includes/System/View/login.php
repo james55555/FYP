@@ -24,10 +24,6 @@
                     Small-Scale Project Management<br>
                     Login
                 </h1>
-                <p>This venture looks to deliver small-scale project management to 
-                    professional users. The site has been designed as part of a 
-                    Final Year Project (CS3010) at Aston University. <br><br>
-                    Designed by James Graham</p>
             </div>
             <div id="login_div" class="centralBox">
                 <p>To access your profile enter your login details or create an account</p>

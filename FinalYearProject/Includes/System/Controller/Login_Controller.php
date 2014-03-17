@@ -8,30 +8,22 @@
 class Login_Controller extends Main_Controller
     {
 
-    protected $success;
     protected $user;
     protected $pwd;
 
     public
             function main()
         {
+        $this->registry->success = null;
        //if the username/password are set then the form has been submitted.
             //only attempt to log in if user id and pwd are set.
             if (isset($_POST['username']) && isset($_POST['password']))
                 {
                 //If authentication was successful
-                $success = $this->login($_POST['username'], $_POST['password']);
-                if ($success)
+                $this->registry->success = $this->login($_POST['username'], $_POST['password']);
+                if ($this->registry->success)
                     {
                     header('Location: ?page=home');
-                    } else
-                    {
-                    ?>
-                    <script type="text/javascript">
-                      alert("Username or Password are not valid!!");
-                    </script>
-                    <?php
-
                     }
                 }
                 $this->registry->View_Template->show('login');

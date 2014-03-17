@@ -1,11 +1,12 @@
 <?php
 
-/**
+/*
  *  Class to model the system side user account
  *  Used mainly for logging into the system
  * 
  *      @author James Graham
  */
+
 class Account_Model extends Validator_Model
     {
 
@@ -130,37 +131,35 @@ class Account_Model extends Validator_Model
         $db = new Database();
         $db->connect();
         $db->filterParameters($registrationFields);
-        /*
-         * Assign array variables to abbreviations for later use
-         */
+
+        //Assign array variables to abbreviations for later use
         $user_id = $registrationFields['user_id'];
         $password = $registrationFields['password'];
         $fName = $registrationFields['fname'];
         $lName = $registrationFields['lname'];
         $em = $registrationFields['email'];
 
-//Validate variables
+        //Validate variables
         $valid = Account_Model::validateArray($registrationFields);
-
         if (is_array($valid))
             {
             return $valid;
             }
-
-        $existingQuery = "SELECT COUNT(*)"
+        $existingQuery = "SELECT user_id"
                 . " FROM account"
                 . " WHERE user_id='" . $user_id . "'";
 
-        if (!$db->querySuccess($existingQuery))
+        $testQuery = mysql_query($existingQuery);
+        if ($db->querySuccess($testQuery))
             {
-//Number of entries with that username
-            $numExisting = mysql_num_rows(mysql_query($existingQuery));
-            if ($numExisting !== 0)
+            //Number of entries with that username
+            $numExisting = mysql_num_rows($testQuery);
+            } else
+            {
+            return "query error... " . mysql_error();
+            if ($numExisting === 0)
                 {
-                return "This user already exists!";
-                } else
-                {
-                $query = "INSERT INTO account" .
+                $insert = "INSERT INTO account" .
                         " (`user_id`, `acc_create_ts`, `password`, `first_nm`, "
                         . " `last_nm`, `email_addr`)"
                         . " VALUES ('"
@@ -171,12 +170,16 @@ class Account_Model extends Validator_Model
                         . $lName . "','"
                         . $em . "')";
 
-                $result = mysql_query($query);
+                $result = mysql_query($insert);
                 if (!$db->querySuccess($result))
                     {
-                    echo "Error inserting data into database."
-                    . "MYSQL Error: " . mysql_errno();
+                    return "Error inserting data into database."
+                            . "MYSQL Error: " . mysql_errno()
+                            . "<br/> MYSQL details: " . mysql_error();
                     }
+                } else
+                {
+                return "This user already exists... " . var_dump($numExisting);
                 }
             }
         return true;
@@ -214,14 +217,14 @@ class Account_Model extends Validator_Model
                 } elseif ($field === "email")
                 {
                 $field = "Email";
-                //$validated = Validator_Model::validateEmail($content, $field);
+                $validated = Validator_Model::validateEmail($content, $field);
                 }
-            if (!isset($validated))
+            if ($validated !== null)
                 {
                 $validated = Validator_Model::variableCheck($field, $content, $type, $length);
                 }
 
-            if ($validated !== null)
+            if (isset($validated))
                 {
                 return $validated;
                 }

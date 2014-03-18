@@ -17,14 +17,13 @@ jQuery(function($) {
         var ln = $.trim($("form#register input[name=lName]").val());
         var em = $.trim($("form#register input[name=email]").val());
         /*Check email contains the right characters */
-        var em_chars = /^[\w%_\-.\d]+@[\w.\-]+.[A-Za-z]{2,6}$/;
+        var em_chars = /([\w\-]+\@[\w\-]+\.[\w\-]+)/;
         var ui = $.trim($("form#register input[name=user_id]").val());
         var pw = $.trim($("form#register input[name=password]").val());
         var pw2 = $.trim($("form#register input[name=password2]").val());
 
         //Begin validation
-        if (fn.indexOf(" ")  !== -1
-                || fn === "") {
+        if (fn === "") {
             $("span.val_fName").html("Invalid first name!").addClass('error');
             noSubmit = 1;
         }
@@ -32,8 +31,7 @@ jQuery(function($) {
             $("span.val_fName").html("");
         }
         //validate whether last name has a space or is empty.
-        if (ln.indexOf(" ") !== -1
-                || ln === "") {
+        if (ln === "") {
             $("span.val_lName").html("Invalid last name!").addClass('error');
             noSubmit = 1;
         }
@@ -49,8 +47,7 @@ jQuery(function($) {
         else {
             $("span.val_email").html("");
         }
-        if (ui.indexOf(" ")
-                || ui === "") {
+        if (ui === "") {
             $("span.val_ui").html("Invalid User ID!").addClass('error');
             noSubmit = 1;
         }

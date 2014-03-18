@@ -8,31 +8,41 @@
  * 
  */ 
 
-#personal h2{
-    margin-bottom: 5%;
-    text-align: center;
+#container{
+    
+}
+#banner{
+    width: 100%;
+    color: #FFFFFF;
+    display: inline-block;
+}
+#banner #title{
+    float: left;
+    margin-left: 10px;
+    text-shadow: none;
 }
 #content{
     /*Position block*/
     margin: 0 auto;
-    height: 75%;
-    text-align: left;
-    width: 400px;
+    background-color: #FFFFFF;
+    margin-top: 10px;
+    text-align: center;
+    width: 50%;
+    height: 60%;
+    box-shadow: none;
 }
+
 .regInput input[type=text], .regInput input[type=password]{
-    display: inline-block;
-    width: 200px;
+    width: 100%;
     padding: 4px;
     margin: 0;
 }
 #navigation{
-    margin-bottom: -10px;
-    text-align: center;
+     text-align: center;
+     vertical-align: bottom;
 }
-
 span.error {
     color: red;
-    padding-left: 8px;
     font-weight: bold;
 }
 

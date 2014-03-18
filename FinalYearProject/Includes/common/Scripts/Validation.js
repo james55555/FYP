@@ -5,15 +5,38 @@
  * the database without failing.
  * @returns {Boolean}
  */
-
-function Validation() {
-    /*
-     * 
-     * @type @exp;documentformsregister
-     * @pro;fName
-     * @pro;value
-     */
-
+jQuery(function($){
+    
+    var noSubmit;
+  
+  $("form#register input[name='submit']").click(function(){
+      
+    var noSubmit = false;  
+    
+   var fn = $("form#register input[name=fName]").val();
+   var ln = $("form#register input[name=lName]").val();
+   var em = $("form#register input[name=email]").val();
+    /*Check email contains the right characters */
+      var em_chars = /^[\w%_\-.\d]+@[\w.\-]+.[A-Za-z]{2,6}$/;
+   var ui = $("form#register input[name=user_id]").val();
+   var pw = $("form#register input[name=password]").val();
+   var pw2 = $("form#register input[name=password2]").val();
+   
+   /*Begin validation*/
+   if (fn === ""){
+       $("span.val_fName").html("Field required!").addClass('error');
+       noSubmit = true
+      }
+      else{
+          $("span.val_fName").html("");
+      }
+      if(ln === ""){
+          $("span.val_fName")
+      }
+  }
+  }
+  
+  /*
     var fn = document.forms["register"]["fname"].value;
     var ln = document.forms["register"]["lname"].value;
     var em = document.forms["register"]["email"].value;
@@ -27,13 +50,16 @@ function Validation() {
             if (validPwd(pw, pw2)) {
                 if (validName(fn, ln, 30)) {
                     if (usernameLength(ui, 25)) {
-                        
-                    }
                     //submit form for server-side validation
-                    document.getElementById("register").main();
+                    document.getElementById("register").main();    
+                    }
+                    return false;
                 }
+                return false;
             }
+            return false;
         }
+        return false;
     }
     return false;
     }
@@ -63,8 +89,10 @@ function Validation() {
 
         var atpos = em.indexOf("@");
         var dotpos = em.lastIndexOf(".");
-        if (!em === null || !em === "") {
-            if (atpos < 1 || dotpos < atpos + 2 || dotpos + 2 >= em.length)
+        if (!em === "") {
+            if (atpos < 1 || 
+                    dotpos < atpos + 2 || 
+                    dotpos + 2 >= em.length)
             {
                 alert("Not a valid e-mail address");
                 return false;

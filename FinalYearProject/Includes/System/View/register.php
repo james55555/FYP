@@ -34,15 +34,19 @@
             <div id="content" class="centralBox">
                 <form id="register" name="register" action="?page=Register&action=submitForm" 
                       method="post">
-
                     <div id="personal" class="regInput">
                         <h2>Create your account</h2>
                         <input type="text" name="fname" placeholder="Your first name"
-                               title="No more than 30 characters"/>
+                               title="No more than 30 characters"
+                               value="<?php 
+                               if(isset($_POST['fname'])){
+                                       echo $_POST['fname'];
+                                       }
+                                       ?>"/>
+                        <br/><span class="val_fName"></span>
                         <input type="text" name="lname" placeholder="Your last name"
                                title="No more than 30 characters"/>
-                        <br/>   <span class="val_fName"></span>
-                                <span class="val_lName"></span>
+                        <br/>   <span class="val_lName"></span>
                         <input type="text" name="email" placeholder="Your email address (optional)"
                                title="Must be a valid email"/>
                         <br/><span class="val_email"></span>

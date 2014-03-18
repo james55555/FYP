@@ -111,9 +111,6 @@ table, th, td
     -moz-border-radius:3px;
     -ms-border-radius:3px;
     -o-border-radius:3px;
-    -webkit-border-radius:3px;
-    top:50%;
-    left:50%;
-    margin-left: -145px; 
-    margin-top: auto;
+    -webkit-border-radius:3px; 
+    margin: 0 auto;
 }

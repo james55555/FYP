@@ -23,7 +23,8 @@ class Account_Model extends Validator_Model
             $email_addr;
     private
             $password;
-
+    private 
+            $salt;
     /*
      *  Constructor to initialize object from a MySQL user_id and password
      * @param object row
@@ -33,7 +34,7 @@ class Account_Model extends Validator_Model
             function __construct($row)
         {
         $this->userId = $row->user_id;
-        $this->password = $row->password;
+        $this->password = hash("sha256", $row->password . $this->salt);
         $this->first_nm = $row->first_nm;
         $this->last_nm = $row->last_nm;
         $this->email_addr = $row->email_addr;
@@ -87,7 +88,10 @@ class Account_Model extends Validator_Model
         {
         $db = new Database();
         $db->connect();
-
+        $db->filterParameters($accId);
+        
+        
+        
         $query = "SELECT user_id, acc_create_ts, password,"
                 . " first_nm, last_nm, email_addr"
                 . " FROM ACCOUNT"
@@ -160,6 +164,9 @@ class Account_Model extends Validator_Model
             }
             if ($numExisting === 0)
                 {
+                if(empty($em)){
+                    $em = "NULL";
+                    }
                 $insert = "INSERT INTO account" .
                         " (`user_id`, `acc_create_ts`, `password`, `first_nm`, "
                         . " `last_nm`, `email_addr`)"
@@ -180,7 +187,7 @@ class Account_Model extends Validator_Model
                     }
                 } else
                 {
-                return "This user already exists... " . var_dump($numExisting);
+                return "Username already exists";
                 }
            return true;
         }

@@ -57,7 +57,9 @@ table, th, td
 #container
 {
     width: 760px;
+    height: 100%;
     margin: 0 auto;
+    position: relative;
 }
 
 
@@ -114,5 +116,4 @@ table, th, td
     left:50%;
     margin-left: -145px; 
     margin-top: auto;
-    position:relative;
 }

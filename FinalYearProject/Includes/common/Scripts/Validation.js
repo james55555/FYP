@@ -23,9 +23,9 @@ jQuery(function($){
    var pw2 = $("form#register input[name=password2]").val();
    
    //Begin validation
-   if (fn === ""){
-       $("span.val_fName").html("Field required!").addClass('error');
-       noSubmit = true
+   if (fn === "" || fn.length > 25){
+       $("span.val_fName").html("Invalid first name!").addClass('error');
+       noSubmit = true;
       }
       else{
           $("span.val_fName").html("");
@@ -45,6 +45,12 @@ jQuery(function($){
       else {
           $("span.val_email").html("");
       }
+      if(ui === ""){
+          $("span.val_ui").html("Field Required").addClass('error');
+      }
+      else{
+          $("span.val_ui").html("");
+      }    
       if(pw === ""){
           $("span.val_pass").html("Field Required").addClass('error');
           noSubmit = true;

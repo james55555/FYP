@@ -22,7 +22,7 @@ jQuery(function($){
    var pw = $("form#register input[name=password]").val();
    var pw2 = $("form#register input[name=password2]").val();
    
-   /*Begin validation*/
+   //Begin validation
    if (fn === ""){
        $("span.val_fName").html("Field required!").addClass('error');
        noSubmit = true
@@ -31,10 +31,49 @@ jQuery(function($){
           $("span.val_fName").html("");
       }
       if(ln === ""){
-          $("span.val_fName")
+          $("span.val_lName").html("Field Required!").addClass('error');
       }
-  }
-  }
+      else {
+          $("span.val_lName").html("");
+          noSubmit = true;
+      }
+      //If email is invalid
+      if(em_chars.test(em)){
+          $("span.val_email").html("Invalid email!").addClass('error');
+          noSubmit = true;
+      }
+      else {
+          $("span.val_email").html("");
+      }
+      if(pw === ""){
+          $("span.val_pass").html("Field Required").addClass('error');
+          noSubmit = true;
+      }
+      else {
+          $("span.val_pass").html("");
+      }
+      if(pw2 === ""){
+          $("span.val_pass2").html("Field Required").addClass('error');
+          noSubmit = true;
+      }
+      else{
+          if(pw !== pw2){
+              $("span.val_pass2").html("Passwords don't match!!").addClass('error');
+               noSubmit = true;
+           } else{
+               $("span.val_pass2").html("");
+           }
+       }
+           
+           if(noSubmit){
+               $("p.val_msg").slideDown("fast");
+               return false;
+           }
+           noSubmit = false;
+      });
+  });
+      
+
   
   /*
     var fn = document.forms["register"]["fname"].value;

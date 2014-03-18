@@ -8,6 +8,7 @@
  * 
  */
 ?>
+<!DOCTYPE html>
 <html>
     <head>
         <link rel="stylesheet" type="text/css" href="Includes/CSS/reset.css"/>
@@ -15,37 +16,46 @@
         <link rel="stylesheet" type="text/css" href="Includes/CSS/register.css"/>
         <!--Include jQuery library-->
         <script type="text/javascript"
-                src="http://code.jquery.com/jquery-1.9.0.js"></script>
-        
+        src="Includes/common/Scripts/jQuery_lib/jquery_v1.11.1.js"></script>
+
         <script type="text/javascript" 
-                src="Includes/common/Scripts/Validation.js"></script>
-        
+        src="Includes/common/Scripts/Validation.js"></script>
+
         <title>Time Management System for Professionals - Registration page</title>
 
     </head>
     <body>
-        <div id="container">
-
-            <h1>Registration Form</h1>
+        <div id="container" class="blockColour">
+            <div id="banner">
+                <div id="title">
+                    <h1>Thanks for choosing us</h1>
+                </div>
+            </div>
             <div id="content" class="centralBox">
                 <form id="register" name="register" action="?page=Register&action=submitForm" 
                       method="post">
 
                     <div id="personal" class="regInput">
-                        <h2>Your Details</h2>
-                        <input type="text" name="fname" placeholder="Your first name"/>
-                        <span class="val_fName"></span>
-                        <br/>
-                        <input type="text" name="lname" placeholder="Your last name"/>
-                        <br/><span class="val_lName"></span>
-                        <input type="text" name="email" placeholder="Your email address (optional)"/>
+                        <h2>Create your account</h2>
+                        <input type="text" name="fname" placeholder="Your first name"
+                               title="No more than 30 characters"/>
+                        <input type="text" name="lname" placeholder="Your last name"
+                               title="No more than 30 characters"/>
+                        <br/>   <span class="val_fName"></span>
+                                <span class="val_lName"></span>
+                        <input type="text" name="email" placeholder="Your email address (optional)"
+                               title="Must be a valid email"/>
                         <br/><span class="val_email"></span>
-                        <input type="text" name="user_id" placeholder="New Username"/>
-                        <br/><span class="val_ui"></span>
                     </div>
                     <br/>
-                    <div id="passwords" class="regInput">
-                        <input type="password" name="password" placeholder="New Password "/>
+
+                    <div id="credentials" class="regInput">
+                        <h2>Set up your login details</h2>
+                        <input type="text" name="user_id" placeholder="New Username"
+                               title="No more than 25 characters"/>
+                        <br/><span class="val_ui"></span>
+                        <input type="password" name="password" placeholder="New Password"
+                               title="No more than 25 characters"/>
                         <br/><span class="val_pass"></span>
                         <input type="password" name="password2" placeholder="Re-enter password"/>
                         <br/><span class="val_pass2"></span>

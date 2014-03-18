@@ -7,20 +7,33 @@
  *                    /Include/System/View/registration.php
  * 
  */ 
+
 #personal h2{
     margin-bottom: 5%;
+    text-align: center;
 }
 #content{
     /*Position block*/
-    margin-top: 2%;
-    height: 60%;
-    text-align: center;
-    margin-right: 400px;
+    margin: 0 auto;
+    height: 75%;
+    text-align: left;
+    width: 400px;
 }
 .regInput input[type=text], .regInput input[type=password]{
+    display: inline-block;
     width: 200px;
     padding: 4px;
-    margin-bottom: 2.5%;
-    }
+    margin: 0;
+}
+#navigation{
+    margin-bottom: -10px;
+    text-align: center;
+}
+
+span.error {
+    color: red;
+    padding-left: 8px;
+    font-weight: bold;
+}
 
 

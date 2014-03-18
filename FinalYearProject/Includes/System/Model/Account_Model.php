@@ -24,7 +24,7 @@ class Account_Model extends Validator_Model
     private
             $password;
     private 
-            $salt;
+            $salt = "Zo4rU5Z1YyKJAASY0PT6EUg7BBYdlEhPaNLuxAwU8lqu1ElzHv0Ri7EM6irpx5w";
     /*
      *  Constructor to initialize object from a MySQL user_id and password
      * @param object row
@@ -34,6 +34,7 @@ class Account_Model extends Validator_Model
             function __construct($row)
         {
         $this->userId = $row->user_id;
+        //64-bit password encryption
         $this->password = hash("sha256", $row->password . $this->salt);
         $this->first_nm = $row->first_nm;
         $this->last_nm = $row->last_nm;

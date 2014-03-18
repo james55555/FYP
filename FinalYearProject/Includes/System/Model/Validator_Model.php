@@ -17,7 +17,7 @@ abstract class Validator_Model
      * 
      * @return boolean
      * 
-     *  (Waterson, 2013)
+     * (Waterson, 2013)
      */
 
     public static function variableCheck($field, $string, $type, $length)

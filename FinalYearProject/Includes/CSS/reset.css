@@ -29,10 +29,9 @@ time, mark, audio, video {
     vertical-align:baseline;
     background:transparent;
 }
-body {
-    line-height:1.25;
-    color:black;
-    background:white;
+body, html {
+    height: 100%;
+    width: 100%;
 }
 article,aside,details,figcaption,figure,
 footer,header,hgroup,menu,nav,section { 

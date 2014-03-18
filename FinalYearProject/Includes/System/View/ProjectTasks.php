@@ -19,9 +19,11 @@
         <body>
             <div id="container">
 
-                <?php include("header.php"); ?>
+                <?php 
+                include("header.php"); 
+                ?>
                 <div class="Proj_Details">
-                    <h1>Tasks for project: <?php echo $_GET['proj_id']; ?></h1><br/>
+                    <h1 id="title">Tasks for project: <?php echo $_GET['proj_id']; ?></h1><br/>
                     <?php
                     $projEstimate = $this->registry->projectEstimation;
                     $stCheck = $projEstimate->start_dt();

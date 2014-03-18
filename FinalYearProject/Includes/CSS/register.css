@@ -8,9 +8,6 @@
  * 
  */ 
 
-#container{
-    
-}
 #banner{
     width: 100%;
     color: #FFFFFF;
@@ -27,7 +24,7 @@
     background-color: #FFFFFF;
     margin-top: 10px;
     text-align: center;
-    width: 50%;
+    width: 25%;
     height: 60%;
     box-shadow: none;
 }

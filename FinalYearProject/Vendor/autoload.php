@@ -26,6 +26,9 @@ include __COMMON_PATH . 'Router.class.php';
 
 //include Database class
 include __COMMON_PATH . 'Database.class.php';
+
+//include password hashing class
+include __COMMON_PATH . 'PassHash.class.php';
 //Autoload undefined class
 //@param className
 function __autoload($className)

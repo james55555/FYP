@@ -33,7 +33,6 @@ class Account_Model extends Validator_Model
             function __construct($row)
         {
         $this->userId = $row->user_id;
-        //64-bit password encryption
         $this->password = $row->password;
         $this->first_nm = $row->first_nm;
         $this->last_nm = $row->last_nm;

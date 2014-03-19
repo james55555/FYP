@@ -42,7 +42,7 @@ class Login_Controller extends Main_Controller
 //Ensure password is correct
         if (isset($acc))
             {
-            if (PassHash::check_password($user['pass_hash'],
+            if (PassHash::check_password($acc->password(),
                     $password))
                 {
 //Log in successful, set up new session and set boolean to false

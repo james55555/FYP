@@ -76,8 +76,10 @@ abstract class Validator_Model
             }
         //Check if email contains only usable chars
         if(strlen($email) !== 0){ 
+            
         if (!preg_match("/([\w\-]+\@[\w\-]+\.[\w\-]+)/",$email))
             {
+            die("email chars aren't correct");
             array_push($emailError, "Ensure " . $field . " contains correct characters!");
             }
         }
@@ -130,4 +132,4 @@ abstract class Validator_Model
         }
 
     }
-   ?>
+    ?>

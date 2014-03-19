@@ -208,9 +208,10 @@ class Account_Model extends Validator_Model
                 {
                 $length = 25;
                 $field = "Username";
+                
                 } elseif ($field === "password")
                 {
-                $length = 25;
+                $length = 255;
                 $field = "Password";
                 } elseif ($field === "fname")
                 {
@@ -236,7 +237,4 @@ class Account_Model extends Validator_Model
                 }
             }
         }
-
     }
-
-?>

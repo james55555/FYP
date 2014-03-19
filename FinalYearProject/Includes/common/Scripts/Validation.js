@@ -13,8 +13,8 @@ jQuery(function($) {
         
         var noSubmit = 0;
 
-        var fn = $.trim($("form#register input[name=fName]").val());
-        var ln = $.trim($("form#register input[name=lName]").val());
+        var fn = $.trim($("form#register input[name=fname]").val());
+        var ln = $.trim($("form#register input[name=lname]").val());
         var em = $.trim($("form#register input[name=email]").val());
         /*Check email contains the right characters */
         var em_chars = /([\w\-]+\@[\w\-]+\.[\w\-]+)/;
@@ -37,7 +37,6 @@ jQuery(function($) {
         }
         else {
             $("span.val_lName").html("");
-            noSubmit = 1;
         }
         //If email is invalid
         if (em_chars.test(em)) {
@@ -54,8 +53,7 @@ jQuery(function($) {
         else {
             $("span.val_ui").html("");
         }
-        if (pw.indexOf(" ") !== -1
-                || pw === "") {
+        if (pw === "") {
             $("span.val_pass").html("Invalid Password!").addClass('error');
             noSubmit = 1;
         }

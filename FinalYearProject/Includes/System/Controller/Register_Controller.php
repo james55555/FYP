@@ -57,11 +57,9 @@ class Register_Controller extends Main_Controller
         $registrationFields['lname'] = $_POST['lname'];
         $registrationFields['email'] = $_POST['email'];
         $registrationFields['user_id'] = $_POST['user_id'];
-        $registrationFields['password'] = $_POST['password'];
-        $registrationFields['password2'] = $_POST['password2'];
-
-        if ($registrationFields['password'] === $registrationFields['password2'])
-            {
+        $registrationFields['password'] = PassHash::hash($_POST['password']);
+        
+        
             $this->newUser = Account_Model::addUser($registrationFields);
             if (is_bool($this->newUser))
                 {
@@ -70,11 +68,7 @@ class Register_Controller extends Main_Controller
                 elseif(is_array($this->newUser) || is_string($this->newUser)){
                     $valid = false;
                     }
-            }
-            else{
-                $this->newUser = "Passwords didn't match...";
-                }
-            
+                        
         return $valid;
         }
 

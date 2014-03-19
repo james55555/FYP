@@ -9,7 +9,6 @@
 
 class Account_Model extends Validator_Model
     {
-
     //instantiate variables from ACCOUNT
     private
             $accCreate_ts;
@@ -23,8 +22,8 @@ class Account_Model extends Validator_Model
             $email_addr;
     private
             $password;
-    private 
-            $salt = "Zo4rU5Z1YyKJAASY0PT6EUg7BBYdlEhPaNLuxAwU8lqu1ElzHv0Ri7EM6irpx5w";
+
+    
     /*
      *  Constructor to initialize object from a MySQL user_id and password
      * @param object row
@@ -35,7 +34,7 @@ class Account_Model extends Validator_Model
         {
         $this->userId = $row->user_id;
         //64-bit password encryption
-        $this->password = hash("sha256", $row->password . $this->salt);
+        $this->password = $row->password;
         $this->first_nm = $row->first_nm;
         $this->last_nm = $row->last_nm;
         $this->email_addr = $row->email_addr;
@@ -77,7 +76,7 @@ class Account_Model extends Validator_Model
         {
         return $this->accCreate_ts;
         }
-
+        
     /*
      * Get a user by their id
      * @param String $accId

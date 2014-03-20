@@ -152,7 +152,10 @@
                         <div id="dependencies">
                             <li>Dependent on this task:
                                 <?php
-                                $dependency = $dependencies->dpnd_on();
+                                if (isset($dependencies))
+                                    {
+                                    $dependency = $dependencies->dpnd_on();
+                                    }
                                 if (isset($dependency))
                                     {
                                     echo $dependency;
@@ -167,6 +170,6 @@
                 </div>
             </div>
 
-            <?php include("footer.php"); ?>
+<?php include("footer.php"); ?>
     </body>
 </html>

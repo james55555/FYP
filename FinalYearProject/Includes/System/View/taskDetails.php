@@ -22,9 +22,9 @@
                 <?php
                 //Set easier to use variables throughout the view
                 $task = $this->registry->task;
-                echo "vardump tasks: " .var_dump($task);
                 $taskStaff = $this->registry->taskStaff;
                 $taskEstimation = $this->registry->taskEstimation;
+                $dependencies = $this->registry->taskDependencies;
                 $noEstimate = "No estimate set!";
                 ?>
                 <h1>Details for: <?php echo $task->tsk_nm(); ?></h1>
@@ -81,12 +81,12 @@
                         </li>
                         <li>Task Description: 
                             <?php
-                            $descr  = $task->tsk_dscr();
-                            $web    = $task->web_addr();
+                            $descr = $task->tsk_dscr();
+                            $web = $task->web_addr();
                             if (isset($descr) || isset($web))
                                 {
-                                echo $task->tsk_dscr() . "<br/>"
-                                        . "Web Link: " . $task->web_addr();
+                                echo $descr . "<br/>"
+                                . "Web Link: " . $web;
                                 } else
                                 {
                                 echo "No task description available.";
@@ -112,9 +112,10 @@
                             <div id="estimation">
                                 <li>Planned Hours: 
                                     <?php
-                                    if (isset($taskEstimation->pln_hr))
+                                    $planned_hours = $taskEstimation->pln_hr();
+                                    if (isset($planned_hours))
                                         {
-                                        echo $taskEstimation->pln_hr();
+                                        echo $planned_hours;
                                         } else
                                         {
                                         echo "Not set.";
@@ -123,9 +124,10 @@
                                 </li>
                                 <li>Actual Hours: 
                                     <?php
-                                    if (isset($taskEstimation->act_hr))
+                                    $actual_hours = $taskEstimation->act_hr();
+                                    if (isset($actual_hours))
                                         {
-                                        echo $taskEstimation->act_hr();
+                                        echo $actual_hours;
                                         } else
                                         {
                                         echo "Not set";
@@ -134,12 +136,13 @@
                                 </li>
                                 <li>Actual End Date:
                                     <?php
-                                    if (isset($taskEstimation->act_end_dt))
+                                    $actual_end_date = $taskEstimation->act_end_dt();
+                                    if (isset($actual_end_date))
                                         {
-                                        echo $taskEstimation->act_end_dt();
+                                        echo $actual_end_date;
                                         } else
                                         {
-                                        echo "Not set yet";
+                                        echo "Not set";
                                         }
                                     } //End of is_object if statement
                                 ?>
@@ -147,8 +150,24 @@
                         </div>
 
                         <div id="dependencies">
-                            <li>Dependent on this task: </li>
-                            <li>This task is dependent on: </li>
+                            <li>Dependent on this task:
+                                <?php
+                                if (is_object($dependencies))
+                                    {
+                                    $dependency = $dependencies->dpnd_on();
+                                    if (isset($dependency))
+                                        {
+                                        echo $dependency;
+                                        } else
+                                        {
+                                        echo "Not set";
+                                        }
+                                    } else
+                                    {
+                                    echo "Not Set";
+                                    }
+                                ?>
+                            </li>
                         </div>
                     </ul>
                 </div>

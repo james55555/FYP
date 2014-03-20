@@ -82,18 +82,23 @@
                         </li>
                         <li><div class="infoTitle">Task Description: </div>
                             <div class="info">
-                            <?php
-                            $descr = $task->tsk_dscr();
-                            $web = $task->web_addr();
-                            if (isset($descr) || isset($web))
-                                {
-                                echo $descr . "<br/>"
-                                . "Web Link: " . $web;
-                                } else
-                                {
-                                echo "No task description available.";
-                                }
-                            ?>
+                                <?php
+                                $descr = $task->tsk_dscr();
+                                $web = $task->web_addr();
+                                if (isset($descr))
+                                    {
+                                    echo $descr;
+                                    if (isset($web))
+                                        {
+                                        echo "<br/>"
+                                        . "<div class=\"info\">"
+                                        . "Web Link: </div>" . $web;
+                                        }
+                                    } else
+                                    {
+                                    echo "No task description available.";
+                                    }
+                                ?>
                             </div>
                         </li>
                     </div> <!--End of direct task info-->

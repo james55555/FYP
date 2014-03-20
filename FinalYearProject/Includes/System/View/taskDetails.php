@@ -27,7 +27,7 @@
                 $dependencies = $this->registry->taskDependencies;
                 $noEstimate = "No estimate set!";
                 ?>
-                <h1>Details for: <?php echo $task->tsk_nm(); ?></h1>
+                
                 <div class="upper" id="start">
                     <p>Task Start Date: 
                         <?php
@@ -54,7 +54,7 @@
                         ?>
                     </p>
                 </div> <!--End of end date div-->
-                <button name="up" type="submit" onclick="history.go(-1);">
+                <button id="up" onclick="history.go(-1);">
                     <img src="Includes/CSS/img/Icons/up.png" 
                          alt="up" title="Return to task list"
                          width="20" height="20"/>
@@ -62,6 +62,7 @@
             </div> <!--End of upper class-->
 
             <div id="content">
+                <h1>Details for: <?php echo $task->tsk_nm(); ?></h1>
                 <ul>
                     <div class="details" id="taskDetails">
                         <li><div class="infoTitle">Status: </div>
@@ -189,6 +190,7 @@
 
                     </div> <!--End of dependencies-->
                 </ul>
+                <div id="down"></div>
             </div> <!--End of content-->
 
             <?php include("footer.php"); ?>

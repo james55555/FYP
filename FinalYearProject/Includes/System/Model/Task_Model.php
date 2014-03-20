@@ -39,10 +39,10 @@ class Task_Model
             $_assocProj = Project_Model::getProject($_GET['proj_id']);
             //Assign the associated
             $this->proj_id = $_assocProj->proj_id();
+            } else
+            {
+            $this->proj_id = $this->proj_id();
             }
-            else{
-                $this->proj_id = $this->proj_id();
-                }
 
         $this->status = $row->STATUS;
         $this->task_nm = $row->TASK_NM;
@@ -99,9 +99,11 @@ class Task_Model
         {
         return $this->staff;
         }
-        public function dpnd(){
-            return $this->dpnd;
-            }
+
+    public function dpnd()
+        {
+        return $this->dpnd;
+        }
 
     /*
      * method to get a task by its id.

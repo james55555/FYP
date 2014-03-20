@@ -62,8 +62,8 @@
             </div> <!--End of upper class-->
 
             <div id="content">
-                <div class="details" id="taskDetails">
-                    <ul>
+                <ul>
+                    <div class="details" id="taskDetails">
                         <li><div class="infoTitle">Status: </div>
                             <div class="info">
                                 <?php
@@ -80,7 +80,8 @@
                                 ?>
                             </div>
                         </li>
-                        <li>Task Description: 
+                        <li><div class="infoTitle">Task Description: </div>
+                            <div class="info">
                             <?php
                             $descr = $task->tsk_dscr();
                             $web = $task->web_addr();
@@ -93,50 +94,86 @@
                                 echo "No task description available.";
                                 }
                             ?>
+                            </div>
                         </li>
-                </div> <!--End of direct task info-->
-                <div class="details" id="staff">
-                    <li><div class="infoTitle">Staff associated: </div>
-                        <div class="info">
-                            <?php
-                            if (is_object($taskStaff))
-                                {
-                                echo $taskStaff->staff_first_nm()
-                                . " " . $taskStaff->staff_last_nm();
-                                } else
-                                {
-                                echo "No staff member associated with task";
-                                }
-                            ?>
-                        </div>
-                    </li>
-                </div><!--End of staff div-->
-                <div class="details" id="estimation">
-                    <?php
-                    if (is_object($taskEstimation))
-                        {
-                        ?>
-                        <li><div class="infoTitle">Planned Hours: </div>
+                    </div> <!--End of direct task info-->
+                    <div class="details" id="staff">
+                        <li><div class="infoTitle">Staff associated: </div>
                             <div class="info">
                                 <?php
-                                $planned_hours = $taskEstimation->pln_hr();
-                                if (isset($planned_hours))
+                                if (is_object($taskStaff))
                                     {
-                                    echo $planned_hours;
+                                    echo $taskStaff->staff_first_nm()
+                                    . " " . $taskStaff->staff_last_nm();
                                     } else
                                     {
-                                    echo "Not set.";
+                                    echo "No staff member associated with task";
                                     }
                                 ?>
                             </div>
                         </li>
-                        <li><div class="infoTitle">Actual Hours: </div>
+                    </div><!--End of staff div-->
+                    <div class="details" id="estimation">
+                        <?php
+                        if (is_object($taskEstimation))
+                            {
+                            ?>
+                            <li><div class="infoTitle">Planned Hours: </div>
+                                <div class="info">
+                                    <?php
+                                    $planned_hours = $taskEstimation->pln_hr();
+                                    if (isset($planned_hours))
+                                        {
+                                        echo $planned_hours;
+                                        } else
+                                        {
+                                        echo "Not set.";
+                                        }
+                                    ?>
+                                </div>
+                            </li>
+                            <li><div class="infoTitle">Actual Hours: </div>
+                                <div class="info">
+                                    <?php
+                                    $actual_hours = $taskEstimation->act_hr();
+                                    if (isset($actual_hours))
+                                        {
+                                        echo $actual_hours;
+                                        } else
+                                        {
+                                        echo "Not set";
+                                        }
+                                    ?>
+                                </div>
+                            </li>
+                            <li><div class="infoTitle">Actual End Date: </div>
+                                <div class="info">
+                                    <?php
+                                    $actual_end_date = $taskEstimation->act_end_dt();
+                                    if (isset($actual_end_date))
+                                        {
+                                        echo $actual_end_date;
+                                        } else
+                                        {
+                                        echo "Not set";
+                                        }
+                                    } //End of is_object if statement
+                                ?>
+                            </div>
+                        </li>
+                    </div>
+
+                    <div class="details" id="dependencies">
+                        <li><div class="infoTitle">Dependent on this task: </div>
                             <div class="info">
                                 <?php
-                                $actual_hours = $taskEstimation->act_hr();
-                                if (isset($actual_hours))
+                                if (isset($dependencies))
                                     {
-                                    echo $actual_hours;
+                                    $dependency = $dependencies->dpnd_on();
+                                    }
+                                if (isset($dependency))
+                                    {
+                                    echo $dependency;
                                     } else
                                     {
                                     echo "Not set";
@@ -144,43 +181,8 @@
                                 ?>
                             </div>
                         </li>
-                        <li><div class="infoTitle">Actual End Date: </div>
-                            <div class="info">
-                                <?php
-                                $actual_end_date = $taskEstimation->act_end_dt();
-                                if (isset($actual_end_date))
-                                    {
-                                    echo $actual_end_date;
-                                    } else
-                                    {
-                                    echo "Not set";
-                                    }
-                                } //End of is_object if statement
-                            ?>
-                        </div>
-                    </li>
-                </div>
 
-                <div class="details" id="dependencies">
-                    <li><div class="infoTitle">Dependent on this task: </div>
-                        <div class="info">
-                            <?php
-                            if (isset($dependencies))
-                                {
-                                $dependency = $dependencies->dpnd_on();
-                                }
-                            if (isset($dependency))
-                                {
-                                echo $dependency;
-                                } else
-                                {
-                                echo "Not set";
-                                }
-                            ?>
-                        </div>
-                    </li>
-
-                </div> <!--End of dependencies-->
+                    </div> <!--End of dependencies-->
                 </ul>
             </div> <!--End of content-->
 

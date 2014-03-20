@@ -33,7 +33,7 @@ class Dependency_Model
 
     public static function get($dpnd_id)
         {
-        $columns = array("DEPENDENCY_ID", "DEPENDENT_ON");
+        $columns = "DEPENDENCY_ID, DEPENDENT_ON";
         $dependency = Database_Queries::getOneCol($columns, "DEPENDENCY", "DEPENDENCY_ID", $dpnd_id);
         return $dependency;
         }

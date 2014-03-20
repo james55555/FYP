@@ -29,8 +29,14 @@ include __COMMON_PATH . 'Database.class.php';
 
 //include password hashing class
 include __COMMON_PATH . 'PassHash.class.php';
-//Autoload undefined class
-//@param className
+
+//include database generic queries class
+include __COMMON_PATH . 'Database_Queries.class.php';
+/*
+ * Autoload undefined class
+ * @param className
+ */
+
 function __autoload($className)
     {
     if (substr($className, -5 == 'Model'))

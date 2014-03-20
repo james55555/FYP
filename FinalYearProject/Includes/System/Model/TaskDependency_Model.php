@@ -13,8 +13,11 @@ class TaskDependency_Model extends Dependency_Model
 
     public function __construct($row)
         {
-        $this->tsk_id = $row->TSK_ID;
-        $this->dp_id = $row->DEPENDENCY_ID;
+       if (isset($row))
+            {
+            $this->tsk_id = $row->TSK_ID;
+            $this->dp_id = $row->DEPENDENCY_ID;
+            }
         }
 
     public function tsk_id()
@@ -30,10 +33,7 @@ class TaskDependency_Model extends Dependency_Model
     public static function getDpID($tsk_id)
         {
         $id = Database_Queries::getOneCol("DEPENDENCY_ID", "TASK_DEPENDENCY", "TSK_ID", $tsk_id);
-
-        if ($id !== null)
-            {
-            return $id;
-            }
+        return $id;
         }
+
     }

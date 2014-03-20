@@ -78,7 +78,7 @@
                                     $staff = Staff_Model::get($task->staff());
                                     $tsk_id = $task->tsk_id();
                                     echo "<tr><td>"
-                                    . "<a href=\"?page=Task&arg=$tsk_id" . $tsk_id . "\" \">"
+                                    . "<a href=\"?page=task&action=details&task_id=$tsk_id\" \">"
                                     . $tsk_id
                                     . "</a>"
                                     . "</td>" .

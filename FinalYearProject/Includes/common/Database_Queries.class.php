@@ -16,7 +16,7 @@ class Database_Queries
      * @return  $col    this is the required value corresponding with $paramID in $reqCol
      */
 
-    public static function getOneCol($reqCol, $table, $colCheck, $paramID)
+    public static function selectFrom($reqCol, $table, $colCheck, $paramID)
         {
         $db = new Database();
         $db->connect();

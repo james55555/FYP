@@ -67,7 +67,6 @@ class Task_Model
     public
             function tsk_status()
         {
-
         return $this->status;
         }
 

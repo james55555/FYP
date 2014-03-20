@@ -8,13 +8,12 @@
 
 class Dependency_Model
     {
-
     private $dpnd_id;
     private $dpnd_on;
 
     public function __construct($row)
         {
-        if (isset($row))
+        if (is_object($row))
             {
             $this->dpnd_id = $row->DEPENDENCY_ID;
             $this->dpnd_on = $row->DEPENDENT_ON;
@@ -36,7 +35,6 @@ class Dependency_Model
         $columns = "DEPENDENCY_ID, DEPENDENT_ON";
         $dependency = Database_Queries::selectFrom("Dependency_Model",
                 $columns, "DEPENDENCY", "DEPENDENCY_ID", $dpnd_id);
-        
         return $dependency;
         }
 

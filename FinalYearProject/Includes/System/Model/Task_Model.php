@@ -23,6 +23,7 @@ class Task_Model
             $tsk_dscr;
     private $estimation;
     private $staff;
+    private $dpnd;
 
     /*
      * construct new task object
@@ -47,9 +48,10 @@ class Task_Model
         $this->task_nm = $row->TASK_NM;
         $this->web_addr = $row->WEB_ADDR;
         $this->tsk_dscr = $row->TSK_DESCR;
-
+        //Set up associated objects with task
         $this->estimation = TaskEstimation_Model::getEstimationId($row->TSK_ID);
         $this->staff = StaffTask_Model::getStaffId($row->TSK_ID);
+        $this->dpnd = TaskDependency_Model::getDpID($row->TSK_ID);
         }
 
     public
@@ -97,6 +99,9 @@ class Task_Model
         {
         return $this->staff;
         }
+        public function dpnd(){
+            return $this->dpnd;
+            }
 
     /*
      * method to get a task by its id.

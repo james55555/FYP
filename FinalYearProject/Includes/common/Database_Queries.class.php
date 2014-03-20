@@ -20,14 +20,10 @@ class Database_Queries
         {
         $db = new Database();
         $db->connect();
-
         //Ensure paramaters are set up correctly
         $check = array($reqCol, $table, $colCheck, $paramID);
         $db->filterParameters($check);
-        if (is_array($check[0]))
-            {
-            implode(", ", $check[0]);
-            }
+        
         $query = "SELECT distinct " . $check[0]
                 . " FROM " . $check[1]
                 . " WHERE " . $check[2]

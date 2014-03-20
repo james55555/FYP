@@ -73,13 +73,14 @@
                             ?>
                         </li>
                         <li>Task Description: 
-                            <?php if (isset($task->tsk_dscr))
+                            <?php
+                            if (isset($task->tsk_dscr))
                                 {
                                 echo $task->tsk_dscr();
+                                } else
+                                {
+                                echo "No task description available.";
                                 }
-                                else {
-                                    echo "No task description available.";
-                                    }
                             ?>
                         </li>
                         <li>Staff associated: 
@@ -99,17 +100,38 @@
                             {
                             ?>
                             <div id="estimation">
-                                <li>Planned Hours: </li>
-                                <li>Actual Hours: </li>
+                                <li>Planned Hours: 
                                 <?php
-                                if (isset($taskEstimation->act_end_dt))
-                                    {
-                                    echo "<li>Actual End Date: " .
-                                    $taskEstimation->act_end_dt() . "</li>";
+                                if(isset($taskEstimation->pln_hr)){
+                                    echo $taskEstimation->pln_hr();
+                                }
+                                else{
+                                    echo "Not set.";
+                                }
+                                ?>
+                                </li>
+                                <li>Actual Hours: 
+                                <?php
+                                if(isset($taskEstimation->act_hr)){
+                                    echo $taskEstimation->act_hr();
+                                }
+                                else {
+                                    echo "Not set";
                                     }
-                                } //End of is_object if statement
-                            ?>
-
+                                    ?>
+                                </li>
+                                <li>Actual End Date:
+                                    <?php
+                                    if (isset($taskEstimation->act_end_dt))
+                                        {
+                                        echo $taskEstimation->act_end_dt();
+                                        } else
+                                        {
+                                        echo "Not set yet";
+                                        }
+                                    } //End of is_object if statement
+                                ?>
+                            </li>
                         </div>
 
                         <div id="dependencies">

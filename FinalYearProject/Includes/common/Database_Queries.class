@@ -7,7 +7,6 @@
  */
 class Database_Queries
     {
-    
     /*
      * Function to run a dynamic query against connecting tables to return an id
      * @param $reqCol   this is the collumn to return
@@ -16,29 +15,43 @@ class Database_Queries
      * @param $paramID  this is the provided id to be checked in $colCheck
      * @return  $col    this is the required value corresponding with $paramID in $reqCol
      */
-    public static function getOneCol($reqCol, $table, $colCheck, $paramID){
+
+    public static function getOneCol($reqCol, $table, $colCheck, $paramID)
+        {
         $db = new Database();
         $db->connect();
-        
+
         //Ensure paramaters are set up correctly
         $check = array($reqCol, $table, $colCheck, $paramID);
         $db->filterParameters($check);
-        
-        $query = "SELECT distinct " . $reqCol
-                . " FROM " . $table
-                . " WHERE " . $colCheck
-                . "='".$paramID."'";
-        if($db->querySuccess($query)){
+        if (is_array($check[0])){
+                    foreach ($check[0] as $field){
+                        $field = $field . ", ";
+                        }
+                        end($check[0]) = substr(end($check[0]), 0, -2);
+                    }
+        $query = "SELECT distinct " . $check[0]                
+                . " FROM " . $check[1]
+                . " WHERE " . $check[2]
+                . "='" . $check[3] . "'";
+        if ($db->querySuccess($query))
+            {
             $result = mysql_query($query);
             $row = mysql_fetch_object($result);
-            if(is_object($row)){
+            if (is_object($row))
+                {
                 $col = $row->$reqCol;
+                } else
+                {
+                return null;
                 }
-                else{
-                    return null;
-                    }
-                    $db->close();
-                    return $col;
+            $db->close();
+            return $col;
+            } //End of query success
+        else
+            {
+            throw new Exception("mysql error: " . mysql_error());
             }
         }
+
     }

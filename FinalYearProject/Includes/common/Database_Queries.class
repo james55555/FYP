@@ -24,13 +24,11 @@ class Database_Queries
         //Ensure paramaters are set up correctly
         $check = array($reqCol, $table, $colCheck, $paramID);
         $db->filterParameters($check);
-        if (is_array($check[0])){
-                    foreach ($check[0] as $field){
-                        $field = $field . ", ";
-                        }
-                        end($check[0]) = substr(end($check[0]), 0, -2);
-                    }
-        $query = "SELECT distinct " . $check[0]                
+        if (is_array($check[0]))
+            {
+            implode(", ", $check[0]);
+            }
+        $query = "SELECT distinct " . $check[0]
                 . " FROM " . $check[1]
                 . " WHERE " . $check[2]
                 . "='" . $check[3] . "'";

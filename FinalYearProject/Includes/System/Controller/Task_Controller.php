@@ -30,13 +30,14 @@ class Task_Controller extends Main_Controller
          * Function to set individual task variables and 
          * show the task details page
          */
-    public function details($id)
+    public function details()
         {
-        $this->registry->task = Task_Model::getTask($id);
+        $this->registry->task = Task_Model::getTask($_GET['task_id']);
         $this->registry->taskEstimation = 
                 Estimation_Model::get($this->registry->task->estimation());
-        $this->registry->taskStaff = 
+        $this->registry->taskStaff =      
                 Staff_Model::get($this->registry->task->staff());
+         
         $this->registry->View_Template->show('taskDetails');
         }
         

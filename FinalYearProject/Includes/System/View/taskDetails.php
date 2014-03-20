@@ -45,7 +45,7 @@
                         <?php
                         if (is_object($taskEstimation))
                             {
-                            echo $taskEstimation->end_dt();
+                            echo $taskEstimation->est_end_dt();
                             } else
                             {
                             echo $noEstimate;
@@ -53,33 +53,65 @@
                         ?>
                     </p>
                 </div>
-                <input type="button"
+                <button name="up" class=button onclick="history.go(-1);">
+                </button>
             </div>
             <br/>
 
             <div id="taskDetails">
                 <div id="heading">
                     <ul>
-                        <li>Status: </li>
-                        <li>Task Description: </li>
-                        <li>Staff Member Associated: $</li>
+                        <li>Status: 
+                            <?php
+                            if (isset($task->tsk_status))
+                                {
+                                echo $task->tsk_status();
+                                } else
+                                {
+                                echo "Not set!";
+                                }
+                            ?>
+                        </li>
+                        <li>Task Description: 
+                            <?php if (isset($task->tsk_dscr))
+                                {
+                                echo $task->tsk_dscr();
+                                }
+                                else {
+                                    echo "No task description available.";
+                                    }
+                            ?>
+                        </li>
+                        <li>Staff associated: 
+                            <?php
+                            if (is_object($taskStaff))
+                                {
+                                echo $taskStaff->staff_first_nm()
+                                . " " . $taskStaff->staff_last_nm();
+                                } else
+                                {
+                                echo "No staff member associated with task";
+                                }
+                            ?>
+                        </li>
                         <?php
                         if (is_object($taskEstimation))
                             {
                             ?>
-                            }
                             <div id="estimation">
                                 <li>Planned Hours: </li>
                                 <li>Actual Hours: </li>
                                 <?php
                                 if (isset($taskEstimation->act_end_dt))
                                     {
-                                    echo "<li>Actual End Date: </li>";
+                                    echo "<li>Actual End Date: " .
+                                    $taskEstimation->act_end_dt() . "</li>";
                                     }
-                                ?>
+                                } //End of is_object if statement
+                            ?>
 
-                            </div>
-                        <?php } ?>
+                        </div>
+
                         <div id="dependencies">
                             <li>Dependent on this task: </li>
                             <li>This task is dependent on: </li>
@@ -88,6 +120,6 @@
                 </div>
             </div>
 
-            <?php include("footer.php"); ?>
+<?php include("footer.php"); ?>
     </body>
 </html>

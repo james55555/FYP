@@ -32,7 +32,7 @@ class TaskDependency_Model extends Dependency_Model
 
     public static function getDpID($tsk_id)
         {
-        $id = Database_Queries::getOneCol("DEPENDENCY_ID", "TASK_DEPENDENCY", "TSK_ID", $tsk_id);
+        $id = Database_Queries::selectFrom("DEPENDENCY_ID", "TASK_DEPENDENCY", "TSK_ID", $tsk_id);
         return $id;
         }
 

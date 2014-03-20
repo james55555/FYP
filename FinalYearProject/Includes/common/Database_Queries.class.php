@@ -9,6 +9,8 @@ class Database_Queries
     {
     /*
      * Function to run a dynamic query against connecting tables to return an id
+     * @param $model    this should be set to null if only one column is selected, 
+     *                  otherwise set to as String to the name of the model.
      * @param $reqCol   this is the collumn to return
      * @param $table    this is the table to run the query against
      * @param $colCheck this is the collumn to check against

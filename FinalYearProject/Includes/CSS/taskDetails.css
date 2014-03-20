@@ -4,3 +4,25 @@
     Author     : James
 */
 
+/* Upper boundary design (Start date, end date and up button)*/
+.upper{
+    text-align: center;
+    border: solid black;
+}
+.upper#start {
+    float: left;
+    font-weight: bold;
+    color: green;
+    margin-left: 20px;
+}
+.upper#end {
+    float: right;
+    font-weight: bold;
+    color: red;
+    margin-right: 20px;
+}
+
+/*Content design*/
+.details{
+   text-align: center;
+}

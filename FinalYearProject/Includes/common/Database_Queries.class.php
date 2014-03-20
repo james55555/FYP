@@ -30,7 +30,6 @@ class Database_Queries
                 . " FROM " . $check[1]
                 . " WHERE " . $check[2]
                 . "='" . $check[3] . "'";
-        echo "Query running: " . $query . "</br>";
         $result = mysql_query($query);
         if ($db->querySuccess($result))
             {
@@ -39,7 +38,6 @@ class Database_Queries
                 {       
                 if (is_object($row))
                     {
-                    echo"<br/>we are here</br>";
                     $col = $row->$reqCol;
                     } else
                     {

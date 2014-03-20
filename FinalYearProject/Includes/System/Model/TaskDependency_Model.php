@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Description of TaskDependency_Model
  *
@@ -6,20 +7,33 @@
  */
 class TaskDependency_Model extends Dependency_Model
     {
+
     private $tsk_id;
     private $dp_id;
-    
-    public function __construct($row){
+
+    public function __construct($row)
+        {
         $this->tsk_id = $row->TSK_ID;
         $this->dp_id = $row->DEPENDENCY_ID;
         }
-        
-        public function tsk_id(){
-            return $this->tsk_id;
+
+    public function tsk_id()
+        {
+        return $this->tsk_id;
+        }
+
+    public function dp_id()
+        {
+        return $this->dp_id;
+        }
+
+    public static function getDpID($tsk_id)
+        {
+        $id = Database_Queries::getOneCol("DEPENDENCY_ID", "TASK_DEPENDENCY", "TSK_ID", $tsk_id);
+
+        if ($id !== null)
+            {
+            return $id;
             }
-            public function dp_id(){
-                return $this->dp_id;
-                }
-                
-                
+        }
     }

@@ -18,27 +18,28 @@ class Database_Queries
      * @return  $col    this is the required value corresponding with $paramID in $reqCol
      */
 
-    public static function selectFrom($reqCol, $table, $colCheck, $paramID)
+    public static function selectFrom($model, $reqCol, $table, $colCheck, $paramID)
         {
         $db = new Database();
         $db->connect();
         //Ensure paramaters are set up correctly
-        $check = array($model, $reqCol, $table, $colCheck, $paramID);
+        $check = array($reqCol, $table, $colCheck, $paramID);
         $db->filterParameters($check);
 
         $query = "SELECT distinct " . $check[0]
                 . " FROM " . $check[1]
                 . " WHERE " . $check[2]
                 . "='" . $check[3] . "'";
-
-        if ($db->querySuccess($query))
+        echo "Query running: " . $query . "</br>";
+        $result = mysql_query($query);
+        if ($db->querySuccess($result))
             {
-            $result = mysql_query($query);
-            if (mysql_num_rows === 1)
-                {
-                $row = mysql_fetch_object($result);
+            $row = mysql_fetch_object($result);
+            if (!isset($model))
+                {       
                 if (is_object($row))
                     {
+                    echo"<br/>we are here</br>";
                     $col = $row->$reqCol;
                     } else
                     {
@@ -46,11 +47,13 @@ class Database_Queries
                     }
                 } else
                 {
-                $col = array();
-                while ($row = mysql_fetch_object($result))
+                if (is_object($row))
                     {
-                    array_push($col, new $model($row));
+                    $col = new $model($row);
                     }
+                    else {
+                        return null;
+                        }
                 }
 
             $db->close();

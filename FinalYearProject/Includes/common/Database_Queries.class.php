@@ -21,24 +21,36 @@ class Database_Queries
         $db = new Database();
         $db->connect();
         //Ensure paramaters are set up correctly
-        $check = array($reqCol, $table, $colCheck, $paramID);
+        $check = array($model, $reqCol, $table, $colCheck, $paramID);
         $db->filterParameters($check);
-        
+
         $query = "SELECT distinct " . $check[0]
                 . " FROM " . $check[1]
                 . " WHERE " . $check[2]
                 . "='" . $check[3] . "'";
+
         if ($db->querySuccess($query))
             {
             $result = mysql_query($query);
-            $row = mysql_fetch_object($result);
-            if (is_object($row))
+            if (mysql_num_rows === 1)
                 {
-                $col = $row->$reqCol;
+                $row = mysql_fetch_object($result);
+                if (is_object($row))
+                    {
+                    $col = $row->$reqCol;
+                    } else
+                    {
+                    return null;
+                    }
                 } else
                 {
-                return null;
+                $col = array();
+                while ($row = mysql_fetch_object($result))
+                    {
+                    array_push($col, new $model($row));
+                    }
                 }
+
             $db->close();
             return $col;
             } //End of query success

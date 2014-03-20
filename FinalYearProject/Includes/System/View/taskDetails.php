@@ -22,11 +22,12 @@
                 <?php
                 //Set easier to use variables throughout the view
                 $task = $this->registry->task;
+                echo "vardump tasks: " .var_dump($task);
                 $taskStaff = $this->registry->taskStaff;
                 $taskEstimation = $this->registry->taskEstimation;
                 $noEstimate = "No estimate set!";
                 ?>
-                <h1>Task is... <?php echo $task->tsk_nm(); ?></h1>
+                <h1>Details for: <?php echo $task->tsk_nm(); ?></h1>
                 <div class="details" id="start">
                     <p>Task Start Date: 
                         <?php
@@ -53,7 +54,10 @@
                         ?>
                     </p>
                 </div>
-                <button name="up" class=button onclick="history.go(-1);">
+                <button name="up" type="submit" onclick="history.go(-1);">
+                    <img src="Includes/CSS/img/Icons/up.png" 
+                         alt="up" title="Return to task list"
+                         width="20" height="20"/>
                 </button>
             </div>
             <br/>
@@ -63,20 +67,26 @@
                     <ul>
                         <li>Status: 
                             <?php
-                            if (isset($task->tsk_status))
+                            $status = $task->tsk_status();
+                            if (isset($status))
                                 {
-                                echo $task->tsk_status();
+                                echo $status;
                                 } else
                                 {
-                                echo "Not set!";
+                                echo "Not set. 
+                                    <a href=\"?page=task&action=update\"
+                                    value=\"Add a status?\"/>";
                                 }
                             ?>
                         </li>
                         <li>Task Description: 
                             <?php
-                            if (isset($task->tsk_dscr))
+                            $descr  = $task->tsk_dscr();
+                            $web    = $task->web_addr();
+                            if (isset($descr) || isset($web))
                                 {
-                                echo $task->tsk_dscr();
+                                echo $task->tsk_dscr() . "<br/>"
+                                        . "Web Link: " . $task->web_addr();
                                 } else
                                 {
                                 echo "No task description available.";
@@ -101,23 +111,25 @@
                             ?>
                             <div id="estimation">
                                 <li>Planned Hours: 
-                                <?php
-                                if(isset($taskEstimation->pln_hr)){
-                                    echo $taskEstimation->pln_hr();
-                                }
-                                else{
-                                    echo "Not set.";
-                                }
-                                ?>
+                                    <?php
+                                    if (isset($taskEstimation->pln_hr))
+                                        {
+                                        echo $taskEstimation->pln_hr();
+                                        } else
+                                        {
+                                        echo "Not set.";
+                                        }
+                                    ?>
                                 </li>
                                 <li>Actual Hours: 
-                                <?php
-                                if(isset($taskEstimation->act_hr)){
-                                    echo $taskEstimation->act_hr();
-                                }
-                                else {
-                                    echo "Not set";
-                                    }
+                                    <?php
+                                    if (isset($taskEstimation->act_hr))
+                                        {
+                                        echo $taskEstimation->act_hr();
+                                        } else
+                                        {
+                                        echo "Not set";
+                                        }
                                     ?>
                                 </li>
                                 <li>Actual End Date:

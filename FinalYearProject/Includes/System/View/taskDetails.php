@@ -152,19 +152,13 @@
                         <div id="dependencies">
                             <li>Dependent on this task:
                                 <?php
-                                if (is_object($dependencies))
+                                $dependency = $dependencies->dpnd_on();
+                                if (isset($dependency))
                                     {
-                                    $dependency = $dependencies->dpnd_on();
-                                    if (isset($dependency))
-                                        {
-                                        echo $dependency;
-                                        } else
-                                        {
-                                        echo "Not set";
-                                        }
+                                    echo $dependency;
                                     } else
                                     {
-                                    echo "Not Set";
+                                    echo "Not set";
                                     }
                                 ?>
                             </li>
@@ -173,6 +167,6 @@
                 </div>
             </div>
 
-<?php include("footer.php"); ?>
+            <?php include("footer.php"); ?>
     </body>
 </html>

@@ -54,7 +54,6 @@ class TaskEstimation_Model extends Estimation_Model
 
             $db->close();
 
-
             return $est_id;
             }
         }

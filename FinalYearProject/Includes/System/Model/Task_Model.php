@@ -146,13 +146,18 @@ class Task_Model
                 . " FROM task"
                 . " WHERE proj_id = '$proj_id'";
         $result = mysql_query($query);
-
+        if($result !== false)
+            {
         $project_tasks = array();
         while ($row = mysql_fetch_object($result))
             {
             array_push($project_tasks, new Task_Model($row));
             }
-
+            }
+            else {
+                throw new Exception("Query error: " . mysql_error()
+                        . "<br/>Variable vardump: " . var_dump($result));
+                }
         $db->close();
         return $project_tasks;
         }

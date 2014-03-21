@@ -12,7 +12,7 @@
 
 <html>
     <head>
-        <script type="text/javascript" href="Inludes/common/Scripts/confirm.js"></script>
+        <script type="text/javascript" src="Includes/common/Scripts/confirmAction.js"></script>
         <link rel="stylesheet" type="text/css" href="Includes/CSS/reset.css"/>
         <link rel="stylesheet" type="text/css" href="Includes/CSS/main.css"/>
         <link rel="stylesheet" type="text/css" href="Includes/CSS/home.css"/>
@@ -64,14 +64,16 @@
                                      width="20" height="20"/>
                             </a>
                         </button>
-
-                        <button type="submit" id="delP" 
-                                onclick="return confirm(<? $project->proj_nm() ?>)">                                
-                            <a href="?page=Home&action=delete&proj_id=<?php $projid ?>">
+                        <button id="delP" onclick="return confirmAction(
+                                <?php
+                    echo "'{$project->proj_nm()}'";
+                                ?>);">
+                            <a href="?page=Home&action=delete&proj_id=
+                                <?php echo "'{$projid}'"; ?>">
                                 <img src="Includes/CSS/img/Icons/delete.png" 
                                      alt="edit" title="Delete Project"
                                      width="20" height="20"/>
-                            </a>
+                           </a>
                         </button>                    
                     </td>
 

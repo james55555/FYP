@@ -18,8 +18,9 @@ h1{
 }
 
 /*Set the properties of the button*/
-#addP{
+.upper{
     margin: 0 auto;
+    text-align: center;
 }
 /*Set the size of the image in the button*/
 

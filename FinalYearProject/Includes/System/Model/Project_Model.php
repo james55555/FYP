@@ -130,22 +130,28 @@ class Project_Model extends Validator_Model
         $query = "START TRANSACTION;"
                 //Delete from base table 'PROJECT'
                 . " DELETE FROM project"
-                        . " WHERE proj_id=" . $proj_id . ";"
+                . " WHERE proj_id=" . $proj_id . ";"
                 //Delete from estimation table
                 . " DELETE FROM estimation WHERE est_id in("
-                        . " SELECT est_id FROM project_estimation"
-                        . " WHERE proj_id=" . $proj_id . ");"
+                . " SELECT est_id FROM project_estimation"
+                . " WHERE proj_id=" . $proj_id . ");"
                 //Delete from reference table between PROJECT and ESTIMATION
                 . " DELETE FROM project_estimation "
-                        . " WHERE proj_id=" . $proj_id . ";"
+                . " WHERE proj_id=" . $proj_id . ";"
                 //Delete from association with user
                 . " DELETE FROM user_project"
-                        . " WHERE proj_id=" . $proj_id . ";"
-               . " COMMIT;";
-               
-        $result = mysql_query($query);
+                . " WHERE proj_id=" . $proj_id . ";"
+                . " COMMIT;";
 
-        if ($db->querySuccess($archiveResult) && 
+        $result = mysql_query($query);
+        
+        //Loop through all tasks associated with the project and remove each one
+        $deleteTask = Task_Model::getAllTasks($proj_id);
+        foreach ($deleteTask as $delete)
+            {
+            Task_Model::deleteTask($delete->task_id());
+            }
+        if ($db->querySuccess($archiveResult) &&
                 $db->querySuccess($result))
             {
             $del = true;

@@ -3,9 +3,8 @@
     Author     : James
 */
 #showMsg{
-    text-align: center;
+    margin: 0 auto;
     width: 250px;
-    margin-left: 32.5%;
 }
 #showMsg p.error{
     text-align: center;

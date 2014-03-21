@@ -5,6 +5,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
+
 /**
  * Description of Home_Controller
  *
@@ -25,13 +26,20 @@ class Home_Controller extends Main_Controller
 
     public function delete()
         {
-        //Get the paper selected
-        $proj_id = ['proj_id'];
+        //Run the delete function and return a boolean
+        $this->registry->success = Project_Model::deleteProject($_GET['proj_id']);
 
-        //Delete a paper for given id
-        $this->registry->success = Project_Model::deleteProject($proj_id);
-
-    
+        if ($this->registry->success)
+            {
+            $this->registry->heading = "Success";
+            $this->registry->message = "User successfully deleted";
+            } else
+            {
+            $this->registry->error = true;
+            $this->registry->heading = "Error Deleting..";
+            $this->registry->message = "We don't know what happened here.";
+            }
+        $this->registry->View_Template->show('showMessage');
         }
 
     }

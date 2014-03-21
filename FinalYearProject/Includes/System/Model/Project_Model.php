@@ -149,9 +149,13 @@ class Project_Model extends Validator_Model
         $deleteTask = Task_Model::getAllTasks($proj_id);
         foreach ($deleteTask as $delete)
             {
-            Task_Model::deleteTask($delete->task_id());
+            $taskResult = Task_Model::deleteTask($delete->task_id());
+            if($taskResult === false) {
+                throw new Exception("Task query error: " . mysql_error());
+                }
             }
         if ($db->querySuccess($archiveResult) &&
+                $db->querySuccess($result) &&
                 $db->querySuccess($result))
             {
             $del = true;

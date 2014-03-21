@@ -19,14 +19,17 @@
     color: red;
     float:right;
 }
+#myTasks th, tr, td{
+    width:1%;
+    height:20px;
+    text-align:center;
+}
+#description {
+    width: 100px;
+}
 #actions{
     text-align:center;
-    margin-top: 10px;
-    margin-bottom: 2.5px;
 }
-#actions #editP{
-    margin-right: 20px; 
+#editT, #delT{
+ background: transparent;   
 }
-#actions #delP{
-    margin-left: 20px;
-} 

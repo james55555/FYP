@@ -16,7 +16,7 @@
     </head>
     <body>
         <div id="container">
-                    <?php
+            <?php
             if (isset($_SESSION['user']))
                 {
                 include 'header.php';
@@ -25,7 +25,7 @@
                 echo "<a href=\"?page=register\">Return to registration<a/>";
                 }
             ?>            
-                
+
             <h1><?php echo $this->registry->heading; ?></h1>
             <div id="showMsg">
                 <p><?php
@@ -36,12 +36,23 @@
                         {
                         echo $this->registry->message;
                         }
-                    ?></p>
+
+                    if ($this->registry->error)
+                        {
+                        ?>
+                        <br/>
+                        <a href="javascript:history.go(-1);">
+                            Return to previous page
+                        </a>
+                    <?php }
+                    elseif(!$this->registry->error) {
+                        ?>
+                    <br/>
+                    <a href=?page=Login>Return to login</a>
+                       <?php } //if registry error is true then provide user 
+                               //opportunity to fix it.?> 
+                </p>
             </div>
-        
-        <?php
-        include("footer.php");
-        ?>
-            </div>
+        </div>
     </body>
 </html>

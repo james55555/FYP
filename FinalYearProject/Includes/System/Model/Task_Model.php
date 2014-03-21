@@ -141,10 +141,11 @@ class Task_Model
         {
         $db = new Database();
         $db->connect();
-
+        
+         
         $query = "SELECT DISTINCT TSK_ID, PROJ_ID, STATUS, TASK_NM, WEB_ADDR, TSK_DESCR"
                 . " FROM task"
-                . " WHERE proj_id = '$proj_id'";
+                . " WHERE proj_id =''" . $proj_id . "'";
         $result = mysql_query($query);
         if($result !== false)
             {

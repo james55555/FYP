@@ -126,8 +126,23 @@ class Project_Model extends Validator_Model
                 . " WHERE proj_id=" . $proj_id;
         $archiveResult = mysql_query($archiveQuery);
 
-        //Delete project from projects
-        $query = "DELETE FROM project where proj_id=" . $proj_id;
+        //Delete project and clean up references in the db
+        $query = "START TRANSACTION;"
+                //Delete from base table 'PROJECT'
+                . " DELETE FROM project"
+                        . " WHERE proj_id=" . $proj_id . ";"
+                //Delete from estimation table
+                . " DELETE FROM estimation WHERE est_id in("
+                        . " SELECT est_id FROM project_estimation"
+                        . " WHERE proj_id=" . $proj_id . ");"
+                //Delete from reference table between PROJECT and ESTIMATION
+                . " DELETE FROM project_estimation "
+                        . " WHERE proj_id=" . $proj_id . ";"
+                //Delete from association with user
+                . " DELETE FROM user_project"
+                        . " WHERE proj_id=" . $proj_id . ";"
+               . " COMMIT;";
+               
         $result = mysql_query($query);
 
         if ($db->querySuccess($archiveResult) && 

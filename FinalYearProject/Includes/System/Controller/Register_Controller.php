@@ -27,13 +27,13 @@ class Register_Controller extends Main_Controller
         if ($valid)
             {
             $this->registry->heading = "Registration success!";
-            $this->registry->message = "You are now a registered user."
-                    . "<br/>"
-                    . "<a href=?page=Login>Return to login</a>";
+            $this->registry->message = "You are now a registered user.";
             } else
             {
+                //Set user session to null so that header doesn't appear
+                $this->registry->error = true;
             $this->registry->heading = "Error adding new user...";
-            //Print errors as a list             
+            //Print errors             
                 $this->registry->message = $this->newUser;
                 
             }

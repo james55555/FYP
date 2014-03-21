@@ -215,6 +215,7 @@ class Task_Model
             {
             return false;
             }
+            return true;
         }
 
     /* public static

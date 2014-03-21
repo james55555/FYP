@@ -96,7 +96,7 @@
                                         </button>
 
                                         <button type="submit" id="delT">                                
-                                            <a href="?page=Home&action=delete(<?php $projid ?>)">
+                                            <a href="?page=Home&action=delete&proj_id=<?php $proj_id ?>">
                                                 <img src="Includes/CSS/img/Icons/delete.png" 
                                                      alt="edit" title="Delete Project"
                                                      width="20" height="20"/>

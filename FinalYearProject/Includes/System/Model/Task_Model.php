@@ -202,6 +202,13 @@ class Task_Model
                 . "='" . $task_id . "';";
         //Query used to bind all of the above into a transaction
         $query = "START TRANSACTION;"
+                . " {$deleteStaff}"
+                . " {$deleteStaffTask}"
+                . " {$deleteEstimation}"
+                . " {$deleteTaskEstimation}"
+                . " {$deleteDependency}"
+                . " {$deleteTaskDependency}"
+                . " {$deleteTask}"
                 . "COMMIT;";
         $result = Database_Queries::deleteFrom(null, null, null, $query);
         if (!$result)

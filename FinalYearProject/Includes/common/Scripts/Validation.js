@@ -39,7 +39,8 @@ jQuery(function($) {
             $("span.val_lName").html("");
         }
         //If email is invalid
-        if (em_chars.test(em)) {
+        if (!em_chars.test(em)) {
+            var test = em_chars.test(em);
             $("span.val_email").html("Invalid email!").addClass('error');
             noSubmit = 1;
         }

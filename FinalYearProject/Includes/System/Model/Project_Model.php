@@ -119,15 +119,14 @@ class Project_Model extends Validator_Model
         {
         $db = new Database();
         $db->connect();
-//Archive project
+        //Archive project
         $archiveQuery = "INSERT INTO archived_project"
                 . " SELECT proj_id, proj_nm, proj_descr"
                 . " FROM projects"
                 . " WHERE proj_id='" . $proj_id . "'";
         $archiveResult = mysql_query($archiveQuery);
 
-
-//Delete project from projects
+        //Delete project from projects
         $query = "DELETE FROM projects where proj_id='" . $proj_id . "'";
         $result = mysql_query($query);
 

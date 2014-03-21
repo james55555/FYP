@@ -123,14 +123,15 @@ class Project_Model extends Validator_Model
         $archiveQuery = "INSERT INTO archived_project"
                 . " SELECT proj_id, proj_nm, proj_descr"
                 . " FROM projects"
-                . " WHERE proj_id='" . $proj_id . "'";
+                . " WHERE proj_id=" . $proj_id;
         $archiveResult = mysql_query($archiveQuery);
 
         //Delete project from projects
-        $query = "DELETE FROM projects where proj_id='" . $proj_id . "'";
+        $query = "DELETE FROM project where proj_id=" . $proj_id;
         $result = mysql_query($query);
 
-        if ($db->querySuccess($archiveResult) && $db->querySuccess($result))
+        if ($db->querySuccess($archiveResult) && 
+                $db->querySuccess($result))
             {
             $del = true;
             } else

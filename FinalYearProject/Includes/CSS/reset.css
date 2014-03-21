@@ -29,9 +29,10 @@ time, mark, audio, video {
     vertical-align:baseline;
     background:transparent;
 }
-body, html {
-    height: 100%;
-    width: 100%;
+body, html{
+    /*Body and html set to these values so user sees everything without any scrolling*/
+    height: 96%;
+    width: 99%
 }
 article,aside,details,figcaption,figure,
 footer,header,hgroup,menu,nav,section { 

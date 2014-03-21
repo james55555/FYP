@@ -23,14 +23,14 @@
 }
 .upper #up {
     margin-top: 20px;
+    background: none;
 }
 
 /*Content design*/
 #content{
    margin: 0 auto;
    width: 400px;
-   border:solid black;
-   box-shadow: 1px 1px 5px 10px #0047CC;
+   box-shadow: 1px 1px 10px 5px #DCDCDC;
 }
 #content li{
     list-style: none;
@@ -43,8 +43,10 @@
 }
 .info {
     float:left;
-    width: 70%;
-    background-color: #cccccc;
+    width: 60%;
+}
+.info {
+    padding-left: 10px;
 }
 #down {
     clear:both;

@@ -35,7 +35,7 @@ class Database_Queries
             {
             $row = mysql_fetch_object($result);
             if (!isset($model))
-                {       
+                {
                 if (is_object($row))
                     {
                     $col = $row->$reqCol;
@@ -48,10 +48,10 @@ class Database_Queries
                 if (is_object($row))
                     {
                     $col = new $model($row);
+                    } else
+                    {
+                    return null;
                     }
-                    else {
-                        return null;
-                        }
                 }
 
             $db->close();
@@ -61,6 +61,32 @@ class Database_Queries
             {
             throw new Exception("mysql error: " . mysql_error());
             }
+        }
+
+    public static function deleteFrom($table, $colCheck, $paramID)
+        {
+        $db = new Database();
+        $db->connect();
+
+        $paramID = trim($paramID, "'");
+
+        $check = array($table, $colCheck, $paramID);
+        $db->filterParameters($check);
+
+        $query = "DELETE FROM " . $check[0]
+                . " WHERE " . $check[1]
+                . " ='" . $paramID . "'";
+
+        $result = mysql_query($query);
+        if ($db->querySuccess($result))
+            {
+            $this->success = true;
+            } else
+            {
+            $this->success = false;
+            }
+        $db->close();
+        return $this->success;
         }
 
     }

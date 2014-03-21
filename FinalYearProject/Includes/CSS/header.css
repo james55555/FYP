@@ -13,19 +13,19 @@
 
         /*(Odvarko, 2014)*/  
     /* IE10 Consumer Preview */ 
-    background-image: -ms-radial-gradient(center top, circle farthest-side, #0047CC 0%, #FFFFFF 50%);
+    background-image: -ms-radial-gradient(center top, circle farthest-side, #0047CC 0%, #FFFFFF 65%);
 
     /* Mozilla Firefox */ 
-    background-image: -moz-radial-gradient(center top, circle farthest-side, #0047CC 0%, #FFFFFF 50%);
+    background-image: -moz-radial-gradient(center top, circle farthest-side, #0047CC 0%, #FFFFFF 65%);
 
     /* Opera */ 
-    background-image: -o-radial-gradient(center top, circle farthest-side, #0047CC 0%, #FFFFFF 50%);
+    background-image: -o-radial-gradient(center top, circle farthest-side, #0047CC 0%, #FFFFFF 65%);
 
     /* Webkit (Safari/Chrome 10) */ 
-    background-image: -webkit-gradient(radial, center top, 0, center top, 487, color-stop(0, #0047CC), color-stop(0.5, #FFFFFF));
+    background-image: -webkit-gradient(radial, center top, 0, center top, 487, color-stop(0, #0047CC), color-stop(0.65, #FFFFFF));
 
     /* Webkit (Chrome 11+) */ 
-    background-image: -webkit-radial-gradient(center top, circle farthest-side, #0047CC 0%, #FFFFFF 50%);
+    background-image: -webkit-radial-gradient(center top, circle farthest-side, #0047CC 0%, #FFFFFF 65%);
 
 }
 #wrapperHeader #Buttons{

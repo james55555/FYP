@@ -63,11 +63,19 @@ class Database_Queries
             }
         }
 
-    public static function deleteFrom($table, $colCheck, $paramID)
+        /*
+         * Functon to delete from one table using one id
+         * @param $table (String)       Name of table to delete from
+         * @param $colCheck (String)    Name of column to check field in
+         * @param $paramID (int)        Field to check in column
+         * @return (boolean)    Field to represent whether query has been successful or not
+         */
+    public static function deleteFrom($table, $colCheck, $paramID, $setQuery)
         {
         $db = new Database();
         $db->connect();
 
+        if(!isset($setQuery)){
         $paramID = trim($paramID, "'");
 
         $check = array($table, $colCheck, $paramID);
@@ -75,8 +83,11 @@ class Database_Queries
 
         $query = "DELETE FROM " . $check[0]
                 . " WHERE " . $check[1]
-                . " ='" . $paramID . "'";
-
+                . " ='" . $check[2] . "'";
+        }
+        else {
+            $query = $setQuery;
+            }
         $result = mysql_query($query);
         if ($db->querySuccess($result))
             {
@@ -88,5 +99,22 @@ class Database_Queries
         $db->close();
         return $this->success;
         }
-
+        /*
+         * Delete query to return delete string for transactional SQL statements
+         * @param $table (String)       Name of table to delete from
+         * @param $colCheck (String)    Column to use for id cross-referencing
+         * 
+         * @return $query (String)      Query string to return 
+         */
+        public static function deleteFrom_String($table, $colCheck)
+            {
+            $db = new Database();
+            $check = array($table, $colCheck);
+            
+            $db->filterParameters($check);
+            $query = "DELETE FROM " . $check[0] .
+                    " WHERE " . $check[1];
+            
+            return $query;
+            }
     }

@@ -1,11 +1,9 @@
 <?php
-
 #Copyright 2014 - Aston University
 #Final Year Project - CS3010
 #
 #Document: addProject
 #@author: James
-
 ?>
 <html>
     <head>
@@ -25,12 +23,12 @@
                 <form id="addProject" action="?page=addProject&action=submitForm" method="post" onsubmit="return projectValidation()">
                     <label>Name: <input type="text" name="pName"/></label><br/>
                     <label>Description:  <textarea 
-                                                form="addProject"
-                                               rows="4"
-                                               coles="50"
-                                               maxlength="200"
-                                               name="pDescr"></textarea></label><br/>
-                   
+                            form="addProject"
+                            rows="4"
+                            coles="50"
+                            maxlength="200"
+                            name="pDescr"></textarea></label><br/>
+
                     <br>
                     <h2>Project Dates</h2>
                     <label>Start Date: <input type="date" name="pStart"</label>
@@ -41,9 +39,9 @@
 
                 </form>
             </div>
-            <?php
-            include("footer.php");
-            ?>
         </div>
+        <?php
+        include("footer.php");
+        ?>
     </body>
 </html>

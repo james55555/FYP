@@ -12,8 +12,6 @@
 
 <html>
     <head>
-        <script type ="script/javascript" src="Includes/common/Scripts/getValue.js"></script>
-
         <link rel="stylesheet" type="text/css" href="Includes/CSS/reset.css"/>
         <link rel="stylesheet" type="text/css" href="Includes/CSS/main.css"/>
         <link rel="stylesheet" type="text/css" href="Includes/CSS/home.css"/>
@@ -27,11 +25,12 @@
             <?php
             include("header.php");
             ?>`
-            <h1>My Projects</h1>
-            <!--Image button to represent add new project-->
-            <input type="button" class="button" value="Add New"
-                    action="?page=Home&action=add"/>
-           
+            <div class="upper">
+                <h1>My Projects</h1>
+                <!--Image button to represent add new project-->
+                <input type="button" class="button" value="Add New"
+                       action="?page=Home&action=add"/>
+            </div>
             <table id="myProjects" class="table">
                 <tr>
                     <th>Project Id</th>
@@ -81,11 +80,11 @@
                     }
                 ?>
             </table>
-            <?php
-            include("footer.php");
-            ?> 
-        </div>
 
+        </div>
+        <?php
+        include("footer.php");
+        ?> 
     </body>
 </html>
 

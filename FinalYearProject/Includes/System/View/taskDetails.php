@@ -27,7 +27,7 @@
                 $dependencies = $this->registry->taskDependencies;
                 $noEstimate = "No estimate set!";
                 ?>
-                
+
                 <div class="upper" id="start">
                     <p>Task Start Date: 
                         <?php
@@ -192,8 +192,9 @@
                 </ul>
                 <div id="down"></div>
             </div> <!--End of content-->
-
-            <?php include("footer.php"); ?>
         </div> <!--End of container-->
+        <?php
+        include("footer.php");
+        ?>
     </body>
 </html>

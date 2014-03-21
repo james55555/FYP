@@ -60,18 +60,18 @@
 
                 <div id="tasks">
                     <table id="myTasks" class="table">
-                                <tr>
-                                    <th>Task ID</th>
-                                    <th>Task Name</th>
-                                    <th>Task Description</th>
-                                    <th>Status</th>
-                                    <th>Actions</th>
-                                </tr>
-                    <?php
-                    if ($this->registry->project_tasks !== null)
-                        {
-                        foreach ($this->registry->project_tasks as $task)
+                        <tr>
+                            <th>Task ID</th>
+                            <th>Task Name</th>
+                            <th>Task Description</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                        <?php
+                        if ($this->registry->project_tasks !== null)
                             {
+                            foreach ($this->registry->project_tasks as $task)
+                                {
                                 //for every task obtain the staff member
                                 $staff = Staff_Model::get($task->staff());
                                 $tsk_id = $task->tsk_id();
@@ -117,8 +117,9 @@
                     </table><br/>
 
                 </div>
-<?php include("footer.php"); ?>
             </div>
-
+            <?php
+            include("footer.php");
+            ?>
         </body>
     </html>

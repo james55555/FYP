@@ -146,18 +146,18 @@ class Task_Model
                 . " FROM task"
                 . " WHERE proj_id = '$proj_id'";
         $result = mysql_query($query);
-        if($result !== false)
+        if ($result !== false)
             {
-        $project_tasks = array();
-        while ($row = mysql_fetch_object($result))
-            {
-            array_push($project_tasks, new Task_Model($row));
-            }
-            }
-            else {
-                throw new Exception("Query error: " . mysql_error()
-                        . "<br/>Variable vardump: " . var_dump($result));
+            $project_tasks = array();
+            while ($row = mysql_fetch_object($result))
+                {
+                array_push($project_tasks, new Task_Model($row));
                 }
+            } else
+            {
+            throw new Exception("Query error: " . mysql_error()
+            . "<br/>Variable vardump: " . var_dump($result));
+            }
         $db->close();
         return $project_tasks;
         }
@@ -180,42 +180,39 @@ class Task_Model
 
     public static function deleteTask($task_id)
         {
+        $task = Self::getTask($task_id);
         //Prepare queries
-        //Bind staff queries together
-        $deleteStaff = Database_Queries::deleteFrom_String("STAFF", "staff_id")
-                . " IN(SELECT staff_id"
-                . " FROM STAFF_TASK"
-                . " WHERE TSK_ID='" . $task_id . "');";
-        $deleteStaffTask = Database_Queries::deleteFrom_String("STAFF_TASK", "TSK_ID")
-                . "='" . $task_id . "';";
-        //Bind estimation queries together
-        $deleteEstimation = Database_Queries::deleteFrom_String("ESTIMATION", "est_id")
-                . " IN(SELECT est_id"
-                . " FROM TASK_ESTIMATION"
-                . " WHERE TSK_ID='" . $task_id . "');";
-        $deleteTaskEstimation = Database_Queries::deleteFrom_String("TASK_ESTIMATION", "TSK_ID")
-                . "='" . $task_id . "';";
-        //Bind dependency queries together
-        $deleteDependency = Database_Queries::deleteFrom_String("DEPENDENCY", "DEPENDENCY_ID")
-                . " IN(SELECT dependency_id"
-                . " FROM TASK_DEPENDENCY"
-                . " WHERE TSK_ID='" . $task_id . "');";
-        $deleteTaskDependency = Database_Queries::deleteFrom_String("TASK_DEPENDENCY", "TSK_ID")
-                . "='" . $task_id . "';";
-        //Set up deletion of task from task table
-        $deleteTask = Database_Queries::deleteFrom_String("TASK", "TSK_ID")
-                . "='" . $task_id . "';";
-        //Query used to bind all of the above into a transaction
-        $query = "START TRANSACTION;"
-                . " {$deleteStaff}"
-                . " {$deleteStaffTask}"
-                . " {$deleteEstimation}"
-                . " {$deleteTaskEstimation}"
-                . " {$deleteDependency}"
-                . " {$deleteTaskDependency}"
-                . " {$deleteTask}"
-                . "COMMIT;";
-        $result = Database_Queries::deleteFrom(null, null, null, $query);
+        //Delete staff data
+        $staffRef = StaffTask_Model::delete($task_id, null);
+        if ($staffRef)
+            {
+            $staff = Staff_Model::delete($task->staff());
+            }
+        if ($staff)
+            {
+            //Delete estimation data
+            $estimateRef = TaskEstimation_Model::delete($task_id, null);
+            }
+        if ($estimateRef)
+            {
+            $estimate = Estimation_Model::delete($task->estimation());
+            }
+        if ($estimate)
+            {
+            $dpndRef = TaskDependency_Model::delete($task_id, null);
+            }
+        if ($dpndRef)
+            {
+            $dependency = Dependency_Model::delete($task->dpnd());
+            }
+        if ($dependency)
+            {
+            //Set up deletion of task from task table
+            $query = Database_Queries::deleteFrom_String("TASK", "TSK_ID")
+                    . "='" . $task_id . "';";
+
+            $result = Database_Queries::deleteFrom(null, null, null, $query);
+            }
         if (!$result)
             {
             return false;

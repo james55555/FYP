@@ -10,10 +10,11 @@ class TaskDependency_Model extends Dependency_Model
 
     private $tsk_id;
     private $dp_id;
+    private $table = "TASK_DEPENDENCY";
 
     public function __construct($row)
         {
-       if (isset($row))
+        if (isset($row))
             {
             $this->tsk_id = $row->TSK_ID;
             $this->dp_id = $row->DEPENDENCY_ID;
@@ -34,6 +35,16 @@ class TaskDependency_Model extends Dependency_Model
         {
         $id = Database_Queries::selectFrom(null, "DEPENDENCY_ID", "TASK_DEPENDENCY", "TSK_ID", $tsk_id);
         return $id;
+        }
+
+    public static function delete($dpnd_id)
+        {
+        $table = $this->table;
+        $field = "DEPENDENCY_ID";
+
+        $success = __delete($dpnd_id, $table, $field);
+
+        return $success;
         }
 
     }

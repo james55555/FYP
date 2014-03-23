@@ -8,8 +8,10 @@
 
 class Dependency_Model
     {
+
     private $dpnd_id;
     private $dpnd_on;
+    private $table = "DEPENDENCY";
 
     public function __construct($row)
         {
@@ -33,9 +35,18 @@ class Dependency_Model
     public static function get($dpnd_id)
         {
         $columns = "DEPENDENCY_ID, DEPENDENT_ON";
-        $dependency = Database_Queries::selectFrom("Dependency_Model",
-                $columns, "DEPENDENCY", "DEPENDENCY_ID", $dpnd_id);
+        $dependency = Database_Queries::selectFrom("Dependency_Model", $columns, "DEPENDENCY", "DEPENDENCY_ID", $dpnd_id);
         return $dependency;
+        }
+
+    public static function delete($dpnd_id)
+        {
+        $table = $this->table;
+        $field = "DEPENDENCY_ID";
+
+        $success = parent::__delete($dpnd_id, $table, $field);
+        
+        return $success;
         }
 
     }

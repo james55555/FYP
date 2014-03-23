@@ -59,18 +59,12 @@ class TaskEstimation_Model extends Estimation_Model
             }
         }
         
-        public static function delete($est_id, $tsk_id){
+        public static function delete($tsk_id){
             $table = $this->table;
-            if(isset($est_id)){
-                $var = $est_id;
-                $field = "est_id";
-                }
-                else {
-                    $var = $tsk_id;
                     $field = "tsk_id";
-                    }
+                    
                     //Run deletion with passed parameters
-        $success = __delete($var, $table, $field);
+        $success = __delete($tsk_id, $table, $field);
 
         return $success;
             }

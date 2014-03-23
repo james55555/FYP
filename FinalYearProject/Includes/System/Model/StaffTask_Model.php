@@ -1,21 +1,15 @@
 <?php
-
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
-/**
  * Description of StaffTask_Model
  *
  * @author James
  */
-class StaffTask_Model
+class StaffTask_Model extends Staff_Model
     {
 
     private $tsk_id;
     private $staff_id;
+    private $table = "STAFF_TASK";
 
     public function __construct($row)
         {
@@ -59,5 +53,18 @@ class StaffTask_Model
 
         return $staff_id;
         }
+        public static function delete($tsk_id, $staff_id){
+            $table = $this->table;
+            if(isset($tsk_id)){
+                $var = $tsk_id;
+                $field = "TSK_ID";
+                }
+                else {
+                    $var = $staff_id;
+                    $field = "staff_id";
+                    }
+            $success = Generic_Model::__delete($var, $table, $field);
+            return $success;
+            }
 
     }

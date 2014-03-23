@@ -6,7 +6,7 @@
  * and open the template in the editor.
  */
 
-class Staff_Model
+class Staff_Model extends Generic_Model
     {
 
     private
@@ -19,6 +19,7 @@ class Staff_Model
             $staff_phone;
     private
             $staff_email;
+    private $table = "STAFF";
     private $fields = array();
 
     public
@@ -129,5 +130,10 @@ class Staff_Model
         $db->close();
         return $staff;
         }
-
-    }
+        public static function delete($staff_id){
+            $table = $this->table;
+            $field = "STAFF_ID";
+            $success = parent::__delete($staff_id, $table, $field);
+            return $success;
+            }
+            }

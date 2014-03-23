@@ -24,47 +24,40 @@
                 {
                 echo "<a href=\"?page=register\">Return to registration<a/>";
                 }
-            if (isset($this->registry->heading) &&
-                    isset($this->registry->message))
-                {
-                ?>            
+            ?>            
 
-                <h1><?php echo $this->registry->heading; ?></h1>
-                <div id="showMsg">
-                    <p><?php
-                        if (is_array($this->registry->message))
-                            {
-                            implode("<br/>", $this->registry->message);
-                            } else
-                            {
-                            echo $this->registry->message;
-                            }
+            <h1><?php echo $this->registry->heading; ?></h1>
+            <div id="showMsg">
 
-                        if ($this->registry->error)
-                            {
-                            ?>
-                            <br/>
-                            <a href="javascript:history.go(-1);">
-                                Return to previous page
-                            </a>
-                        <?php
-                            } elseif (!$this->registry->error)
-                            {
-                            ?>
-                            <br/>
-                            <a href=?page=Login>Return to login</a>
-                        <?php
-                            } //if registry error is true then provide user 
-                        //opportunity to fix it.
-                        }//End of if content is set
-                    else
-                        {
-                        echo "No message set!";
-                        }
-                    //Return error state to previous
+                <?php
+                if ($this->registry->error)
+                    {
+                    //Reset registry error
                     $this->registry->error = false;
-                    ?> 
-                </p>
+                    if (is_array($this->registry->message))
+                        {
+                        echo "<p class=\"error\">" .
+                        implode("<br/>", $this->registry->message)
+                        . "</p>";
+                        } else
+                        {
+                        ?>
+                        <p class="error"><?php echo $this->registry->message; ?></p>
+                        <?php
+                        }
+                    ?>
+
+                    <br/>
+                    <a href="javascript:history.go(-1);">
+                        Return to previous page
+                    </a>
+                    <?php
+                    } else
+                    {
+                    echo "<p>" . $this->registry->message . "</p>";
+                    }
+                ?>
+
             </div>
         </div>
     </body>

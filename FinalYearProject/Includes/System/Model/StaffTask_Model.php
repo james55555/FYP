@@ -53,17 +53,9 @@ class StaffTask_Model extends Staff_Model
 
         return $staff_id;
         }
-        public static function delete($tsk_id, $staff_id){
+        public static function delete($tsk_id){
             $table = $this->table;
-            if(isset($tsk_id)){
-                $var = $tsk_id;
-                $field = "TSK_ID";
-                }
-                else {
-                    $var = $staff_id;
-                    $field = "staff_id";
-                    }
-            $success = Generic_Model::__delete($var, $table, $field);
+            $success = Generic_Model::__delete($tsk_id, $table, $field);
             return $success;
             }
 

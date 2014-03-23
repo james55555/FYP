@@ -11,6 +11,7 @@ class TaskEstimation_Model extends Estimation_Model
 
     private $tsk_id;
     private $est_id;
+    private $table = "TASK_ESTIMATION";
 
     public function __construct($row)
         {
@@ -57,6 +58,22 @@ class TaskEstimation_Model extends Estimation_Model
             return $est_id;
             }
         }
+        
+        public static function delete($est_id, $tsk_id){
+            $table = $this->table;
+            if(isset($est_id)){
+                $var = $est_id;
+                $field = "est_id";
+                }
+                else {
+                    $var = $tsk_id;
+                    $field = "tsk_id";
+                    }
+                    //Run deletion with passed parameters
+        $success = __delete($var, $table, $field);
+
+        return $success;
+            }
 
     }
 

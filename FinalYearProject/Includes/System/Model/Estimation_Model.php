@@ -5,7 +5,7 @@
  * and open the template in the editor.
  */
 
-class Estimation_Model
+class Estimation_Model extends Generic_Model
     {
 
     private
@@ -19,18 +19,20 @@ class Estimation_Model
     private
             $est_end_dt;
     private $est_id;
-    
+    private $table = "ESTIMATION";
+
     public
-            function __construct($row){
-        if(is_object($row)){
-        $this->est_id = $row->est_id;
-        $this->act_hr = $row->act_hr;
-        $this->pln_hr = $row->pln_hr;
-        $this->start_dt = $row->start_dt;
-        $this->act_end_dt = $row->act_end_dt;
-        $this->est_end_dt = $row->est_end_dt;
-        }
-       
+            function __construct($row)
+        {
+        if (is_object($row))
+            {
+            $this->est_id = $row->est_id;
+            $this->act_hr = $row->act_hr;
+            $this->pln_hr = $row->pln_hr;
+            $this->start_dt = $row->start_dt;
+            $this->act_end_dt = $row->act_end_dt;
+            $this->est_end_dt = $row->est_end_dt;
+            }
         }
 
     public function est_id()
@@ -146,7 +148,17 @@ class Estimation_Model
             {
             return null;
             }
-            return $est_id;
+        return $est_id;
+        }
+
+    public static function delete($est_id){
+        $table = $this->table;
+        $field = "est_id";
+        
+        $success = parent::__delete($est_id, $table, $field);
+        
+            return $success;
+            
         }
 
     }

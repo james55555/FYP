@@ -37,12 +37,19 @@ class TaskDependency_Model extends Dependency_Model
         return $id;
         }
 
-    public static function delete($dpnd_id)
+    public static function delete($dpnd_id, $tsk_id)
         {
         $table = $this->table;
-        $field = "DEPENDENCY_ID";
-
-        $success = __delete($dpnd_id, $table, $field);
+        if(isset($dpnd_id)){
+            $var = $dpnd_id;
+            $field = "DEPENDENCY_ID";
+            }
+            else {
+                $var = $tsk_id;
+                $field = "TSK_ID";
+                }
+        //Run deletion with passed parameters
+        $success = __delete($var, $table, $field);
 
         return $success;
         }

@@ -52,5 +52,9 @@ class Task_Controller extends Main_Controller
         {
         
         }
+        public function delete()
+            {
+            
+            }
 
     }

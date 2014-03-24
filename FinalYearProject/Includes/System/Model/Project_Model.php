@@ -120,38 +120,44 @@ class Project_Model extends Validator_Model
         $db = new Database();
         $db->connect();
         //Archive project
+        $proj_id = trim($proj_id);
         $archiveQuery = "INSERT INTO archived_project"
                 . " SELECT proj_id, proj_nm, proj_descr"
                 . " FROM projects"
                 . " WHERE proj_id=" . $proj_id;
+        
         $archiveResult = mysql_query($archiveQuery);
-
+        $project = self::getProject($proj_id);
+        //project added need to configure similarly to task config!!
         //Delete project and clean up references in the db
+        
         $query = "START TRANSACTION;"
                 //Delete from base table 'PROJECT'
-                . " DELETE FROM project"
-                . " WHERE proj_id=" . $proj_id . ";"
+                . " DELETE FROM project, user_project"
+                . " WHERE proj_id='" . $proj_id . "';"
+                . "COMMIT;";
                 //Delete from estimation table
-                . " DELETE FROM estimation WHERE est_id in("
-                . " SELECT est_id FROM project_estimation"
-                . " WHERE proj_id=" . $proj_id . ");"
-                //Delete from reference table between PROJECT and ESTIMATION
-                . " DELETE FROM project_estimation "
-                . " WHERE proj_id=" . $proj_id . ";"
-                //Delete from association with user
-                . " DELETE FROM user_project"
-                . " WHERE proj_id=" . $proj_id . ";"
-                . " COMMIT;";
+                $estimation = Estimation_Model::delete($project->estimate());
+                if($estimation){
+                    $estRef = ProjectEstimation_Model::delete($project->estimate());
+                    }
+                    //Delete from reference table between PROJECT and ESTIMATION
+                    if(isset($estRef) && $estRef){
+                        
+                        }
 
-        $result = mysql_query($query);
-        
+
+        $result = mysql_query($query);       
         //Loop through all tasks associated with the project and remove each one
         $deleteTask = Task_Model::getAllTasks($proj_id);
+        if($deleteTask === false){
+            return false;
+            }
         foreach ($deleteTask as $delete)
             {
-            $taskResult = Task_Model::deleteTask($delete->task_id());
+            $taskResult = Task_Model::deleteTask($delete->tsk_id());
             if($taskResult === false) {
-                throw new Exception("Task query error: " . mysql_error());
+                return false;
                 }
             }
         if ($db->querySuccess($archiveResult) &&

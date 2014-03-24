@@ -88,17 +88,17 @@
                                     <div id="actions">
                                         <!--Buttons to take users to edit or delete for each project-->
                                         <button type="submit" id="editT">
-                                            <a href="?page=Home&action=edit(<?php $projid ?>)">
+                                            <a href="?page=Task&action=edit&proj_id=<?php echo $_GET['proj_id']; ?>)">
                                                 <img src="Includes/CSS/img/Icons/edit.png" 
-                                                     alt="edit" title="Edit Project"
+                                                     alt="edit" title="Edit Task"
                                                      width="20" height="20"/>
                                             </a>
                                         </button>
 
                                         <button type="submit" id="delT">                                
-                                            <a href="?page=Home&action=delete&proj_id=<?php $proj_id ?>">
+                                            <a href="?page=Task&action=delete&proj_id=<?php echo $_GET['proj_id']; ?>">
                                                 <img src="Includes/CSS/img/Icons/delete.png" 
-                                                     alt="edit" title="Delete Project"
+                                                     alt="edit" title="Delete Task"
                                                      width="20" height="20"/>
                                             </a>
                                         </button>    

@@ -81,9 +81,13 @@ class Database_Queries
         $check = array($table, $colCheck, $paramID);
         $db->filterParameters($check);
 
-        $query = "DELETE FROM " . $check[0]
+        //Query uses a transactional statement to allow rollback if 
+        //scaled to an automated process
+        $query = "START TRANSACTION;"
+                . "DELETE FROM " . $check[0]
                 . " WHERE " . $check[1]
-                . " ='" . $check[2] . "'";
+                . " ='" . $check[2] . "';"
+                . "COMMIT;";
         }
         else {
             $query = $setQuery;

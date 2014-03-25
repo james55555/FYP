@@ -14,13 +14,15 @@ class Generic_Model
      * @param (String) $field   The field that the $var exists in
      * @return boolean          If the deletion has been successful then return true
      */
-    public static function __delete($var, $table, $field){
+
+    public static function __delete($var, $table, $field)
+        {
         //Trim beginning and end of $var for ' character
-                $var = trim($var, "'");
-                //Return query as a string
+        $var = trim($var, "'");
+        //Return query as a string
         $delete = Database_Queries::deleteFrom_String($table, $field)
                 . "='" . $var . "';";
-//Run the query
+        //Run the query
         $success = Database_Queries::deleteFrom(null, null, null, $delete);
         //If the query hasn't been succesful then alert.
         if (!$success)
@@ -30,4 +32,5 @@ class Generic_Model
             }
         return true;
         }
+
     }

@@ -141,10 +141,11 @@ class Task_Model
         {
         $db = new Database();
         $db->connect();
-
+        
         $query = "SELECT DISTINCT TSK_ID, PROJ_ID, STATUS, TASK_NM, WEB_ADDR, TSK_DESCR"
                 . " FROM task"
-                . " WHERE proj_id = '$proj_id'";
+                . " WHERE proj_id='" . $proj_id. "'";
+        
         $result = mysql_query($query);
         if ($result !== false)
             {
@@ -155,8 +156,7 @@ class Task_Model
                 }
             } else
             {
-            throw new Exception("Query error: " . mysql_error()
-            . "<br/>Variable vardump: " . var_dump($result));
+            return false;
             }
         $db->close();
         return $project_tasks;
@@ -180,10 +180,10 @@ class Task_Model
 
     public static function deleteTask($task_id)
         {
-        $task = Self::getTask($task_id);
+        $task = Task_Model::getTask($task_id);
         //Prepare queries
         //Delete staff data
-        $staffRef = StaffTask_Model::delete($task_id, null);
+        $staffRef = StaffTask_Model::delete($task_id);
         if ($staffRef)
             {
             $staff = Staff_Model::delete($task->staff());
@@ -191,7 +191,7 @@ class Task_Model
         if ($staff)
             {
             //Delete estimation data
-            $estimateRef = TaskEstimation_Model::delete($task_id, null);
+            $estimateRef = TaskEstimation_Model::delete($task_id);
             }
         if ($estimateRef)
             {
@@ -199,7 +199,7 @@ class Task_Model
             }
         if ($estimate)
             {
-            $dpndRef = TaskDependency_Model::delete($task_id, null);
+            $dpndRef = TaskDependency_Model::delete($task_id);
             }
         if ($dpndRef)
             {

@@ -19,7 +19,6 @@ class Estimation_Model extends Generic_Model
     private
             $est_end_dt;
     private $est_id;
-    private $table = "ESTIMATION";
 
     public
             function __construct($row)
@@ -33,6 +32,7 @@ class Estimation_Model extends Generic_Model
             $this->act_end_dt = $row->act_end_dt;
             $this->est_end_dt = $row->est_end_dt;
             }
+            
         }
 
     public function est_id()
@@ -64,7 +64,6 @@ class Estimation_Model extends Generic_Model
         {
         return $this->est_end_dt;
         }
-
     public static function get($est_id)
         {
         $db = new Database();
@@ -152,7 +151,7 @@ class Estimation_Model extends Generic_Model
         }
 
     public static function delete($est_id){
-        $table = $this->table;
+        $table = "ESTIMATION";
         $field = "est_id";
         
         $success = parent::__delete($est_id, $table, $field);

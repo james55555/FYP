@@ -1,15 +1,16 @@
 <?php
+
 /*
  * Description of StaffTask_Model
  *
  * @author James
  */
+
 class StaffTask_Model extends Staff_Model
     {
 
     private $tsk_id;
     private $staff_id;
-    private $table = "STAFF_TASK";
 
     public function __construct($row)
         {
@@ -41,22 +42,26 @@ class StaffTask_Model extends Staff_Model
             $result = mysql_query($query);
 
             $row = mysql_fetch_object($result);
-            if(is_object($row)){
-            $staff_id = $row->STAFF_ID;
-            }
-            else{
+            if (is_object($row))
+                {
+                $staff_id = $row->STAFF_ID;
+                } else
+                {
                 $staff_id = null;
                 }
-            } 
+            }
         $db->close();
 
 
         return $staff_id;
         }
-        public static function delete($tsk_id){
-            $table = $this->table;
-            $success = Generic_Model::__delete($tsk_id, $table, $field);
-            return $success;
-            }
+
+    public static function delete($tsk_id)
+        {
+        $table = "STAFF_TASK";
+        $field = "STAFF_ID";
+        $success = Generic_Model::__delete($tsk_id, $table, $field);
+        return $success;
+        }
 
     }

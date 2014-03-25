@@ -6,12 +6,11 @@
  * @author James
  */
 
-class Dependency_Model
+class Dependency_Model extends Generic_Model
     {
 
     private $dpnd_id;
     private $dpnd_on;
-    private $table = "DEPENDENCY";
 
     public function __construct($row)
         {
@@ -41,11 +40,11 @@ class Dependency_Model
 
     public static function delete($dpnd_id)
         {
-        $table = $this->table;
+        $table = "DEPENDENCY";
         $field = "DEPENDENCY_ID";
 
         $success = parent::__delete($dpnd_id, $table, $field);
-        
+
         return $success;
         }
 

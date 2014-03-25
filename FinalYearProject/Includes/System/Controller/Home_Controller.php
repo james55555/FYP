@@ -31,9 +31,8 @@ class Home_Controller extends Main_Controller
             //Run the delete function and return a boolean
             $this->success = Project_Model::deleteProject($_GET['proj_id']);
             }
-        if (isset($this->success) && $this->success)
+        if ($this->success)
             {
-            die("success set");
             $this->registry->heading = "Success";
             $this->registry->message = "User successfully deleted";
             } else

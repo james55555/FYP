@@ -105,20 +105,7 @@ Class Router
     protected
             function getController()
         {
-        // if user is logged in take them to requested page or home page.
-       // if (isset($_SESSION['user']))
-         //   {
-
-            $this->controller = empty($_GET['page']) ? 'Login' : $_GET['page'];
-
-//echo "user (" . $_SESSION['user'] . ")logged in";
-        //    }
-        //if user isn't logged in take them to login page.
-       // else
-        //    {
-        //    echo "*********controller is set to login******";
-        //    $this->controller = 'Login';
-        //    }
+        $this->controller = empty($_GET['page']) ? 'Login' : $_GET['page'];
 
         //Store action action in @var action
         $this->action = $this->getAction();

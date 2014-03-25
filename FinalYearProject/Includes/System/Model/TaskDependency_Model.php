@@ -10,7 +10,6 @@ class TaskDependency_Model extends Dependency_Model
 
     private $tsk_id;
     private $dp_id;
-    private $table = "TASK_DEPENDENCY";
 
     public function __construct($row)
         {
@@ -39,7 +38,9 @@ class TaskDependency_Model extends Dependency_Model
 
     public static function delete($tsk_id)
         {
-        $table = $this->table;
+        
+    $table = "TASK_DEPENDENCY";
+    $field = "DEPENDENCY_ID";
         $success = Generic_Model::__delete($tsk_id, $table, $field);
         return $success;
         }

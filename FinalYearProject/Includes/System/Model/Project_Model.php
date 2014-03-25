@@ -11,8 +11,6 @@ class Project_Model extends Validator_Model
     private
             $proj_id;
     private
-            $acc_id;
-    private
             $proj_nm;
     private
             $proj_descr;
@@ -36,12 +34,6 @@ class Project_Model extends Validator_Model
             function proj_id()
         {
         return $this->proj_id;
-        }
-
-    public
-            function acc_id()
-        {
-        return $this->acc_id;
         }
 
     public
@@ -121,42 +113,61 @@ class Project_Model extends Validator_Model
         $db->connect();
         //Archive project
         $proj_id = trim($proj_id);
-        $archiveQuery = "INSERT INTO archived_project"
-                . " SELECT proj_id, proj_nm, proj_descr"
-                . " FROM projects"
-                . " WHERE proj_id=" . $proj_id;
-        
+
+        $archiveQuery = "START TRANSACTION;"
+                //Archive project - initial project
+                . " INSERT INTO archive.project"
+                . " (SELECT proj_id,"
+                . " proj_nm,"
+                . " proj_descr,"
+                . " null" 
+                . " FROM fyp.project"
+                . " WHERE proj_id='" . $proj_id . "');"
+                //Archive user reference to project
+                . " INSERT INTO archive.user_project"
+                . " (SELECT user_id,"
+                . " proj_id,"
+                . " null"
+                . " FROM fyp.user_project"
+                . " WHERE proj_id='" . $proj_id . "');"
+                . " COMMIT;";
+die($archiveQuery);
         $archiveResult = mysql_query($archiveQuery);
-        $project = self::getProject($proj_id);
-        //project added need to configure similarly to task config!!
-        //Delete project and clean up references in the db
         
+        $project = self::getProject($proj_id);    
+//project added need to configure similarly to task config!!
+        //Delete project and clean up references in the db
+
         $query = "START TRANSACTION;"
                 //Delete from base table 'PROJECT'
-                . " DELETE FROM project, user_project"
+                . " DELETE FROM project"
                 . " WHERE proj_id='" . $proj_id . "';"
                 . "COMMIT;";
-                //Delete from estimation table
-                $estimation = Estimation_Model::delete($project->estimate());
-                if($estimation){
-                    $estRef = ProjectEstimation_Model::delete($project->estimate());
-                    }
-                    //Delete from reference table between PROJECT and ESTIMATION
-                    if(isset($estRef) && $estRef){
-                        
-                        }
+        die($query);        //Delete from estimation table
+        $estimation = Estimation_Model::delete($project->estimation());
+        if ($estimation)
+            {
+            $estRef = ProjectEstimation_Model::delete($project->estimation());
+            }
+        //Delete from reference table between PROJECT and ESTIMATION
+        if (isset($estRef) && $estRef)
+            {
+            
+            }
 
 
-        $result = mysql_query($query);       
+        $result = mysql_query($query);
         //Loop through all tasks associated with the project and remove each one
         $deleteTask = Task_Model::getAllTasks($proj_id);
-        if($deleteTask === false){
+        if ($deleteTask === false)
+            {
             return false;
             }
         foreach ($deleteTask as $delete)
             {
             $taskResult = Task_Model::deleteTask($delete->tsk_id());
-            if($taskResult === false) {
+            if ($taskResult === false)
+                {
                 return false;
                 }
             }
@@ -198,7 +209,7 @@ class Project_Model extends Validator_Model
 
         if (sizeof($arrayError) === 0)
             {
-            $projInsert = "BEGIN;"
+            $projInsert = "START TRANSACTION;"
                     //Insert into project table
                     . "INSERT INTO  `fyp`.`project` ("
                     . " `proj_id` ,"

@@ -39,32 +39,26 @@ include __COMMON_PATH . 'Database_Queries.class.php';
 
 function __autoload($className)
     {
-    if (substr($className, -5 == 'Model'))
+    if(substr($className, -5 == 'Model'))
         {
-        $fileName = str_replace('\\', '/', (__MODEL_PATH . 
+        $fileName = str_replace('\\', '/', (__MODEL_PATH .
                 $className . '.php'));
-        }
-    else
+        }  else
         {
         $fileName = str_replace('\\', '/', (__SITE_PATH . $className . '.class.php'));
         }
-
-
-//Run this class
+//If the class exists then load, else run the error controller.
     if (file_exists($fileName))
         {
         require $fileName;
-        }
-    else
+        } else
         {
-        echo "file doesn't exist: " . $fileName;
-        return false;
+            
+        throw new Exception("File not found: " . $className
+        . " // Location: " . $fileName);
         }
     }
 
 //Create new registry object
 $registry = new registry();
-//$this->registry->Database->connect();
-
-
 ?>

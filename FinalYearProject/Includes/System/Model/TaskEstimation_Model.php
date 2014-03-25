@@ -11,7 +11,6 @@ class TaskEstimation_Model extends Estimation_Model
 
     private $tsk_id;
     private $est_id;
-    private $table = "TASK_ESTIMATION";
 
     public function __construct($row)
         {
@@ -44,7 +43,7 @@ class TaskEstimation_Model extends Estimation_Model
             $result = mysql_query($query);
 
             $row = mysql_fetch_object($result);
-            
+
             if (is_object($row))
                 {
                 $est_id = $row->est_id;
@@ -58,16 +57,17 @@ class TaskEstimation_Model extends Estimation_Model
             return $est_id;
             }
         }
-        
-        public static function delete($tsk_id){
-            $table = $this->table;
-                    $field = "tsk_id";
-                    
-                    //Run deletion with passed parameters
-        $success = __delete($tsk_id, $table, $field);
+
+    public static function delete($tsk_id)
+        {
+        $table = "TASK_ESTIMATION";
+        $field = "tsk_id";
+
+        //Run deletion with passed parameters
+        $success = Generic_Model::__delete($tsk_id, $table, $field);
 
         return $success;
-            }
+        }
 
     }
 

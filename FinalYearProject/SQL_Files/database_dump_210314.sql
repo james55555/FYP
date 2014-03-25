@@ -25,7 +25,7 @@ DROP TABLE IF EXISTS `account`;
 CREATE TABLE `account` (
   `user_id` varchar(25) NOT NULL,
   `acc_create_ts` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'Timestamp for creation of the account',
-  `password` varchar(25) NOT NULL COMMENT 'Password for account',
+  `password` varchar(255) NOT NULL COMMENT 'Password for account',
   `first_nm` varchar(30) NOT NULL COMMENT 'First name of the user',
   `last_nm` varchar(30) NOT NULL COMMENT 'Last name of the user',
   `email_addr` varchar(50) DEFAULT NULL COMMENT 'Email address of the user',
@@ -39,7 +39,7 @@ CREATE TABLE `account` (
 
 LOCK TABLES `account` WRITE;
 /*!40000 ALTER TABLE `account` DISABLE KEYS */;
-INSERT INTO `account` VALUES ('','2014-03-18 14:47:51','','','',NULL),('testuser1','2014-02-13 12:56:15','testuser1','test1','user','testuser1@aston'),('testuser2','2014-03-02 18:06:51','testuser2','test','user2','testuse2@hotmail.com'),('testuser3','2014-03-06 22:26:29','testuser3','testuser3','testuser3','testuser1@asda');
+INSERT INTO `account` VALUES ('james','2014-03-19 09:13:01','$2a$10$19df7f92d2f5cd65d5d7fONj2jw.yPVRIrqaJXoSwIapFhVWgzfF6','james','james',NULL),('testuser1','2014-03-19 09:34:28','$2a$10$9b130962e8deb9f088b05uMCGg1fxtiWQV5gL6n3E0jL7rdWKatDe','test','yser1',NULL),('testuser2','2014-03-19 09:36:09','$2a$10$7509c2f9f20794e6b6bdeu2MiKOQ0sWetxs4ni8e3wLGxi/s8P4f6','test','user2',NULL),('testuser3','2014-03-19 09:37:24','$2a$10$799e33fe650ddaba71619u6ZHT539Ic59.q5O60s5sVsglO5LfVLC','test','user3',NULL),('testuser5','2014-03-21 08:33:52','$2a$10$90021503b943a6579a371OJeeJMRoo8ouIBw1OhoD1Wdh/PlJL1bC','test','user','testuser5@email.com');
 /*!40000 ALTER TABLE `account` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
@@ -59,6 +59,30 @@ DELIMITER ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
 /*!50003 SET character_set_results = @saved_cs_results */ ;
 /*!50003 SET collation_connection  = @saved_col_connection */ ;
+
+--
+-- Table structure for table `dependency`
+--
+
+DROP TABLE IF EXISTS `dependency`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `dependency` (
+  `DEPENDENCY_ID` int(10) unsigned zerofill NOT NULL AUTO_INCREMENT COMMENT 'Identify each corresponding dependency',
+  `DEPENDENT_ON` int(10) unsigned zerofill DEFAULT NULL COMMENT 'Represents a task id the task requires before start',
+  PRIMARY KEY (`DEPENDENCY_ID`)
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 COMMENT='Represent dependencies between tasks';
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `dependency`
+--
+
+LOCK TABLES `dependency` WRITE;
+/*!40000 ALTER TABLE `dependency` DISABLE KEYS */;
+INSERT INTO `dependency` VALUES (0000000001,0000000001),(0000000002,0000000015);
+/*!40000 ALTER TABLE `dependency` ENABLE KEYS */;
+UNLOCK TABLES;
 
 --
 -- Table structure for table `estimation`
@@ -85,31 +109,8 @@ CREATE TABLE `estimation` (
 
 LOCK TABLES `estimation` WRITE;
 /*!40000 ALTER TABLE `estimation` DISABLE KEYS */;
-INSERT INTO `estimation` VALUES (0000000001,NULL,NULL,'2014-06-06',NULL,'2014-07-06'),(0000000002,NULL,NULL,'2014-06-06','2014-07-30','2014-07-06');
+INSERT INTO `estimation` VALUES (0000000001,5,5,'2014-06-06','2014-03-11','2014-07-06'),(0000000002,NULL,NULL,'2014-06-06','2014-07-30','2014-07-06'),(0000000005,NULL,10,'2014-06-06','2014-10-09','2014-11-10'),(0000000006,95,90,'2014-06-06','2014-07-06','2014-07-06');
 /*!40000 ALTER TABLE `estimation` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `proect_estimation`
---
-
-DROP TABLE IF EXISTS `proect_estimation`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `proect_estimation` (
-  `proj_id` int(10) unsigned zerofill NOT NULL COMMENT 'this provides the link to each project',
-  `est_id` int(10) unsigned zerofill NOT NULL COMMENT 'this provides the link to each estimation',
-  UNIQUE KEY `proj_id` (`proj_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='This table provides the link between projects and their estimation';
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `proect_estimation`
---
-
-LOCK TABLES `proect_estimation` WRITE;
-/*!40000 ALTER TABLE `proect_estimation` DISABLE KEYS */;
-/*!40000 ALTER TABLE `proect_estimation` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -133,8 +134,32 @@ CREATE TABLE `project` (
 
 LOCK TABLES `project` WRITE;
 /*!40000 ALTER TABLE `project` DISABLE KEYS */;
-INSERT INTO `project` VALUES (0000000001,'testproject1','this project does this'),(0000000002,'testproject2','this project does that'),(0000000003,'projecttest1','projecttest1 description');
+INSERT INTO `project` VALUES (0000000001,'testproject 1','this project is the first project with everything set up accordingly...'),(0000000002,'testproject2','this project does that'),(0000000003,'projecttest1','projecttest1 description');
 /*!40000 ALTER TABLE `project` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `project_estimation`
+--
+
+DROP TABLE IF EXISTS `project_estimation`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `project_estimation` (
+  `proj_id` int(10) unsigned zerofill NOT NULL COMMENT 'this provides the link to each project',
+  `est_id` int(10) unsigned zerofill NOT NULL COMMENT 'this provides the link to each estimation',
+  UNIQUE KEY `proj_id` (`proj_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='This table provides the link between projects and their estimation';
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `project_estimation`
+--
+
+LOCK TABLES `project_estimation` WRITE;
+/*!40000 ALTER TABLE `project_estimation` DISABLE KEYS */;
+INSERT INTO `project_estimation` VALUES (0000000001,0000000005),(0000000002,0000000006);
+/*!40000 ALTER TABLE `project_estimation` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -160,7 +185,7 @@ CREATE TABLE `staff` (
 
 LOCK TABLES `staff` WRITE;
 /*!40000 ALTER TABLE `staff` DISABLE KEYS */;
-INSERT INTO `staff` VALUES (0000000001,'Ian','Nabney','0738392','ITN@aston.ac.uk'),(0000000002,'Ian','Nabney','0738392','ITN@aston.ac.uk');
+INSERT INTO `staff` VALUES (0000000001,'Ian','Nabney','0738392','ITN@aston.ac.uk'),(0000000002,'staff','memmber','018124r320975','staff@aston.ac.uk');
 /*!40000 ALTER TABLE `staff` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
@@ -200,7 +225,7 @@ CREATE TABLE `staff_task` (
 
 LOCK TABLES `staff_task` WRITE;
 /*!40000 ALTER TABLE `staff_task` DISABLE KEYS */;
-INSERT INTO `staff_task` VALUES (0000000001,0000000001);
+INSERT INTO `staff_task` VALUES (0000000001,0000000001),(0000000015,0000000002),(0000000001,0000000002);
 /*!40000 ALTER TABLE `staff_task` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -241,9 +266,8 @@ DROP TABLE IF EXISTS `task_dependency`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `task_dependency` (
+  `DEPENDENCY_ID` int(10) unsigned zerofill NOT NULL COMMENT 'Dependency Identifier',
   `TSK_ID` int(10) unsigned zerofill NOT NULL COMMENT 'Store task identifier',
-  `DEPENDCY_ID` int(10) unsigned zerofill NOT NULL COMMENT 'Store task id that TSK_ID is dependent on ',
-  `START` char(2) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL DEFAULT 'Y' COMMENT 'Identify whether or this task can be started before its dependency',
   PRIMARY KEY (`TSK_ID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Table to hold information pertaining to the relationships between tasks';
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -254,6 +278,7 @@ CREATE TABLE `task_dependency` (
 
 LOCK TABLES `task_dependency` WRITE;
 /*!40000 ALTER TABLE `task_dependency` DISABLE KEYS */;
+INSERT INTO `task_dependency` VALUES (0000000002,0000000001),(0000000001,0000000015);
 /*!40000 ALTER TABLE `task_dependency` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -314,4 +339,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2014-03-19  8:08:51
+-- Dump completed on 2014-03-21 15:53:50

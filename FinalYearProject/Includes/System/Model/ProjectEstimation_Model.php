@@ -39,8 +39,8 @@ class ProjectEstimation_Model extends Estimation_Model
         $db->connect();
 
         $query = "SELECT distinct est_id"
-                . " FROM task_estimation"
-                . " WHERE tsk_id='" . $proj_id . "'";
+                . " FROM project_estimation"
+                . " WHERE proj_id='" . $proj_id . "'";
 
 
         if ($db->querySuccess($query))

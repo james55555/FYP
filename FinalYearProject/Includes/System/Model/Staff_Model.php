@@ -19,7 +19,6 @@ class Staff_Model extends Generic_Model
             $staff_phone;
     private
             $staff_email;
-    private $table = "STAFF";
     private $fields = array();
 
     public
@@ -131,7 +130,8 @@ class Staff_Model extends Generic_Model
         return $staff;
         }
         public static function delete($staff_id){
-            $table = $this->table;
+            
+    $table = "STAFF";
             $field = "STAFF_ID";
             $success = parent::__delete($staff_id, $table, $field);
             return $success;

@@ -28,6 +28,9 @@ define('__CONTROLLER_PATH', __SITE_PATH . '/Includes/System/Controller/');
 
 //Set up path to Views
 define('__VIEW_PATH', __SITE_PATH . '/Includes/System/View/');
+//Set up autoload path for error handling
+define('__AUTOLOAD_PATH', __SITE_PATH . '/Vendor/autoload.php');
 
-include __SITE_PATH .'/Vendor/autoload.php';
+include __AUTOLOAD_PATH;
+
 ?>

@@ -95,13 +95,13 @@ class Database_Queries
         $result = mysql_query($query);
         if ($db->querySuccess($result))
             {
-            $this->success = true;
+            $success = true;
             } else
             {
-            $this->success = false;
+            $success = false;
             }
         $db->close();
-        return $this->success;
+        return $success;
         }
         /*
          * Delete query to return delete string for transactional SQL statements

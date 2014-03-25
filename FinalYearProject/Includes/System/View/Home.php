@@ -2,11 +2,11 @@
 <?php
 /*
  *  Namespace       : Include
- *  File name       : Home 
+ *  File name       : Home
  *  File extension  : php
  *  Author          : James Graham
  *  Description     : Show user's home page and current task list
- * 
+ *
  */
 ?>
 
@@ -45,50 +45,54 @@
                 foreach ($this->registry->projects as $project)
                     {
                     $projid = $project->proj_id();
-
-                    echo "<!--Print out project information for each project into a table-->
-                <tr>
-                
-                    <td><a href=\"?page=Task&proj_id=" . $projid . "\" \">
-                    $projid"
+                    //Print out row of information foreach project object that exists for that user.
+                    echo "<tr>"
+                    //Make project id hyperlink redirecting user to projectDetails.php
+                    . "<td><a href=\"?page=Task&proj_id=" . $projid . "\" \">"
+                    . "$projid"
                     . "</a></td>"
-                    . "<td>{$project->proj_nm()}</td>
-                    <td>{$project->proj_descr()}</td>";
+                    //Get project name from project object
+                    . "<td>{$project->proj_nm()}</td>"
+                    //Get project description from project object
+                    . "<td>{$project->proj_descr()}</td>";
                     ?>
                     <td>
                         <!--Buttons to take users to edit or delete for each project-->
                         <button type="submit" id="editP">
-                            <a href="?page=Home&action=edit(<?php $projid ?>)">
-                                <img src="Includes/CSS/img/Icons/edit.png" 
+                            <a href="?page=Home&action=edit&proj_id=
+                               <?php echo $projid; ?>">
+                                <img src="Includes/CSS/img/Icons/edit.png"
                                      alt="edit" title="Edit Project"
                                      width="20" height="20"/>
                             </a>
                         </button>
                         <button id="delP" onclick="return confirmAction(
                                 <?php
-                    echo "'{$project->proj_nm()}'";
+                                echo $project->proj_nm();
                                 ?>);">
                             <a href="?page=Home&action=delete&proj_id=
-                                <?php echo "'{$projid}'"; ?>">
-                                <img src="Includes/CSS/img/Icons/delete.png" 
+                               <?php echo $projid; ?>">
+                                <img src="Includes/CSS/img/Icons/delete.png"
                                      alt="edit" title="Delete Project"
                                      width="20" height="20"/>
-                           </a>
-                        </button>                    
-                    </td>
+                            </a>
+                        </button>
+                    </td> <!--End of actions cell-->
 
 
 
                     <?php
+                    //Close table row for each projct
                     echo "</tr>";
-                    }
+                    } //End of foreach loop
                 ?>
+                <!-- When foreach loop has ended end the table-->
             </table>
 
-        </div>
+        </div> <!--End of container div-->
         <?php
         include("footer.php");
-        ?> 
+        ?>
     </body>
 </html>
 

@@ -60,43 +60,6 @@ class Database
         }
 
     /*
-     * Singleton to query database and return object
-     */
-
-    public
-            function selectQuery($query, $model)
-        {
-        //Run the query against the database and assign the result set to result variable
-        $result = mysql_query($query, $this->conn);
-        //Ensure query success has returned correctly
-        if (Database::querySuccess($result))
-            {
-            if (mysql_num_rows($result) > 0)
-                {
-                //Fetch result and assign it to row variable
-                $row = mysql_fetch_object($result);
-                //Create a new instance of the object using result set
-                $instance = new $model($row);
-                } else
-                {
-                $instance = null;
-                //**TESTING: waht happens if instance is null... All models should handle this
-                echo "<br/>instance is null. Rows returned is: " . mysql_num_rows($result);
-                }
-            } else
-            {
-            //Die and print issue with query
-            die("Issue running query: " . mysql_error()
-                    . "<br/>The query is: " . $query
-                    . "<br/>Died...");
-            }
-        //Close database and return the instance
-        Database::close();
-
-        return $instance;
-        }
-
-    /*
      * Created by: Stefan van Beusekom
      * Created on: 31-01-2011
      * Description: A method that ensures safe data entry, and accepts either strings or arrays. If the array is multidimensional, 
@@ -140,7 +103,13 @@ class Database
         }
 
         /*
-         * Function to ascertain success of query
+         * Function to ascertain success of mysql_result 
+         * (Convert mysql result into boolean)
+         *  If the @param is false then there has been an issue running the query
+         *                          Therefore return boolean false
+         *  If the query produces a mysql resource then it has been successful
+         *                          Therefore retun boolean true
+         * @param mysql resource - This will either be false or a mysql resource                   
          * @return boolean success
          */
 

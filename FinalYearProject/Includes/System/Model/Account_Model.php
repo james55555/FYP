@@ -33,7 +33,7 @@ class Account_Model extends Validator_Model
             function __construct($userid)
         {
         $row = $this->getUser($userid);
-        
+
         $this->userId = $row->user_id;
         $this->password = $row->password;
         $this->first_nm = $row->first_nm;
@@ -89,7 +89,7 @@ class Account_Model extends Validator_Model
         {
         $fields = array("user_id", "password", "first_nm", "last_nm", "email_addr");
         $user = Database_Queries::selectFrom("ACCOUNT_MODEL", $fields, "ACCOUNT", "user_id", $userid);
-        
+
         return $user;
         }
 

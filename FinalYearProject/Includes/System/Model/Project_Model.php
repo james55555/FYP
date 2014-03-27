@@ -67,7 +67,7 @@ class Project_Model extends Validator_Model
     public static
             function getProject($proj_id)
         {
-        $fields = array("proj_id","proj_nm","proj_descr");
+        $fields = array("proj_id", "proj_nm", "proj_descr");
         $project = Database_Queries::selectFrom("Project_Model", $fields, "PROJECT", "proj_id", $proj_id);
         return $project;
         }
@@ -171,52 +171,77 @@ class Project_Model extends Validator_Model
 
         $db = new Database();
         $db->connect();
-        $db->filterParameters($fields);
+        $fields = $db->filterParameters($fields);
 //This will be a multi-dimensional array due to the checkbox field.
         $proj_nm = $fields['pName'];
         $htmlDescr = $fields['pDescr'];
-        $proj_descr = Validator_Model::htmlChar($htmlDescr);
-
-        $arrayError = array(
-//Project name validation
-//String length needs to be between 1 and 30
-            array(Validator_Model::variableCheck($proj_nm, 'string', 30)),
-            //Project description validation
-//string length needs to be between 1 and 200
-            array(Validator_Model::variableCheck($proj_descr, 'string', 200)),
-                //Project start date errors
-//Project deadline date errors
-        );
+//GET estimation vairables
+        $proj_start = $fields['pStart'];
+        $proj_deadline = $fields['pDead'];
+        //GET user who is adding project
+        $account = $_SESSION['user'];
 
 
-        if (sizeof($arrayError) === 0)
+        $valid = Project_Model::validateArray($fields);
+        if (is_array($valid))
             {
-            $projInsert = "START TRANSACTION;"
-                    //Insert into project table
-                    . "INSERT INTO  `fyp`.`project` ("
-                    . " `proj_id` ,"
-                    . " `proj_nm` ,"
-                    . " `proj_descr`"
-                    . ") VALUES ("
-                    . "NULL,"
-                    . " '" . $proj_nm . "',"
-                    . " '" . $proj_descr . "');"
-                    //Insert new project into user_project table
-                    . " INSERT INTO `fyp`.`user_project` ("
-                    . " `proj_id` , "
-                    . " `user_id`)"
-                    . " VALUES ("
-                    . " LAST_INSERT_ID(),"
-                    . " `" . $_SESSION['user']->userId() . "`);"
-                    . "COMMIT;"
-            ;
+            return $valid;
+            }
+        $projInsert = "START TRANSACTION;"
+                //Insert into project table
+                . "INSERT INTO  `fyp`.`project` ("
+                . " `proj_id` ,"
+                . " `proj_nm` ,"
+                . " `proj_descr`"
+                . ") VALUES ("
+                . "NULL,"
+                . " '" . $proj_nm . "',"
+                . " '" . $proj_descr . "');"
+                //Insert new project into user_project table
+                . " INSERT INTO `fyp`.`user_project` ("
+                . " `proj_id` , "
+                . " `user_id`)"
+                . " VALUES ("
+                . " LAST_INSERT_ID(),"
+                . " `" . $_SESSION['user']->userId() . "`);"
+                . "COMMIT;";
 
-            $result = mysql_query($projInsert);
-            if (!$db->querySuccess($result))
+        $result = mysql_query($projInsert);
+        if (!$db->querySuccess($result))
+            {
+            echo "Error inserting data into database."
+            . "MYSQL Error: " . mysql_error();
+            }
+        }
+
+    private static function validateArray($fields)
+        {
+        //Set var validation variables
+        $type = "String";
+        $validated = null;
+
+        foreach ($fields as $field => $content)
+            {
+            if ($field === "proj_nm")
                 {
-                echo "Error inserting data into database."
-                . "MYSQL Error: " . mysql_error();
+                $length = 30;
+                $field = "Project Name";
+                } elseif ($field === "proj_descr")
+                {
+                $length = 200;
+                $field = "Project Description";
+                } elseif ($field === "pStart" || $field === "pDead")
+                {
+                $validated = Validator_Model::validateDate($field);
                 }
+            if (!isset($validated))
+                {
+                $validated = Validator_Model::variableCheck($field, $content, $type, $length);
+                }
+            }
+        if (isset($validated))
+            {
+            return $validated;
             }
         }
 

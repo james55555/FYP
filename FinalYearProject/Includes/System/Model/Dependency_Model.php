@@ -36,7 +36,6 @@ class Dependency_Model extends Generic_Model
     public static function get($dpnd_id)
         {
         $columns = array("DEPENDENCY_ID", "DEPENDENT_ON");
-        print_r($dpnd_id);
         $dependency = Database_Queries::selectFrom("Dependency_Model", 
                 $columns, "DEPENDENCY", "DEPENDENCY_ID", $dpnd_id);
         

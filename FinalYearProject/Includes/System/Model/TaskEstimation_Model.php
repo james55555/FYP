@@ -30,9 +30,15 @@ class TaskEstimation_Model extends Estimation_Model
 
     public static function getEstimationId($tsk_id)
         {
-        $db = new Database();
+        $row = Database_Queries::selectFrom(null, "est_id", 
+                "TASK_ESTIMATION", "tsk_id", $tsk_id);
+        
+        $est_id = $row->est_id;
+        return $est_id;
+        }
+        /*$db = new Database();
         $db->connect();
-
+        
         $query = "SELECT distinct est_id"
                 . " FROM task_estimation"
                 . " WHERE tsk_id='" . $tsk_id . "'";
@@ -47,6 +53,7 @@ class TaskEstimation_Model extends Estimation_Model
             if (is_object($row))
                 {
                 $est_id = $row->est_id;
+                var_dump($est_id);
                 } else
                 {
                 return null;
@@ -55,8 +62,9 @@ class TaskEstimation_Model extends Estimation_Model
             $db->close();
 
             return $est_id;
-            }
-        }
+         
+         
+            }*/
 
     public static function delete($tsk_id)
         {

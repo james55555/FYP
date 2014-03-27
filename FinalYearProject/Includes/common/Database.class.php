@@ -17,7 +17,7 @@ class Database
     private
             $DB_pwd = '';
     private
-            $DB_nm = 'test';
+            $DB_nm = 'fyp';
     
     /*
      * Connect to database

@@ -34,7 +34,7 @@ class Task_Controller extends Main_Controller
 
     public function details()
         {
-        $this->registry->task = Task_Model::getTask($_GET['task_id']);
+        $this->registry->task = new Task_Model($_GET['task_id']);
         $this->registry->taskEstimation = Estimation_Model::get($this->registry->task->estimation());
         $this->registry->taskStaff = Staff_Model::get($this->registry->task->staff());
         $this->registry->taskDependencies = Dependency_Model::get($this->registry->task->dpnd());
@@ -52,9 +52,10 @@ class Task_Controller extends Main_Controller
         {
         
         }
-        public function delete()
-            {
-            
-            }
+
+    public function delete()
+        {
+        
+        }
 
     }

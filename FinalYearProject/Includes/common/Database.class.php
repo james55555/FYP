@@ -1,10 +1,4 @@
 <?php
-
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-
 /**
  * Description of Database_Instance
  *
@@ -23,12 +17,11 @@ class Database
     private
             $DB_pwd = '';
     private
-            $DB_nm = 'FYP';
-
+            $DB_nm = 'test';
+    
     /*
      * Connect to database
      */
-
     public //static
             function connect()
         {
@@ -39,6 +32,7 @@ class Database
             mysql_select_db($this->DB_nm, $this->conn) or die("Unable to Select Database \n" . mysqli_connect_error());
             }
         }
+        
 
     /*
      * Function to close database connection
@@ -88,14 +82,14 @@ class Database
                 if (is_string($array[$key]))
                     {
                     // If they are, perform the real escape function over the selected node
-                    $array[$key] = mysql_real_escape_string($array[$key]);
+                    $array[$key] = trim(mysql_real_escape_string($array[$key]), "'");
                     }
                 }
             // Check if the parameter is a string
             if (is_string($array))
                 {
                 // If it is, perform a  mysql_real_escape_string on the parameter
-                $array = mysql_real_escape_string($array);
+                $array = trim(mysql_real_escape_string($array), "'");
                 }
             // Return the filtered result
             return $array;

@@ -9,11 +9,12 @@
 
 class Account_Model extends Validator_Model
     {
+
     //instantiate variables from ACCOUNT
     private
             $accCreate_ts;
     private
-            $userId;
+            $userid;
     private
             $first_nm;
     private
@@ -23,15 +24,16 @@ class Account_Model extends Validator_Model
     private
             $password;
 
-    
     /*
      *  Constructor to initialize object from a MySQL user_id and password
      * @param object row
      */
 
     public
-            function __construct($row)
+            function __construct($userid)
         {
+        $row = $this->getUser($userid);
+        
         $this->userId = $row->user_id;
         $this->password = $row->password;
         $this->first_nm = $row->first_nm;
@@ -41,9 +43,9 @@ class Account_Model extends Validator_Model
         }
 
     public
-            function userId()
+            function userid()
         {
-        return $this->userId;
+        return $this->userid;
         }
 
     public
@@ -75,7 +77,7 @@ class Account_Model extends Validator_Model
         {
         return $this->accCreate_ts;
         }
-        
+
     /*
      * Get a user by their id
      * @param String $accId
@@ -83,41 +85,13 @@ class Account_Model extends Validator_Model
      */
 
     public static
-            function getUser($accId)
+            function getUser($userid)
         {
-        $db = new Database();
-        $db->connect();
-        $db->filterParameters($accId);
+        $dbQuery = new Database_Queries();
+        $fields = array("user_id", "password", "first_nm", "last_nm", "email_addr");
+        $user = $dbQuery->selectFrom($fields, "ACCOUNT", "user_id", $userid);
         
-        
-        
-        $query = "SELECT user_id, acc_create_ts, password,"
-                . " first_nm, last_nm, email_addr"
-                . " FROM ACCOUNT"
-                . " WHERE user_id='" . $accId . "'";
-
-        /* Run query against database
-         * @var $result type 
-         */
-        $qResult = mysql_query($query);
-        //Verify that the query has returned a user
-        if (mysql_num_rows($qResult) === 1)
-            {
-            //Assign object to @var $row
-            $row = mysql_fetch_object($qResult);
-            //Create new Account_Model using information in the database.
-            $accId = new Account_Model($row);
-            }
-
-        //If query is doesn't query successfully or doesn't return a user then return false.
-        else
-            {
-            $accId = null;
-            }
-
-        //Close databse and return the user object.
-        $db->close();
-        return $accId;
+        return $user;
         }
 
     /*
@@ -161,34 +135,35 @@ class Account_Model extends Validator_Model
             {
             return "query error... " . mysql_error();
             }
-            if ($numExisting === 0)
+        if ($numExisting === 0)
+            {
+            if (empty($em))
                 {
-                if(empty($em)){
-                    $em = "NULL";
-                    }
-                $insert = "INSERT INTO account" .
-                        " (`user_id`, `acc_create_ts`, `password`, `first_nm`, "
-                        . " `last_nm`, `email_addr`)"
-                        . " VALUES ('"
-                        . $user_id . "',"
-                        . "CURRENT_TIMESTAMP,'"
-                        . $password . "','"
-                        . $fName . "','"
-                        . $lName . "','"
-                        . $em . "')";
-
-                $result = mysql_query($insert);
-                if (!$db->querySuccess($result))
-                    {
-                    return "Error inserting data into database."
-                            . "MYSQL Error: " . mysql_errno()
-                            . "<br/> MYSQL details: " . mysql_error();
-                    }
-                } else
-                {
-                return "Username already exists";
+                $em = "NULL";
                 }
-           return true;
+            $insert = "INSERT INTO account" .
+                    " (`user_id`, `acc_create_ts`, `password`, `first_nm`, "
+                    . " `last_nm`, `email_addr`)"
+                    . " VALUES ('"
+                    . $user_id . "',"
+                    . "CURRENT_TIMESTAMP,'"
+                    . $password . "','"
+                    . $fName . "','"
+                    . $lName . "','"
+                    . $em . "')";
+
+            $result = mysql_query($insert);
+            if (!$db->querySuccess($result))
+                {
+                return "Error inserting data into database."
+                        . "MYSQL Error: " . mysql_errno()
+                        . "<br/> MYSQL details: " . mysql_error();
+                }
+            } else
+            {
+            return "Username already exists";
+            }
+        return true;
         }
 
     /*
@@ -208,7 +183,6 @@ class Account_Model extends Validator_Model
                 {
                 $length = 25;
                 $field = "Username";
-                
                 } elseif ($field === "password")
                 {
                 $length = 255;
@@ -237,4 +211,5 @@ class Account_Model extends Validator_Model
                 }
             }
         }
+
     }

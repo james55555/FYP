@@ -26,15 +26,15 @@
                     <h1 id="title">Tasks for project: <?php echo $_GET['proj_id']; ?></h1><br/>
                     <?php
                     $projEstimate = $this->registry->projectEstimation;
-                    $stCheck = $projEstimate->start_dt();
-                    $edCheck = $projEstimate->est_end_dt();
+                    $stCheck = $projEstimate->start_dt;
+                    $edCheck = $projEstimate->est_end_dt;
                     $noEstimate = "No estimate set.";
                     ?>
                     <div class="Proj_Details" id="start">
                         <p>Project Start Date: <?php
                             if (isset($stCheck))
                                 {
-                                echo $projEstimate->start_dt();
+                                echo $projEstimate->start_dt;
                                 } else
                                 {
                                 echo $noEstimate;
@@ -46,7 +46,7 @@
                         <p>Project Deadline: <?php
                             if (isset($edCheck))
                                 {
-                                echo $projEstimate->est_end_dt();
+                                echo $projEstimate->est_end_dt;
                                 } else
                                 {
                                 echo $noEstimate;

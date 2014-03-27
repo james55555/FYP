@@ -14,16 +14,21 @@ class Project_Model extends Validator_Model
             $proj_nm;
     private
             $proj_descr;
-    private $estimate;
+    private
+            $estimate;
 
     /*
      * construct new project object
      */
 
     public
-            function __construct($row)
+            function __construct($proj_id)
         {
-//$this->acc_id = Account_Model::getUser($row->acc_id);
+        $row = $this->getProject($proj_id);
+        if (!$row)
+            {
+            $row = null;
+            }
         $this->proj_id = $row->proj_id;
         $this->proj_nm = $row->proj_nm;
         $this->proj_descr = $row->proj_descr;
@@ -62,25 +67,7 @@ class Project_Model extends Validator_Model
     public static
             function getProject($proj_id)
         {
-        $db = new Database();
-        $db->connect();
-
-        $query = "SELECT DISTINCT proj_id, proj_nm, proj_descr"
-                . " FROM project WHERE proj_id='$proj_id'";
-
-        if ($db->querySuccess($query))
-            {
-            $qResult = mysql_query($query);
-            $row = mysql_fetch_object($qResult);
-            $project = new Project_Model($row);
-// var_dump('vardump db:' .$db);
-            /* @var $result type */
-            } else
-            {
-            var_dump($project);
-            die("object is false");
-            }
-        $db->close();
+        $project = Database_Queries::selectFrom("Project_Model", "proj_id, proj_nm, proj_descr", "PROJECT", "proj_id", $proj_id);
         return $project;
         }
 
@@ -101,7 +88,7 @@ class Project_Model extends Validator_Model
         $projects = array();
         while ($row = mysql_fetch_object($result))
             {
-            array_push($projects, new Project_Model($row));
+            array_push($projects, new Project_Model($row->proj_id));
             }
         $db->close();
         return $projects;
@@ -120,7 +107,7 @@ class Project_Model extends Validator_Model
                 . " (SELECT proj_id,"
                 . " proj_nm,"
                 . " proj_descr,"
-                . " null" 
+                . " null"
                 . " FROM fyp.project"
                 . " WHERE proj_id='" . $proj_id . "');"
                 //Archive user reference to project
@@ -131,57 +118,51 @@ class Project_Model extends Validator_Model
                 . " FROM fyp.user_project"
                 . " WHERE proj_id='" . $proj_id . "');"
                 . " COMMIT;";
-die($archiveQuery);
         $archiveResult = mysql_query($archiveQuery);
-        
-        $project = self::getProject($proj_id);    
-//project added need to configure similarly to task config!!
-        //Delete project and clean up references in the db
+        if (!$db->querySuccess($archiveResult))
+            {
+            return false;
+            }
+        $project = self::getProject($proj_id);
 
-        $query = "START TRANSACTION;"
-                //Delete from base table 'PROJECT'
-                . " DELETE FROM project"
-                . " WHERE proj_id='" . $proj_id . "';"
-                . "COMMIT;";
-        die($query);        //Delete from estimation table
+        //Delete project from base table - PROJECT
+        $projectDelete = Database_Queries::deleteFrom("PROJECT", "proj_id", $proj_id, null);
+        //Disassociate project reference to user in USER_PROJECT
+        $user_projectDelete = Database_Queries::deleteFrom("USER_PROJECT", "proj_id", $proj_id, null);
+        if ($projectDelete && $user_projectDelete)
+            {
+            
+            }
         $estimation = Estimation_Model::delete($project->estimation());
         if ($estimation)
             {
             $estRef = ProjectEstimation_Model::delete($project->estimation());
             }
-        //Delete from reference table between PROJECT and ESTIMATION
-        if (isset($estRef) && $estRef)
-            {
-            
-            }
-
-
-        $result = mysql_query($query);
-        //Loop through all tasks associated with the project and remove each one
-        $deleteTask = Task_Model::getAllTasks($proj_id);
-        if ($deleteTask === false)
+        if (!$estRef)
             {
             return false;
             }
-        foreach ($deleteTask as $delete)
+        //Delete from reference table between PROJECT and ESTIMATION
+        elseif (isset($estRef) && $estRef)
             {
-            $taskResult = Task_Model::deleteTask($delete->tsk_id());
-            if ($taskResult === false)
+            //Loop through all tasks associated with the project and remove each one
+            $deleteTask = Task_Model::getAllTasks($proj_id);
+            if (!$deleteTask)
                 {
                 return false;
                 }
-            }
-        if ($db->querySuccess($archiveResult) &&
-                $db->querySuccess($result) &&
-                $db->querySuccess($result))
-            {
+            foreach ($deleteTask as $delete)
+                {
+                $taskResult = Task_Model::deleteTask($delete->tsk_id());
+                if (!$taskResult)
+                    {
+                    return false;
+                    }
+                }
             $del = true;
-            } else
-            {
-            $del = false;
+            $db->close();
+            return $del;
             }
-        $db->close();
-        return $del;
         }
 
     public static function addProject($fields)

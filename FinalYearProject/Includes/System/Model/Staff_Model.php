@@ -74,28 +74,10 @@ class Staff_Model extends Generic_Model
     public
     static function get($staff_id)
         {
-        $db = new Database();
-        $db->connect();
-        $query = "SELECT staff_id, staff_first_nm, staff_last_nm,"
-                . " staff_phone, staff_email"
-                . " FROM STAFF"
-                . " WHERE STAFF_ID='$staff_id'";
-        //echo "<br/><br/>the query running is... ".$query;
-        if ($db->querySuccess($query))
-            {
-            $qResult = mysql_query($query);
-
-            $row = mysql_fetch_object($qResult);
-            if (is_object($row))
-                {
-                $staff = new Staff_Model($row);
-                } else
-                {
-                return null;
-                }
-            $db->close();
-            return $staff;
-            }
+        $fields = array("STAFF_ID", "STAFF_FIRST_NM", "STAFF_LAST_NM",
+            "STAFF_PHONE", "STAFF_EMAIL");
+        $staff = Database_Queries::selectFrom("Staff_Model", $fields, "STAFF", "STAFF_ID", $staff_id);
+        return $staff;
         }
 
     public static function getStaffForProject($proj_id)
@@ -125,11 +107,14 @@ class Staff_Model extends Generic_Model
         $db->close();
         return $staff;
         }
-        public static function delete($staff_id){
-            
-    $table = "STAFF";
-            $field = "STAFF_ID";
-            $success = parent::__delete($staff_id, $table, $field);
-            return $success;
-            }
-            }
+
+    public static function delete($staff_id)
+        {
+
+        $table = "STAFF";
+        $field = "STAFF_ID";
+        $success = parent::__delete($staff_id, $table, $field);
+        return $success;
+        }
+
+    }

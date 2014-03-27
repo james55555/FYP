@@ -18,30 +18,32 @@
             <?php
             include("header.php");
             ?>
-            <h1>Add Project</h1>
-            <div id="addProjForm">
-                <form id="addProject" action="?page=addProject&action=submitForm" method="post" onsubmit="return projectValidation()">
-                    <label>Name: <input type="text" name="pName"/></label><br/>
-                    <label>Description:  <textarea 
-                            form="addProject"
-                            rows="4"
-                            coles="50"
-                            maxlength="200"
-                            name="pDescr"></textarea></label><br/>
+            <div class="centralBox" id="content"> 
+                <h1>Add Project</h1>
 
-                    <br>
-                    <h2>Project Dates</h2>
-                    <label>Start Date: <input type="date" name="pStart"</label>
-                    <label>Deadline: <input type="date" name="pDeadline"</label>
-                    <br>
+                <form id="addProject" action="?page=addProject&action=submitForm" 
+                      method="post" onsubmit="return projectValidation()">
+                    <div id="details">
+                        <label>Name: <input type="text" name="pName"/></label><br/>
+                        <label>Description:  <textarea 
+                                form="addProject"
+                                rows="4"
+                                coles="50"
+                                maxlength="200"
+                                name="pDescr"></textarea></label><br/>
+                    </div> <!--End of details-->
+                    <div class="regInput" id="projDates">
+                        <h2>Project Dates</h2>
+                        <label>Start Date: <input type="date" name="pStart"/></label>
+                        <label>Deadline: <input type="date" name="pDeadline"/></label>
+                    </div> <!--End of projDates-->
 
-                    <input type="submit" value="Submit" class="button" id="newUser"/>
-
-                </form>
-            </div>
-        </div>
-        <?php
-        include("footer.php");
-        ?>
-    </body>
+                    <input type="submit" value="Submit" class="button" id="newProj"/>
+                </form>    
+            </div><!--End of content-->
+        </div><!--End of container-->
+    <?php
+    include("footer.php");
+    ?>
+</body>
 </html>

@@ -37,15 +37,15 @@ class Login_Controller extends Main_Controller
             function login($user, $password)
         {
         $this->success = false;
-// Get the account from the database
+        // Get the account from the database
         $acc = Account_Model::getUser($user);
-//Ensure password is correct
+        //Ensure password is correct
         if (isset($acc))
             {
-            if (PassHash::check_password($acc->password(),
-                    $password))
+            if (PassHash::check_password($acc->password,
+                    $password))                    
                 {
-//Log in successful, set up new session and set boolean to false
+                //Log in successful, set up new session and set boolean to false
                 $_SESSION['user'] = $acc;
                 $this->success = true;
                 }

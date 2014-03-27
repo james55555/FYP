@@ -35,22 +35,17 @@
 #content li{
     list-style: none;
 }
-
 .infoTitle {
     float:left;
     text-align:right;
     width: 30%;
+    clear:both;
 }
 .info {
     float:left;
     width: 60%;
-}
-.info {
     padding-left: 10px;
 }
 #down {
     clear:both;
-}
-.infoTitle #dependency {
-    
 }

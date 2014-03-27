@@ -67,7 +67,8 @@ class Project_Model extends Validator_Model
     public static
             function getProject($proj_id)
         {
-        $project = Database_Queries::selectFrom("Project_Model", "proj_id, proj_nm, proj_descr", "PROJECT", "proj_id", $proj_id);
+        $fields = array("proj_id","proj_nm","proj_descr");
+        $project = Database_Queries::selectFrom("Project_Model", $fields, "PROJECT", "proj_id", $proj_id);
         return $project;
         }
 

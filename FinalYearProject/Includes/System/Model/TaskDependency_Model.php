@@ -30,10 +30,13 @@ class TaskDependency_Model extends Dependency_Model
         return $this->dp_id;
         }
 
+        //Get dependency id based on the task id provided
     public static function getDpID($tsk_id)
         {
-        $id = Database_Queries::selectFrom(null, "DEPENDENCY_ID", "TASK_DEPENDENCY", "TSK_ID", $tsk_id);
-        return $id;
+        $row = Database_Queries::selectFrom("DEPENDENCY", "DEPENDENCY_ID", 
+                "TASK_DEPENDENCY", "TSK_ID", $tsk_id);
+        $dpId = $row->DEPENDENCY_ID;
+        return $dpId;
         }
 
     public static function delete($tsk_id)

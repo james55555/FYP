@@ -1,0 +1,77 @@
+DELETE FROM user_project;
+DELETE FROM task_estimation;
+DELETE FROM task_dependency;
+DELETE FROM task;
+DELETE FROM staff_task;
+DELETE FROM staff;
+DELETE FROM project_estimation;
+DELETE FROM project;
+DELETE FROM estimation;
+DELETE FROM dependency;
+DELETE FROM account;
+ 
+INSERT INTO account (user_id,acc_create_ts,password,first_nm,last_nm,email_addr) VALUES ('Jo','07.01.01 05:35:00','4rmneblFY3XJP2JSXphCQ5URtFNMpDTWWIQfb5Uoc6Vkzd33fOxHZdnESq5MSvcVXrtCzTtnMFKkkRe1KFWvnXkZfUJqLS3GiBNkyhWMTzUK4XP6Ndue0VSsR21o1ykG5LFE12QdWYkGewBnjVhRY7e4PqjuBUmgCQeHLIeAW6rk0fVx5AmyPnEEb4K0JP7FlhqNPVSn4A3M7dzGMPABdFyDx7qWt1','Sue','Bogdanovich','VictoriaBraconi@myspace.us');
+ 
+
+
+
+ 
+INSERT INTO dependency (DEPENDENCY_ID,DEPENDENT_ON) VALUES (1,984216);
+ 
+
+
+
+ 
+INSERT INTO estimation (EST_ID,ACT_HR,PLN_HR,START_DT,ACT_END_DT,EST_END_DT) VALUES (1,701,NULL,'05.01.03 05:48:00',NULL,'04.16.10 00:06:00');
+ 
+
+
+
+ 
+INSERT INTO project (proj_nm,proj_descr) VALUES ('test project 1','This is a description 8214131');
+ 
+
+
+
+ 
+INSERT INTO project_estimation (proj_id,est_id) VALUES (452,998995);
+ 
+
+
+
+ 
+INSERT INTO staff (STAFF_ID,STAFF_FIRST_NM,STAFF_LAST_NM,STAFF_PHONE,STAFF_EMAIL) VALUES (2,'Lara','van Dijk',NULL,'Nick.Perilloux4@weboffice.fr');
+ 
+
+
+
+ 
+INSERT INTO staff_task (TSK_ID,STAFF_ID) VALUES (NULL,2);
+ 
+
+
+
+ 
+INSERT INTO task (PROJ_ID,STATUS,TASK_NM,WEB_ADDR,TSK_DESCR) VALUES (452,'In Progress','Goldenrod','SXClLYldF','tCewpkxGIQjpau3e0OfIx6v4AfXFXjXhOJMzsxyNBmVagjzvEOYtiMW77O7qquX66cOh3N51KYD3iXn6rowFdLSC8DJ1DWYlXoRu1l7dYqKZuXxOO1iaRX6XpGKq7M6C0vS2LqNXmHsbrSk6xxwc3Vi4Mm');
+ 
+
+
+
+ 
+INSERT INTO task_dependency (DEPENDENCY_ID,TSK_ID) VALUES (1,NULL);
+ 
+
+
+
+ 
+INSERT INTO task_estimation (tsk_id,est_id) VALUES (NULL,1);
+ 
+
+
+
+ 
+INSERT INTO user_project (user_id,proj_id) VALUES ('Erik5',452);
+ 
+
+
+

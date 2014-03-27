@@ -32,6 +32,7 @@ class Database_Queries extends Database
                 . " FROM " . $check[1]
                 . " WHERE " . $check[2]
                 . "='" . $check[3] . "'";
+        
         //Process result and return object
         $result = Database_Queries::processResult($query, $model);
         return $result;
@@ -67,7 +68,7 @@ class Database_Queries extends Database
             }//End of query success
         else
             {
-            throw new Exception("Query Error");
+            throw new Exception("Query Error: " . mysql_error());
             }
         $db->close();
         return $row;

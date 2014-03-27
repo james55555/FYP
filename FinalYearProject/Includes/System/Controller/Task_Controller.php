@@ -22,7 +22,8 @@ class Task_Controller extends Main_Controller
             $this->registry->project_tasks = null;
             }
         $project = Project_Model::getProject($_GET['proj_id']);
-        $this->registry->projectEstimation = Estimation_Model::get($project->estimation());
+        var_dump($project);
+        $this->registry->projectEstimation = Estimation_Model::get($project->estimation);
         //Show the projectTasks view
         $this->registry->View_Template->show('projectTasks');
         }

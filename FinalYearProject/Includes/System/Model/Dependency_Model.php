@@ -12,13 +12,15 @@ class Dependency_Model extends Generic_Model
     private $dpnd_id;
     private $dpnd_on;
 
-    public function __construct($row)
+    public function __construct($dpnd_id)
         {
-        if (is_object($row))
-            {
+        $row = $this->get($dpnd_id);
+            if(!$row){
+                $row = null;
+                }
             $this->dpnd_id = $row->DEPENDENCY_ID;
             $this->dpnd_on = $row->DEPENDENT_ON;
-            }
+            
         }
 
     public function dpnd_id()

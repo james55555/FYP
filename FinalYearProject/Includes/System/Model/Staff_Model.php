@@ -19,19 +19,15 @@ class Staff_Model extends Generic_Model
             $staff_phone;
     private
             $staff_email;
-    private $fields = array();
 
     public
-            function __construct($row)
+            function __construct($staff_id)
         {
-        if ($row === null)
+        $row = $this->get($staff_id);
+        if (!$row)
             {
-            foreach ($this->fields as $this->field)
-                {
-                $this->field = null;
-                }
+            $row = null;
             }
-
         $this->staff_id = $row->staff_id;
         $this->staff_first_nm = $row->staff_first_nm;
         $this->staff_last_nm = $row->staff_last_nm;

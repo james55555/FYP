@@ -87,9 +87,9 @@ class Account_Model extends Validator_Model
     public static
             function getUser($userid)
         {
-        $dbQuery = new Database_Queries();
+        
         $fields = array("user_id", "password", "first_nm", "last_nm", "email_addr");
-        $user = $dbQuery->selectFrom($fields, "ACCOUNT", "user_id", $userid);
+        $user = Database_Queries::selectFrom($fields, "ACCOUNT", "user_id", $userid);
         
         return $user;
         }

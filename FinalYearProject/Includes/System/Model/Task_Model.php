@@ -21,24 +21,28 @@ class Task_Model
             $web_addr;
     private
             $tsk_dscr;
-    private $estimation;
-    private $staff;
-    private $dpnd;
+    private 
+            $estimation;
+    private 
+            $staff;
+    private 
+            $dpnd;
 
     /*
      * construct new task object
      */
 
     public
-            function __construct($row)
+            function __construct($tsk_id)
         {
+        $row = $this->getTask($tsk_id);
         $this->tsk_id = $row->TSK_ID;
         //Get the project corresponding to the linked id
         if (isset($_GET['proj_id']))
             {
             $_assocProj = Project_Model::getProject($_GET['proj_id']);
             //Assign the associated
-            $this->proj_id = $_assocProj->proj_id();
+            $this->proj_id = $_assocProj->proj_id;
             } else
             {
             $this->proj_id = $this->proj_id();
@@ -115,24 +119,13 @@ class Task_Model
     public static
             function getTask($tsk_id)
         {
-        $db = new Database();
-        $db->connect();
-
-        $query = "SELECT DISTINCT TSK_ID, PROJ_ID, "
-                . "STATUS, TASK_NM, WEB_ADDR, TSK_DESCR"
-                . " FROM TASK "
-                . "WHERE tsk_id='$tsk_id'";
-
-        if ($db->querySuccess($query))
-            {
-            $qResult = mysql_query($query);
-            $row = mysql_fetch_object($qResult);
-            $task = new Task_Model($row);
-            } else
-            {
-            throw new Exception("query error... " . mysql_error());
+        $fields = array("TSK_ID, PROJ_ID, STATUS, "
+            . "TASK_NM, WEB_ADDR", "TSK_DESCR");
+        $task = Database_Queries::selectFrom("TASK_MODEL", 
+                $fields, "TASK", "TSK_ID", $tsk_id);
+        if(!isset($task)){
+            $task = null;
             }
-        $db->close();
         return $task;
         }
 
@@ -152,7 +145,7 @@ class Task_Model
             $project_tasks = array();
             while ($row = mysql_fetch_object($result))
                 {
-                array_push($project_tasks, new Task_Model($row));
+                array_push($project_tasks, new Task_Model($row->TSK_ID));
                 }
             } else
             {

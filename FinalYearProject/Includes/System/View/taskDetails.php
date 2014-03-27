@@ -33,7 +33,7 @@
                         <?php
                         if (is_object($taskEstimation))
                             {
-                            echo $taskEstimation->start_dt();
+                            echo $taskEstimation->start_dt;
                             } else
                             {
                             echo $noEstimate;
@@ -46,7 +46,7 @@
                         <?php
                         if (is_object($taskEstimation))
                             {
-                            echo $taskEstimation->est_end_dt();
+                            echo $taskEstimation->est_end_dt;
                             } else
                             {
                             echo $noEstimate;
@@ -103,6 +103,7 @@
                             </div>
                         </li>
                     </div> <!--End of direct task info-->
+
                     <div class="details" id="staff">
                         <li><div class="infoTitle">Staff associated: </div>
                             <div class="info">
@@ -119,6 +120,7 @@
                             </div>
                         </li>
                     </div><!--End of staff div-->
+
                     <div class="details" id="estimation">
                         <?php
                         if (is_object($taskEstimation))
@@ -127,7 +129,7 @@
                             <li><div class="infoTitle">Planned Hours: </div>
                                 <div class="info">
                                     <?php
-                                    $planned_hours = $taskEstimation->pln_hr();
+                                    $planned_hours = $taskEstimation->pln_hr;
                                     if (isset($planned_hours))
                                         {
                                         echo $planned_hours;
@@ -141,7 +143,7 @@
                             <li><div class="infoTitle">Actual Hours: </div>
                                 <div class="info">
                                     <?php
-                                    $actual_hours = $taskEstimation->act_hr();
+                                    $actual_hours = $taskEstimation->act_hr;
                                     if (isset($actual_hours))
                                         {
                                         echo $actual_hours;
@@ -155,7 +157,7 @@
                             <li><div class="infoTitle">Actual End Date: </div>
                                 <div class="info">
                                     <?php
-                                    $actual_end_date = $taskEstimation->act_end_dt();
+                                    $actual_end_date = $taskEstimation->act_end_dt;
                                     if (isset($actual_end_date))
                                         {
                                         echo $actual_end_date;
@@ -165,9 +167,9 @@
                                         }
                                     } //End of is_object if statement
                                 ?>
-                            </div>
+                            </div> <!--End of info-->
                         </li>
-                    </div>
+                    </div> <!--End of estimation-->
 
                     <div class="details" id="dependencies">
                         <li><div class="infoTitle">Dependent on this task: </div>
@@ -175,11 +177,7 @@
                                 <?php
                                 if (isset($dependencies))
                                     {
-                                    $dependency = $dependencies->dpnd_on();
-                                    }
-                                if (isset($dependency))
-                                    {
-                                    echo $dependency;
+                                    echo $dependencies->DEPENDENCY_ID;
                                     } else
                                     {
                                     echo "Not set";
@@ -187,7 +185,6 @@
                                 ?>
                             </div>
                         </li>
-
                     </div> <!--End of dependencies-->
                 </ul>
                 <div id="down"></div>

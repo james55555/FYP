@@ -32,7 +32,6 @@ class Estimation_Model extends Generic_Model
             $this->act_end_dt = $row->act_end_dt;
             $this->est_end_dt = $row->est_end_dt;
             }
-            
         }
 
     public function est_id()
@@ -64,26 +63,13 @@ class Estimation_Model extends Generic_Model
         {
         return $this->est_end_dt;
         }
+
     public static function get($est_id)
         {
-        $db = new Database();
-        $db->connect();
-
-        $query = "SELECT est_id, act_hr, pln_hr, start_dt, act_end_dt, est_end_dt"
-                . " FROM ESTIMATION"
-                . " WHERE est_id='" . $est_id . "'";
-
-
-        if ($db->querySuccess($query))
-            {
-            $result = mysql_query($query);
-            $row = mysql_fetch_object($result);
-            $estimation = new Estimation_Model($row);
-            } else
-            {
-            throw new Exception("QUERY ISSUE!!");
-            }
-        $db->close();
+        $fields = array("est_id", "act_hr", "pln_hr", "start_dt",
+            "act_end_dt", "est_end_dt");
+        $estimation = Database_Queries::selectFrom("ESTIMATION_MODEL", $fields, 
+                "ESTIMATION", "EST_ID", $est_id);
         return $estimation;
         }
 
@@ -123,9 +109,7 @@ class Estimation_Model extends Generic_Model
         $result = mysql_query($query);
         if ($result !== false)
             {
-            echo var_dump($result) . "<br/>";
             $estimations = array();
-            echo var_dump($estimations) . "<br/>";
             while ($row = mysql_fetch_object($result))
                 {
                 array_push($estimations, new Estimation_Model($row));
@@ -150,14 +134,14 @@ class Estimation_Model extends Generic_Model
         return $est_id;
         }
 
-    public static function delete($est_id){
+    public static function delete($est_id)
+        {
         $table = "ESTIMATION";
         $field = "est_id";
-        
+
         $success = parent::__delete($est_id, $table, $field);
-        
-            return $success;
-            
+
+        return $success;
         }
 
     }

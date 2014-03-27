@@ -11,6 +11,7 @@ abstract class Validator_Model
      * This function can be used to validate a variable
      * @access private
      * 
+     * @param String $field     : This is the variable
      * @param String $string    : This is the name of the variable
      * @param String $type      : This is the variable type
      * @param int $length       : This is the maximum length of a variable
@@ -66,23 +67,24 @@ abstract class Validator_Model
 
     public static function validateEmail($em, $field)
         {
-        
+
         $email = Validator_Model::htmlChar($em);
-        
+
         $emailError = array();
         if (strlen($email) > 50)
             {
             array_push($emailError, $field . "is too long! Must be less than 50 characters");
             }
         //Check if email contains only usable chars
-        if(strlen($email) !== 0){ 
-            
-        if (!preg_match("/([\w\-]+\@[\w\-]+\.[\w\-]+)/",$email))
+        if (strlen($email) !== 0)
             {
-            die("email chars aren't correct");
-            array_push($emailError, "Ensure " . $field . " contains correct characters!");
+
+            if (!preg_match("/([\w\-]+\@[\w\-]+\.[\w\-]+)/", $email))
+                {
+                die("email chars aren't correct");
+                array_push($emailError, "Ensure " . $field . " contains correct characters!");
+                }
             }
-        }
         if (sizeof($emailError) === 0)
             {
             $emailError = null;
@@ -130,6 +132,21 @@ abstract class Validator_Model
             return $array;
             }
         }
+        
+        /*
+         * Function to validate provided date.
+         * @param date $date        : This is a user provided date from a HTML5 date input
+         * @return boolean $valid   : This returns boolean based on whether date is valid
+         * 
+         */
+        public static function validateDate($date){
+            $valid = false;
+            if(checkdate($date)){
+                $valid = true;
+                }
+                return $valid;
+            }
 
     }
-    ?>
+
+?>

@@ -25,9 +25,5 @@ abstract
      * Set the default main function for all controllers
      */
         public abstract function main();
-        
-
-    }
-    
-  
-        ?>
+    }      
+  ?>

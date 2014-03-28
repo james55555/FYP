@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Description of Database_Instance
  *
@@ -18,10 +19,11 @@ class Database
             $DB_pwd = '';
     private
             $DB_nm = 'fyp';
-    
+
     /*
      * Connect to database
      */
+
     public //static
             function connect()
         {
@@ -32,12 +34,10 @@ class Database
             mysql_select_db($this->DB_nm, $this->conn) or die("Unable to Select Database \n" . mysqli_connect_error());
             }
         }
-        
 
     /*
      * Function to close database connection
      */
-
     public
             function close()
         {
@@ -96,36 +96,44 @@ class Database
             }
         }
 
-        /*
-         * Function to ascertain success of mysql_result 
-         * (Convert mysql result into boolean)
-         *  If the @param is false then there has been an issue running the query
-         *                          Therefore return boolean false
-         *  If the query produces a mysql resource then it has been successful
-         *                          Therefore retun boolean true
-         * @param mysql resource - This will either be false or a mysql resource                   
-         * @return boolean success
-         */
-
-        public
-
-        function querySuccess($result)
-            {
-            //if the result of the query is true (i.e. has returned without fail)
-            //then assign @boolean success true 
-            if ($result === false)
-                {
-                $success = false;
-                }
-            //else echo the error and return @boolean success false
-            else
-                {
-
-                $success = true;
-                }
-            return $success;
-            }
-
+    /**
+     * Function to get the auto increment id of the last inserted row.
+     * @return integer
+     */
+    public function getInsertId()
+        {
+        return mysql_insert_id($this->conn);
         }
+
+    /*
+     * Function to ascertain success of mysql_result 
+     * (Convert mysql result into boolean)
+     *  If the @param is false then there has been an issue running the query
+     *                          Therefore return boolean false
+     *  If the query produces a mysql resource then it has been successful
+     *                          Therefore retun boolean true
+     * @param mysql resource - This will either be false or a mysql resource                   
+     * @return boolean success
+     */
+
+    public
+            function querySuccess($result)
+        {
+        //if the result of the query is true (i.e. has returned without fail)
+        //then assign @boolean success true 
+        if ($result === false)
+            {
+            $success = false;
+            }
+        //else echo the error and return @boolean success false
+        else
+            {
+
+            $success = true;
+            }
+        return $success;
+        }
+
+    }
 
 ?>

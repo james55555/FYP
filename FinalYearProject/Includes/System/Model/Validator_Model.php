@@ -132,20 +132,24 @@ abstract class Validator_Model
             return $array;
             }
         }
-        
-        /*
-         * Function to validate provided date.
-         * @param date $date        : This is a user provided date from a HTML5 date input
-         * @return boolean $valid   : This returns boolean based on whether date is valid
-         * 
-         */
-        public static function validateDate($date){
-            $valid = false;
-            if(checkdate($date)){
-                $valid = true;
-                }
-                return $valid;
+
+    /*
+     * Function to validate provided date.
+     * @param date $date        : This is a user provided date from a HTML5 date input
+     * @return boolean $valid   : This returns boolean based on whether date is valid
+     * 
+     */
+
+    public static function validateDate($date)
+        {
+        $valid = false;
+        $parts = explode("-", $date);
+        if (checkdate($parts[0], $parts[1], $parts[2]))
+            {
+            $valid = true;
             }
+        return $valid;
+        }
 
     }
 

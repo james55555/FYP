@@ -54,7 +54,8 @@
                         ?>
                     </p>
                 </div> <!--End of end date div-->
-                <button id="up" onclick="javascript:location.href='?page=Home'">
+                <button id="up" 
+                        onclick="javascript:location.href='?page=Task'">
                     <img src="Includes/CSS/img/Icons/up.png" 
                          alt="up" title="Return to task list"
                          width="20" height="20"/>

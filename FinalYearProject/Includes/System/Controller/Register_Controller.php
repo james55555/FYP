@@ -59,7 +59,6 @@ class Register_Controller extends Main_Controller
         $registrationFields['user_id'] = $_POST['user_id'];
         $registrationFields['password'] = PassHash::hash($_POST['password']);
         
-        
             $this->newUser = Account_Model::addUser($registrationFields);
             if (is_bool($this->newUser))
                 {

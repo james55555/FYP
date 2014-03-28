@@ -174,10 +174,11 @@ class Project_Model extends Validator_Model
         $fields = $db->filterParameters($fields);
 //This will be a multi-dimensional array due to the checkbox field.
         $proj_nm = $fields['pName'];
-        $htmlDescr = $fields['pDescr'];
+        $proj_descr = $fields['pDescr'];
 //GET estimation vairables
         $proj_start = $fields['pStart'];
         $proj_deadline = $fields['pDead'];
+        $pln_hr = $fields['pln_hr'];
         //GET user who is adding project
         $account = $_SESSION['user'];
 
@@ -187,31 +188,64 @@ class Project_Model extends Validator_Model
             {
             return $valid;
             }
-        $projInsert = "START TRANSACTION;"
-                //Insert into project table
-                . "INSERT INTO  `fyp`.`project` ("
+        //Set insert into PROJECT String
+        $proj_insert = "INSERT INTO  `fyp`.`project` ("
                 . " `proj_id` ,"
                 . " `proj_nm` ,"
                 . " `proj_descr`"
                 . ") VALUES ("
                 . "NULL,"
                 . " '" . $proj_nm . "',"
-                . " '" . $proj_descr . "');"
-                //Insert new project into user_project table
-                . " INSERT INTO `fyp`.`user_project` ("
+                . " '" . $proj_descr . "');";
+        //Set insert into USER_PROJECT String
+        $userProj_insert = "INSERT INTO `fyp`.`user_project` ("
                 . " `proj_id` , "
                 . " `user_id`)"
                 . " VALUES ("
                 . " LAST_INSERT_ID(),"
-                . " `" . $_SESSION['user']->userId() . "`);"
-                . "COMMIT;";
+                . " `" . $account->user_id() . "`);";
+        //Set insert into ESTIMATION
+        $estimation_insert = "INSERT INTO ESTIMATION"
+                . "(EST_ID,"
+                . " ACT_HR,"
+                . " PLN_HR,"
+                . " START_DT,"
+                . " ACT_END_DT,"
+                . " EST_END_DT)"
+                . "VALUES"
+                . "(NULL,"
+                . " NULL,"
+                . " '" . $pln_hr . "'"
+                . " '" . $proj_start . "'"
+                . " NULL,"
+                . " '" . $proj_deadline . "');";
+        //Concatenate insert into PROJECT and USER_PROJECT
+        $proj_query = "START TRANSACTION; "
+                . $proj_insert
+                . $userProj_insert
+                . " COMMIT";
+        //Get the id from 
+        $proj_id = $db->getInsertId();
+        $est_query = "START TRANSACTION; "
+                . $estimation_insert
+                //Set insert into PROJECT_ESTIMATION
+                . " INSERT INTO PROJECT_ESTIMATION"
+                . " (proj_id,"
+                . " est_id)"
+                . " VALUES ("
+                . " '" . $proj_id . "');"
+                . " last_insert_id(),"
+                . " COMMIT;";
 
-        $result = mysql_query($projInsert);
-        if (!$db->querySuccess($result))
+        $proj_result = mysql_query($proj_query);
+        $est_result = mysql_query($est_query);
+        if (!$db->querySuccess($proj_result) || 
+                !$db->querySuccess($est_result))
             {
-            echo "Error inserting data into database."
+            return "Error inserting data into database."
             . "MYSQL Error: " . mysql_error();
             }
+            return true;
         }
 
     private static function validateArray($fields)

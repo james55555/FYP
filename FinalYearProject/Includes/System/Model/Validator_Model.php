@@ -143,10 +143,14 @@ abstract class Validator_Model
     public static function validateDate($date)
         {
         $valid = false;
-        $parts = explode("-", $date);
-        if (checkdate($parts[0], $parts[1], $parts[2]))
+        echo $date;
+        if (isset($date))
             {
-            $valid = true;
+            $parts = explode("-", $date);
+            if (checkdate($parts[0], $parts[1], $parts[2]))
+                {
+                $valid = true;
+                }
             }
         return $valid;
         }

@@ -11,7 +11,7 @@ class Task_Controller extends Main_Controller
      * Function to set task variables based on project data and 
      * display high-level task view
      */
-
+private $project;
     public
             function main()
         {
@@ -21,8 +21,8 @@ class Task_Controller extends Main_Controller
             {
             $this->registry->project_tasks = null;
             }
-        $project = new Project_Model($_GET['proj_id']);
-        $this->registry->projectEstimation = Estimation_Model::get($project->estimation());
+        $this->project = new Project_Model($_GET['proj_id']);
+        $this->registry->projectEstimation = Estimation_Model::get($this->project->estimation());
         //Show the projectTasks view
         $this->registry->View_Template->show('projectTasks');
         }
@@ -34,6 +34,7 @@ class Task_Controller extends Main_Controller
 
     public function details()
         {
+        $this->registry->project = $this->project;
         $this->registry->task = new Task_Model($_GET['task_id']);
         $this->registry->taskEstimation = Estimation_Model::get($this->registry->task->estimation());
         $this->registry->taskStaff = Staff_Model::get($this->registry->task->staff());
@@ -42,11 +43,6 @@ class Task_Controller extends Main_Controller
         $this->registry->View_Template->show('taskDetails');
         }
 
-    public function addTask()
-        {
-
-        $this->registry->View_Template->show('addTask');
-        }
 
     public function editTask()
         {

@@ -30,7 +30,8 @@
             <div id="showMsg">
 
                 <?php
-                if ($this->registry->error)
+                if (isset($this->registry->error) &&
+                        $this->registry->error)
                     {
                     //Reset registry error
                     $this->registry->error = false;

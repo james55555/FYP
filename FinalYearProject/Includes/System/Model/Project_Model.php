@@ -102,26 +102,29 @@ class Project_Model extends Validator_Model
         //Archive project
         $proj_id = trim($proj_id);
 
-        $archiveQuery = "START TRANSACTION;"
+        $archiveQuery = //"START TRANSACTION;"
                 //Archive project - initial project
-                . " INSERT INTO archive.project"
+                //. 
+                " INSERT INTO archive.project"
                 . " (SELECT proj_id,"
                 . " proj_nm,"
                 . " proj_descr,"
                 . " null"
                 . " FROM fyp.project"
                 . " WHERE proj_id='" . $proj_id . "');"
-                //Archive user reference to project
-                . " INSERT INTO archive.user_project"
-                . " (SELECT user_id,"
-                . " proj_id,"
-                . " null"
-                . " FROM fyp.user_project"
-                . " WHERE proj_id='" . $proj_id . "');"
-                . " COMMIT;";
+        //Archive user reference to project **ERROR
+        /* . " INSERT INTO archive.user_project"
+          . " (SELECT user_id,"
+          . " proj_id,"
+          . " null"
+          . " FROM fyp.user_project"
+          . " WHERE proj_id='" . $proj_id . "');" */;
+        //. " COMMIT;";
         $archiveResult = mysql_query($archiveQuery);
         if (!$db->querySuccess($archiveResult))
             {
+            echo $archiveQuery;
+            echo mysql_error();
             return false;
             }
         $project = self::getProject($proj_id);
@@ -150,6 +153,8 @@ class Project_Model extends Validator_Model
             $deleteTask = Task_Model::getAllTasks($proj_id);
             if (!$deleteTask)
                 {
+
+                echo "taskresul";
                 return false;
                 }
             foreach ($deleteTask as $delete)
@@ -157,13 +162,15 @@ class Project_Model extends Validator_Model
                 $taskResult = Task_Model::deleteTask($delete->tsk_id());
                 if (!$taskResult)
                     {
+                    echo "taskresul";
                     return false;
                     }
                 }
             $del = true;
-            $db->close();
-            return $del;
             }
+
+        $db->close();
+        return $del;
         }
 
     public static function addProject($fields)
@@ -172,10 +179,10 @@ class Project_Model extends Validator_Model
         $db = new Database();
         $db->connect();
         $fields = $db->filterParameters($fields);
-//This will be a multi-dimensional array due to the checkbox field.
+        //This will be a multi-dimensional array due to the checkbox field.
         $proj_nm = $fields['pName'];
         $proj_descr = $fields['pDescr'];
-//GET estimation vairables
+        //GET estimation vairables
         $proj_start = $fields['pStart'];
         $proj_deadline = $fields['pDead'];
         $pln_hr = $fields['pln_hr'];
@@ -184,7 +191,7 @@ class Project_Model extends Validator_Model
 
 
         $valid = Project_Model::validateArray($fields);
-        if (is_array($valid))
+        if (is_array($valid) || is_string($valid))
             {
             return $valid;
             }
@@ -203,7 +210,7 @@ class Project_Model extends Validator_Model
                 . " `user_id`)"
                 . " VALUES ("
                 . " LAST_INSERT_ID(),"
-                . " `" . $account->user_id() . "`);";
+                . " `" . $account->user_id . "`);";
         //Set insert into ESTIMATION
         $estimation_insert = "INSERT INTO ESTIMATION"
                 . "(EST_ID,"
@@ -239,13 +246,13 @@ class Project_Model extends Validator_Model
 
         $proj_result = mysql_query($proj_query);
         $est_result = mysql_query($est_query);
-        if (!$db->querySuccess($proj_result) || 
+        if (!$db->querySuccess($proj_result) ||
                 !$db->querySuccess($est_result))
             {
-            return "Error inserting data into database."
-            . "MYSQL Error: " . mysql_error();
+            return "Error inserting data into database. "
+                    . "MYSQL Error: " . mysql_error();
             }
-            return true;
+        return true;
         }
 
     private static function validateArray($fields)
@@ -256,27 +263,31 @@ class Project_Model extends Validator_Model
 
         foreach ($fields as $field => $content)
             {
-            if ($field === "proj_nm")
+            if ($field === "pName")
                 {
                 $length = 30;
                 $field = "Project Name";
-                } elseif ($field === "proj_descr")
+                } elseif ($field === "pDescr")
                 {
                 $length = 200;
                 $field = "Project Description";
+                } elseif ($field === "pln_hr")
+                {
+                $length = null;
+                $field = "Planned Hours";
+                $type = "int";
                 } elseif ($field === "pStart" || $field === "pDead")
                 {
-                $validated = Validator_Model::validateDate($field);
+                $field = "Project Dates";
+                $validated = Validator_Model::validateDate($content);
                 }
-            if (!isset($validated))
+            $validated = Validator_Model::variableCheck($field, $content, $type, $length);
+            if (is_array($validated) || is_string($validated))
                 {
-                $validated = Validator_Model::variableCheck($field, $content, $type, $length);
+                return $validated;
                 }
             }
-        if (isset($validated))
-            {
-            return $validated;
-            }
+            return null;
         }
 
     }

@@ -37,7 +37,10 @@ class Home_Controller extends Main_Controller
             }
         $this->registry->View_Template->show('showMessage');
         }
-
+        public function addProj(){
+            $this->registry->View_Template->show('addProject');
+            }
+        
     }
 
 ?>

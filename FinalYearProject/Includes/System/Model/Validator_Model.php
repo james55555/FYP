@@ -35,9 +35,9 @@ abstract class Validator_Model
             }
         elseif (!$type($string))
             {
-            $typeErr = "String and type don't match! "
-                    . "\nField is: " . $field .
-                    "\nTrying to run: " . $type . "(" . $string . ")";
+            $typeErr = "String and type don't match!<br>"
+                    . "Field is: " . $field . "<br>"
+                    . "Trying to run: " . $type . "(" . $string . ")";
             array_push($errors, $typeErr);
             }
         

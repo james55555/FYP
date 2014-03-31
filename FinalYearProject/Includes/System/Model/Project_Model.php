@@ -195,69 +195,69 @@ class Project_Model extends Validator_Model
             {
             return $valid;
             }
+                    //Start the transaction
+        mysql_query("START TRANSACTION;");
         //Set insert into PROJECT String
-        $proj_insert = "INSERT INTO  `fyp`.`project` ("
-                . " `proj_id` ,"
-                . " `proj_nm` ,"
-                . " `proj_descr`"
+        $proj_insert = "INSERT INTO PROJECT ("
+                . " proj_id,"
+                . " proj_nm,"
+                . " proj_descr"
                 . ") VALUES ("
                 . "NULL,"
                 . " '" . $proj_nm . "',"
                 . " '" . $proj_descr . "'); ";
-        //Set insert into USER_PROJECT String
-        $userProj_insert = "INSERT INTO `fyp`.`user_project` ("
-                . " `proj_id` , "
-                . " `user_id`)"
+        //Run the query and get the project id
+        $project_result = mysql_query($proj_insert);
+        $proj_insert_id = $db->getInsertId();
+        //Set insert into USER_PROJECT
+        $userProj_insert = "INSERT INTO USER_PROJECT ("
+                . " user_id, "
+                . " proj_id)"
                 . " VALUES ("
-                . " LAST_INSERT_ID(),"
-                . " `" . $account->user_id . "`); ";
+                . " '" . $account->user_id . "',"
+                . " '" . $proj_insert_id . "');";
+        //Run query
+        $userProject_result = mysql_query($userProj_insert);
         //Set insert into ESTIMATION
-        $estimation_insert = "INSERT INTO ESTIMATION"
-                . " (EST_ID,"
-                . " ACT_HR,"
-                . " PLN_HR,"
-                . " START_DT,"
-                . " ACT_END_DT,"
-                . " EST_END_DT)"
-                . " VALUES"
-                . "(NULL,"
-                . " NULL,"
-                . " '" . $pln_hr . "',"
-                . " '" . $proj_start . "',"
-                . " NULL,"
-                . " '" . $proj_deadline . "'); ";
-        //Concatenate insert into PROJECT and USER_PROJECT
-        $proj_query = $proj_insert
-                . $userProj_insert;
-        //Get the id from 
-        $proj_id = $db->getInsertId();
-        $est_query = $estimation_insert
-                //Set insert into PROJECT_ESTIMATION
-                . " INSERT INTO PROJECT_ESTIMATION"
+        $estimation_insert = "INSERT INTO ESTIMATION ("
+                . "EST_ID, "
+                . "ACT_HR, "
+                . "PLN_HR, "
+                . "START_DT, "
+                . "ACT_END_DT, "
+                . "EST_END_DT) "
+                . "VALUES( "
+                . "NULL, "
+                . "NULL, "
+                . "'" . $pln_hr . "', "
+                . "'" . $proj_start . "', "
+                . "NULL, "
+                . "'" . $proj_deadline . "');";
+        //Run query and get estimation id.
+        $estimation_result = mysql_query($estimation_insert);
+        $est_insert_id = $db->getInsertId();
+        //Set insert into PROJECT_ESTIMATION
+        $proj_est = "INSERT INTO PROJECT_ESTIMATION"
                 . " (proj_id,"
                 . " est_id)"
                 . " VALUES ("
-                . " '" . $proj_id . "',"
-                . " last_insert_id());";
-        //Logic to either commit or rollback based on success or failure.
-        //Start the transaction
-        mysql_query("START TRANSACTION;");
-        $proj_result = mysql_query($proj_query);
-        $est_result = mysql_query($est_query);
-        if (mysql_affected_rows() > 0)
+                . " '" . $proj_insert_id . "',"
+                . " '" . $est_insert_id . "');";
+        $projectEstimation_result = mysql_query($proj_est);
+
+        //If all queries are successful then commit the changes
+        if ($project_result 
+                && $userProject_result
+                && $estimation_result
+                && $projectEstimation_result)
             {
             mysql_query("COMMIT;");
-            } else
+            } 
+            //If any of the queries fail then rollback the query and print out error details
+            else
             {
             mysql_query("ROLLBACK;");
-            }
-        if (!$db->querySuccess($proj_result) ||
-                !$db->querySuccess($est_result))
-            {
-            return "Error inserting data into database. <br/>"
-                    . "MYSQL Error: " . mysql_error() . "<br/>"
-                    . "proj result: " . $proj_query
-                    . "<br/>esti result: " . $est_query;
+            return "Error inserting into the database<br/>";
             }
         return true;
         }

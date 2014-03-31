@@ -36,22 +36,16 @@ abstract class Validator_Model
             array_push($errors, $typeErr);
             }
         // now we see if there is anything in the string
-        if (empty($string) || $string === '' || strlen($string === 0))
+        elseif (empty($string) || $string === '' || strlen($string === 0))
             {
             $emptyErr = $field . " can't be empty";
             array_push($errors, $emptyErr);
             }
         // then we check how long the string is
-        if (strlen($string) > $length)
+        elseif (strlen($string) > $length)
             {
             $lengthErr = $field . " cannot be more than " . $length . " characters long!";
             array_push($errors, $lengthErr);
-            }
-        //then check if the values contain any unwanted characters
-        if (preg_match("/[0-9A-Za-z]/", $string) === 0)
-            {
-            $charErr = $field . " can only contain letters and numbers.";
-            array_push($errors, $charErr);
             }
         if (sizeof($errors) === 0)
             {
@@ -78,7 +72,6 @@ abstract class Validator_Model
         //Check if email contains only usable chars
         if (strlen($email) !== 0)
             {
-
             if (!preg_match("/([\w\-]+\@[\w\-]+\.[\w\-]+)/", $email))
                 {
                 die("email chars aren't correct");
@@ -139,19 +132,22 @@ abstract class Validator_Model
      * @return boolean $valid   : This returns boolean based on whether date is valid
      * 
      */
-
     public static function validateDate($date)
         {
-        $valid = false;
-        echo $date;
-        if (isset($date))
+        $valid = true;
+        if (isset($date) && $date !== '')
             {
             $parts = explode("-", $date);
             if (checkdate($parts[0], $parts[1], $parts[2]))
                 {
                 $valid = true;
                 }
+                return "Invalid date format!";
             }
+            else {
+                return "A date field is empty!";
+                }
+            
         return $valid;
         }
 

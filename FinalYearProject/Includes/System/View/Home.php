@@ -29,8 +29,9 @@
             <div class="upper">
                 <h1>My Projects</h1>
                 <!--Image button to represent add new project-->
-                <input type="button" class="button" value="Add New"
-                       action="?page=Home&action=add"/>
+                <input type="submit" class="button" value="Add New"
+                       onclick="javascript:location.href=
+                                   '?page=Add&action=addProj&isProj=true'"/>
             </div>
             <table id="myProjects" class="table">
                 <tr>

@@ -9,7 +9,7 @@ abstract class Validator_Model
     {
     /*
      * This function can be used to validate a variable
-     * @access private
+     * @access public
      * 
      * @param String $field     : This is the variable
      * @param String $string    : This is the name of the variable
@@ -23,24 +23,24 @@ abstract class Validator_Model
 
     public static function variableCheck($field, $string, $type, $length)
         {
-
         // assign the type
         $type = 'is_' . $type;
         $errors = array();
 
-        if (!$type($string))
-            {
-            $typeErr = "String and type don't match! "
-                    . "<br/>Field is: " . $field .
-                    "<br/>Type: " . $type;
-            array_push($errors, $typeErr);
-            }
         // now we see if there is anything in the string
-        elseif (empty($string) || $string === '' || strlen($string === 0))
+        if (empty($string) || $string === '' || strlen($string === 0))
             {
             $emptyErr = $field . " can't be empty";
             array_push($errors, $emptyErr);
             }
+        elseif (!$type($string))
+            {
+            $typeErr = "String and type don't match! "
+                    . "\nField is: " . $field .
+                    "\nTrying to run: " . $type . "(" . $string . ")";
+            array_push($errors, $typeErr);
+            }
+        
         // then we check how long the string is
         elseif (strlen($string) > $length)
             {

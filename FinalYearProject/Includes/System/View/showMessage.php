@@ -30,8 +30,8 @@
             <div id="showMsg">
 
                 <?php
-                if (isset($this->registry->error) &&
-                        $this->registry->error)
+                
+                if ($this->registry->error)
                     {
                     //Reset registry error
                     $this->registry->error = false;
@@ -55,11 +55,12 @@
                     <?php
                     } else
                     {
+                        var_dump($this->registry->message);
                     echo "<p>" . $this->registry->message . "</p>";
                     }
                 ?>
 
-            </div>
-        </div>
+            </div> <!--End of showMsg div-->
+        </div> <!--End of container div-->
     </body>
 </html>

@@ -203,54 +203,61 @@ class Project_Model extends Validator_Model
                 . ") VALUES ("
                 . "NULL,"
                 . " '" . $proj_nm . "',"
-                . " '" . $proj_descr . "');";
+                . " '" . $proj_descr . "'); ";
         //Set insert into USER_PROJECT String
         $userProj_insert = "INSERT INTO `fyp`.`user_project` ("
                 . " `proj_id` , "
                 . " `user_id`)"
                 . " VALUES ("
                 . " LAST_INSERT_ID(),"
-                . " `" . $account->user_id . "`);";
+                . " `" . $account->user_id . "`); ";
         //Set insert into ESTIMATION
         $estimation_insert = "INSERT INTO ESTIMATION"
-                . "(EST_ID,"
+                . " (EST_ID,"
                 . " ACT_HR,"
                 . " PLN_HR,"
                 . " START_DT,"
                 . " ACT_END_DT,"
                 . " EST_END_DT)"
-                . "VALUES"
+                . " VALUES"
                 . "(NULL,"
                 . " NULL,"
-                . " '" . $pln_hr . "'"
-                . " '" . $proj_start . "'"
+                . " '" . $pln_hr . "',"
+                . " '" . $proj_start . "',"
                 . " NULL,"
-                . " '" . $proj_deadline . "');";
+                . " '" . $proj_deadline . "'); ";
         //Concatenate insert into PROJECT and USER_PROJECT
-        $proj_query = "START TRANSACTION; "
-                . $proj_insert
-                . $userProj_insert
-                . " COMMIT";
+        $proj_query = $proj_insert
+                . $userProj_insert;
         //Get the id from 
         $proj_id = $db->getInsertId();
-        $est_query = "START TRANSACTION; "
-                . $estimation_insert
+        $est_query = $estimation_insert
                 //Set insert into PROJECT_ESTIMATION
                 . " INSERT INTO PROJECT_ESTIMATION"
                 . " (proj_id,"
                 . " est_id)"
                 . " VALUES ("
-                . " '" . $proj_id . "');"
-                . " last_insert_id(),"
-                . " COMMIT;";
-
+                . " '" . $proj_id . "',"
+                . " last_insert_id());";
+        //Logic to either commit or rollback based on success or failure.
+        //Start the transaction
+        mysql_query("START TRANSACTION;");
         $proj_result = mysql_query($proj_query);
         $est_result = mysql_query($est_query);
+        if (mysql_affected_rows() > 0)
+            {
+            mysql_query("COMMIT;");
+            } else
+            {
+            mysql_query("ROLLBACK;");
+            }
         if (!$db->querySuccess($proj_result) ||
                 !$db->querySuccess($est_result))
             {
-            return "Error inserting data into database. "
-                    . "MYSQL Error: " . mysql_error();
+            return "Error inserting data into database. <br/>"
+                    . "MYSQL Error: " . mysql_error() . "<br/>"
+                    . "proj result: " . $proj_query
+                    . "<br/>esti result: " . $est_query;
             }
         return true;
         }
@@ -273,9 +280,10 @@ class Project_Model extends Validator_Model
                 $field = "Project Description";
                 } elseif ($field === "pln_hr")
                 {
-                $length = null;
+                $length = 4;
                 $field = "Planned Hours";
-                $type = "int";
+                //Assign field to numeric type as it is form input
+                $type = "numeric";
                 } elseif ($field === "pStart" || $field === "pDead")
                 {
                 $field = "Project Dates";
@@ -287,7 +295,7 @@ class Project_Model extends Validator_Model
                 return $validated;
                 }
             }
-            return null;
+        return null;
         }
 
     }

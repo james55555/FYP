@@ -30,7 +30,7 @@
                                 cols=50
                                 maxlength="200"
                                 name="pDescr"
-                                placeholder="Limit of 200 ">Limit of 200 characters</textarea></label>
+                                placeholder="Limit of 200 characters"></textarea></label>
                     </div> <!--End of details-->
                     <div class="regInput" id="projDates">
                         <h2>Project Dates</h2>

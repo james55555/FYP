@@ -102,31 +102,48 @@ class Project_Model extends Validator_Model
         //Archive project
         $proj_id = trim($proj_id);
 
-        $archiveQuery = //"START TRANSACTION;"
-                //Archive project - initial project
-                //. 
-                " INSERT INTO archive.project"
+        //Set up archive query insert
+        $archiveProj = "INSERT INTO archive.project"
                 . " (SELECT proj_id,"
                 . " proj_nm,"
                 . " proj_descr,"
                 . " null"
                 . " FROM fyp.project"
-                . " WHERE proj_id='" . $proj_id . "');"
+                . " WHERE proj_id='" . $proj_id . "');";
+
+        $archiveProj_result = mysql_query($archiveProj);
+        $projExist = Database_Queries::selectFrom(null, "COUNT(*)", "PROJECT", "PROJ_ID", $proj_id);
+
         //Archive user reference to project **ERROR
-        /* . " INSERT INTO archive.user_project"
-          . " (SELECT user_id,"
-          . " proj_id,"
-          . " null"
-          . " FROM fyp.user_project"
-          . " WHERE proj_id='" . $proj_id . "');" */;
-        //. " COMMIT;";
-        $archiveResult = mysql_query($archiveQuery);
-        if (!$db->querySuccess($archiveResult))
+        $archiveUser_Proj = "INSERT INTO archive.user_project"
+                . " (SELECT user_id,"
+                . " proj_id,"
+                . " null"
+                . " FROM fyp.user_project"
+                . " WHERE proj_id='" . $proj_id . "');";
+        //Get query results
+        $archiveUser_Proj_result = mysql_query($archiveUser_Proj);
+        $user_projExist = Database_Queries::selectFrom(null, "COUNT(*)", "USER_PROJECT", "PROJ_ID", $proj_id);
+
+//Start transaction to archive data
+        mysql_query("START TRANSACTION;");
+//Error handling to check if the project has already been archived
+        if ($archiveProj_result && mysql_num_rows($projExist) !== 1)
             {
-            echo $archiveQuery;
-            echo mysql_error();
-            return false;
+            mysql_query("SAVEPOINT proj_insert;");
+            if ($archiveUser_Proj_result && mysql_num_rows($user_projExist !== 1))
+                {
+                mysql_query("COMMIT;");
+                } else
+                {
+                mysql_query("ROLLBACK TO proj_insert;");
+                }
+            } else
+            {
+            mysql_query("ROLLBACK;");
+            echo "query rolled back";
             }
+
         $project = self::getProject($proj_id);
 
         //Delete project from base table - PROJECT
@@ -135,12 +152,15 @@ class Project_Model extends Validator_Model
         $user_projectDelete = Database_Queries::deleteFrom("USER_PROJECT", "proj_id", $proj_id, null);
         if ($projectDelete && $user_projectDelete)
             {
-            
+            $estimation = Estimation_Model::delete($project->estimation);
             }
-        $estimation = Estimation_Model::delete($project->estimation());
+        if (!isset($estimation))
+            {
+            return false;
+            }
         if ($estimation)
             {
-            $estRef = ProjectEstimation_Model::delete($project->estimation());
+            $estRef = ProjectEstimation_Model::delete($project->estimation);
             }
         if (!$estRef)
             {
@@ -153,8 +173,6 @@ class Project_Model extends Validator_Model
             $deleteTask = Task_Model::getAllTasks($proj_id);
             if (!$deleteTask)
                 {
-
-                echo "taskresul";
                 return false;
                 }
             foreach ($deleteTask as $delete)
@@ -162,7 +180,6 @@ class Project_Model extends Validator_Model
                 $taskResult = Task_Model::deleteTask($delete->tsk_id());
                 if (!$taskResult)
                     {
-                    echo "taskresul";
                     return false;
                     }
                 }
@@ -195,7 +212,7 @@ class Project_Model extends Validator_Model
             {
             return $valid;
             }
-                    //Start the transaction
+        //Start the transaction
         mysql_query("START TRANSACTION;");
         //Set insert into PROJECT String
         $proj_insert = "INSERT INTO PROJECT ("
@@ -246,15 +263,12 @@ class Project_Model extends Validator_Model
         $projectEstimation_result = mysql_query($proj_est);
 
         //If all queries are successful then commit the changes
-        if ($project_result 
-                && $userProject_result
-                && $estimation_result
-                && $projectEstimation_result)
+        if ($project_result && $userProject_result && $estimation_result && $projectEstimation_result)
             {
             mysql_query("COMMIT;");
-            } 
-            //If any of the queries fail then rollback the query and print out error details
-            else
+            }
+        //If any of the queries fail then rollback the query and print out error details
+        else
             {
             mysql_query("ROLLBACK;");
             return "Error inserting into the database<br/>";

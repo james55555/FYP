@@ -18,7 +18,7 @@ class Project_Model extends Validator_Model
             $estimate;
 
     /*
-     * construct new project object
+     * Constructor class to create new Project object
      */
 
     public
@@ -102,72 +102,37 @@ class Project_Model extends Validator_Model
         //Archive project
         $proj_id = trim($proj_id);
 
-        //Set up archive query insert
-        $archiveProj = "INSERT INTO archive.project"
-                . " (SELECT proj_id,"
-                . " proj_nm,"
-                . " proj_descr,"
-                . " null"
-                . " FROM fyp.project"
-                . " WHERE proj_id='" . $proj_id . "');";
+        $project = new Project_Model($proj_id);
 
-        $archiveProj_result = mysql_query($archiveProj);
-        $projExist = Database_Queries::selectFrom(null, "COUNT(*)", "PROJECT", "PROJ_ID", $proj_id);
-
-        //Archive user reference to project **ERROR
-        $archiveUser_Proj = "INSERT INTO archive.user_project"
-                . " (SELECT user_id,"
-                . " proj_id,"
-                . " null"
-                . " FROM fyp.user_project"
-                . " WHERE proj_id='" . $proj_id . "');";
-        //Get query results
-        $archiveUser_Proj_result = mysql_query($archiveUser_Proj);
-        $user_projExist = Database_Queries::selectFrom(null, "COUNT(*)", "USER_PROJECT", "PROJ_ID", $proj_id);
-
-//Start transaction to archive data
-        mysql_query("START TRANSACTION;");
-//Error handling to check if the project has already been archived
-        if ($archiveProj_result && mysql_num_rows($projExist) !== 1)
-            {
-            mysql_query("SAVEPOINT proj_insert;");
-            if ($archiveUser_Proj_result && mysql_num_rows($user_projExist !== 1))
-                {
-                mysql_query("COMMIT;");
-                } else
-                {
-                mysql_query("ROLLBACK TO proj_insert;");
-                }
-            } else
-            {
-            mysql_query("ROLLBACK;");
-            echo "query rolled back";
+        var_dump($project);
+        if(!isset($project)){
+            return false;
             }
-
-        $project = self::getProject($proj_id);
-
-        //Delete project from base table - PROJECT
-        $projectDelete = Database_Queries::deleteFrom("PROJECT", "proj_id", $proj_id, null);
-        //Disassociate project reference to user in USER_PROJECT
-        $user_projectDelete = Database_Queries::deleteFrom("USER_PROJECT", "proj_id", $proj_id, null);
-        if ($projectDelete && $user_projectDelete)
-            {
-            $estimation = Estimation_Model::delete($project->estimation);
-            }
+        $estimation = Estimation_Model::delete($project->estimate);
+        echo "estimate deleted.. " . var_dump($estimation);
         if (!isset($estimation))
             {
             return false;
             }
         if ($estimation)
             {
-            $estRef = ProjectEstimation_Model::delete($project->estimation);
+            $estRef = ProjectEstimation_Model::delete($project->estimate);
+            echo "estref deleted.. " . var_dump($estRef);
+        die("died");
             }
-        if (!$estRef)
+        if (isset($estRef) && $estRef)
+            {
+            //Delete project from base table - PROJECT
+            $projectDelete = Database_Queries::deleteFrom("PROJECT", "proj_id", $proj_id, null);
+
+        //Disassociate project reference to user in USER_PROJECT
+            $user_projectDelete = Database_Queries::deleteFrom("USER_PROJECT", "proj_id", $proj_id, null);
+            } else
             {
             return false;
             }
         //Delete from reference table between PROJECT and ESTIMATION
-        elseif (isset($estRef) && $estRef)
+        if ($projectDelete && $user_projectDelete)
             {
             //Loop through all tasks associated with the project and remove each one
             $deleteTask = Task_Model::getAllTasks($proj_id);
@@ -311,5 +276,5 @@ class Project_Model extends Validator_Model
             }
         return null;
         }
-
+        
     }

@@ -102,22 +102,26 @@ class Database_Queries extends Database
             $archSuccess = self::archive($check[0], $check[1], $check[2]);
             if (!$archSuccess)
                 {
-                return false;
+                echo $table . " was already archived";
                 }
+            $db->connect();
 //Query uses a transactional statement to allow rollback if 
 //scaled to an automated process
-            $query = "DELETE FROM " . $check[0]
+            $query = " DELETE FROM " . $check[0]
                     . " WHERE " . $check[1]
-                    . " ='" . $check[2] . "';";
+                    . " ='" . $check[2] . "'; ";
             } else
             {
             $query = $setQuery;
             }
+
         echo "<br/> {$query} </br>";
         //Start the delete transaction 
         mysql_query("START TRANSACTION;");
         //Run the query to delete
         $result = mysql_query($query);
+
+        echo mysql_error() . "<br/>";
         //Assign true or false based on returned result
         $success = $db->querySuccess($result);
         if ($success)
@@ -151,9 +155,15 @@ class Database_Queries extends Database
         return $query;
         }
 
-        /*
-         * 
-         */
+    /*
+     * Function to archive data
+     * @param $table (String)       This is the table data is being taken from
+     * @param $colCheck (String)    This is the column in which the identifier is stored
+     * @param $id (String)          This is the field to be searched in $colCheck
+     * 
+     * @return boolean  This is either true or false depending on whether the query has been rolled back or not.
+     */
+
     public static function archive($table, $colCheck, $id)
         {
         $db = new Database();
@@ -161,26 +171,37 @@ class Database_Queries extends Database
         //Start transaction to archive data
         mysql_query("START TRANSACTION;");
         //Chec if the project exists in PROJECT
-        $rowExists = mysql_query("SELECT COUNT(*)"
+        $rowExists = mysql_query(" SELECT *"
                 . " FROM " . $table
                 . " WHERE " . $colCheck
-                . " ='" . $id . "';");
+                . " ='" . $id . "'; ");
+
         if (mysql_num_rows($rowExists) === 0)
             {
-            $tableFields = mysql_list_fields("ARCHIVE", $table);
+            $numFields = mysql_num_fields($rowExists);
+            $fields = array();
+            for ($i = 0; $i < $numFields; $i++)
+                {
+                array_push($fields, mysql_field_name($rowExists, $i));
+                }
+            $tableFields = implode(", ", $fields);
             //Set up archive query insert
             $archive_query = "INSERT INTO archive." . $table
                     . " (SELECT " . $tableFields
                     . " FROM " . $table
                     . " WHERE " . $colCheck
-                    . " ='" . $id . "');";
+                    . " ='" . $id . "')"
+                    . " ON DUPLICATE KEY UPDATE "
+                    . $colCheck = $id . ";";
 
             $archive_result = mysql_query($archive_query);
+            echo $table . " " . $archive_query;
             } else
             {
             $archive_result = null;
             }
-
+        echo "TABLE: " . $rowExists . "<br/>";
+        var_dump($archive_result);
         //Validate whether these queries have returned expected results
         if ($archive_result)
             {

@@ -41,7 +41,6 @@ class Task_Model
         if (isset($_GET['proj_id']))
             {
             $_assocProj = Project_Model::getProject($_GET['proj_id']);
-            //Assign the associated
             $this->proj_id = $_assocProj->proj_id;
             } else
             {
@@ -128,31 +127,24 @@ class Task_Model
             }
         return $task;
         }
-
+/*
+ * Function to return all tasks in an array for a given project
+ * @param $proj_id (String) This is the project id, used to identify associated tasks
+ * 
+ * @return $tasks array     This is the array of tasks returned
+ */
     public static
             function getAllTasks($proj_id)
         {
-        $db = new Database();
-        $db->connect();
-        
-        $query = "SELECT DISTINCT TSK_ID, PROJ_ID, STATUS, TASK_NM, WEB_ADDR, TSK_DESCR"
-                . " FROM task"
-                . " WHERE proj_id='" . $proj_id. "'";
-        
-        $result = mysql_query($query);
-        if ($result !== false)
-            {
-            $project_tasks = array();
-            while ($row = mysql_fetch_object($result))
-                {
-                array_push($project_tasks, new Task_Model($row->TSK_ID));
-                }
-            } else
-            {
-            return false;
+        $fields = array("TSK_ID, PROJ_ID, STATUS, "
+            . "TASK_NM, WEB_ADDR", "TSK_DESCR");
+        $tasks = Database_Queries::selectFrom("TASK_MODEL", 
+                $fields, "TASK", "PROJ_ID", $proj_id);
+                
+        if(!isset($tasks)){
+            $tasks = null;
             }
-        $db->close();
-        return $project_tasks;
+        return $tasks;
         }
 
     /*
@@ -179,7 +171,7 @@ class Task_Model
         $staffRef = StaffTask_Model::delete($task_id);
         if ($staffRef)
             {
-            $staff = Staff_Model::delete($task->staff());
+            $staff = Staff_Model::delete($task->staff);
             }
         if ($staff)
             {
@@ -188,7 +180,7 @@ class Task_Model
             }
         if ($estimateRef)
             {
-            $estimate = Estimation_Model::delete($task->estimation());
+            $estimate = Estimation_Model::delete($task->estimation);
             }
         if ($estimate)
             {
@@ -196,7 +188,7 @@ class Task_Model
             }
         if ($dpndRef)
             {
-            $dependency = Dependency_Model::delete($task->dpnd());
+            $dependency = Dependency_Model::delete($task->dpnd);
             }
         if ($dependency)
             {

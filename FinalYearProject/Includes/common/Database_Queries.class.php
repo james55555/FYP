@@ -102,7 +102,7 @@ class Database_Queries extends Database
             $archSuccess = self::archive($check[0], $check[1], $check[2]);
             if (!$archSuccess)
                 {
-                echo $table . " was already archived";
+                echo "<br/>" . $table . " was already archived.<br/>";
                 }
             $db->connect();
 //Query uses a transactional statement to allow rollback if 
@@ -114,14 +114,11 @@ class Database_Queries extends Database
             {
             $query = $setQuery;
             }
-
-        echo "<br/> {$query} </br>";
         //Start the delete transaction 
         mysql_query("START TRANSACTION;");
         //Run the query to delete
         $result = mysql_query($query);
 
-        echo mysql_error() . "<br/>";
         //Assign true or false based on returned result
         $success = $db->querySuccess($result);
         if ($success)
@@ -170,53 +167,55 @@ class Database_Queries extends Database
         $db->connect();
         //Start transaction to archive data
         mysql_query("START TRANSACTION;");
-        //Chec if the project exists in PROJECT
+        //Check if the row alreadys exists in PROJECT in ARCHIVE DB
         $rowExists = mysql_query(" SELECT *"
-                . " FROM " . $table
+                . " FROM ARCHIVE." . $table
                 . " WHERE " . $colCheck
                 . " ='" . $id . "'; ");
-
+        //The statement to identify if it exists
         if (mysql_num_rows($rowExists) === 0)
             {
+            //Get the number of fields in the table
             $numFields = mysql_num_fields($rowExists);
             $fields = array();
-            for ($i = 0; $i < $numFields; $i++)
+            //Loop through the fields and assign each to the $fields array
+            for ($i = 0; $i < $numFields -1; $i++)
                 {
                 array_push($fields, mysql_field_name($rowExists, $i));
                 }
+                //Insert null value to be updated to current timestamp
+                array_push($fields, "NULL");
+                //Implode array components for use in query string
             $tableFields = implode(", ", $fields);
             //Set up archive query insert
-            $archive_query = "INSERT INTO archive." . $table
+            $archive_query = "INSERT INTO ARCHIVE." . $table
                     . " (SELECT " . $tableFields
                     . " FROM " . $table
                     . " WHERE " . $colCheck
                     . " ='" . $id . "')"
                     . " ON DUPLICATE KEY UPDATE "
-                    . $colCheck = $id . ";";
+                    . $colCheck . "=" . $id . ";";
 
             $archive_result = mysql_query($archive_query);
-            echo $table . " " . $archive_query;
+            echo mysql_error();
+            echo "<br/>"  . $archive_query;
             } else
             {
             $archive_result = null;
             }
-        echo "TABLE: " . $rowExists . "<br/>";
-        var_dump($archive_result);
         //Validate whether these queries have returned expected results
         if ($archive_result)
             {
             mysql_query("COMMIT;");
-            $success = true;
             } elseif (!isset($archive_result) || !$archive_result)
             {
             mysql_query("ROLLBACK;");
-            $success = false;
             } else
             {
             throw new Exception("This shouldn't happen");
             }
         $db->close();
-        return $success;
+        return true;
         }
 
     }

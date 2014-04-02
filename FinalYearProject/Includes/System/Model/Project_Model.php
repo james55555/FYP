@@ -103,13 +103,10 @@ class Project_Model extends Validator_Model
         $proj_id = trim($proj_id);
 
         $project = new Project_Model($proj_id);
-
-        var_dump($project);
         if(!isset($project)){
             return false;
             }
         $estimation = Estimation_Model::delete($project->estimate);
-        echo "estimate deleted.. " . var_dump($estimation);
         if (!isset($estimation))
             {
             return false;
@@ -117,16 +114,17 @@ class Project_Model extends Validator_Model
         if ($estimation)
             {
             $estRef = ProjectEstimation_Model::delete($project->estimate);
-            echo "estref deleted.. " . var_dump($estRef);
-        die("died");
             }
         if (isset($estRef) && $estRef)
             {
             //Delete project from base table - PROJECT
             $projectDelete = Database_Queries::deleteFrom("PROJECT", "proj_id", $proj_id, null);
-
+    
         //Disassociate project reference to user in USER_PROJECT
             $user_projectDelete = Database_Queries::deleteFrom("USER_PROJECT", "proj_id", $proj_id, null);
+            die();
+                echo "user proj deleted.. " . var_dump($user_projectDelete);
+        
             } else
             {
             return false;
@@ -136,6 +134,8 @@ class Project_Model extends Validator_Model
             {
             //Loop through all tasks associated with the project and remove each one
             $deleteTask = Task_Model::getAllTasks($proj_id);
+                echo "delete task found.. " . var_dump($deleteTask);
+        die("died");
             if (!$deleteTask)
                 {
                 return false;

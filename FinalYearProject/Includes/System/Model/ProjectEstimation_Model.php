@@ -58,12 +58,12 @@ class ProjectEstimation_Model extends Estimation_Model
             }
         }
         
-       public static function delete($proj_id)
+       public static function delete($est_id)
         {
         
     $table = "PROJECT_ESTIMATION";
     $field = "est_id";
-        $success = Generic_Model::__delete($proj_id, $table, $field);
+        $success = Generic_Model::__delete($est_id, $table, $field);
         return $success;
         }
 

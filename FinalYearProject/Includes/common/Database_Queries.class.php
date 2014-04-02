@@ -15,7 +15,9 @@ class Database_Queries extends Database
      * @param $table    this is the table to run the query against
      * @param $colCheck this is the collumn to check against
      * @param $paramID  this is the provided id to be checked in $colCheck
-     * @return  $col    this is the required value corresponding with $paramID in $reqCol
+     * 
+     * @return  $result this is the required row(s) or value corresponding with $paramID in $reqCol
+     * @return null     null result is returned if query has failed
      */
 
     public static function selectFrom($model, $reqCol, $table, $colCheck, $paramID)
@@ -32,7 +34,7 @@ class Database_Queries extends Database
                 . " FROM " . $check[1]
                 . " WHERE " . $check[2]
                 . "='" . $check[3] . "'";
-        
+
         //Process result and return object
         $result = Database_Queries::processResult($query, $model);
         return $result;
@@ -95,25 +97,35 @@ class Database_Queries extends Database
 
             $check = array($table, $colCheck, $paramID);
             $db->filterParameters($check);
+            //Before any deletes are run, archive the data
 
+            $archSuccess = self::archive($check[0], $check[1], $check[2]);
+            if (!$archSuccess)
+                {
+                return false;
+                }
 //Query uses a transactional statement to allow rollback if 
 //scaled to an automated process
-            $query = "START TRANSACTION;"
-                    . "DELETE FROM " . $check[0]
+            $query = "DELETE FROM " . $check[0]
                     . " WHERE " . $check[1]
-                    . " ='" . $check[2] . "';"
-                    . "COMMIT;";
+                    . " ='" . $check[2] . "';";
             } else
             {
             $query = $setQuery;
             }
+        echo "<br/> {$query} </br>";
+        //Start the delete transaction 
+        mysql_query("START TRANSACTION;");
+        //Run the query to delete
         $result = mysql_query($query);
-        if ($db->querySuccess($result))
+        //Assign true or false based on returned result
+        $success = $db->querySuccess($result);
+        if ($success)
             {
-            $success = true;
+            mysql_query("COMMIT;");
             } else
             {
-            $success = false;
+            mysql_query("ROLLBACK;");
             }
         $db->close();
         return $success;
@@ -137,6 +149,53 @@ class Database_Queries extends Database
                 " WHERE " . $check[1];
 
         return $query;
+        }
+
+        /*
+         * 
+         */
+    public static function archive($table, $colCheck, $id)
+        {
+        $db = new Database();
+        $db->connect();
+        //Start transaction to archive data
+        mysql_query("START TRANSACTION;");
+        //Chec if the project exists in PROJECT
+        $rowExists = mysql_query("SELECT COUNT(*)"
+                . " FROM " . $table
+                . " WHERE " . $colCheck
+                . " ='" . $id . "';");
+        if (mysql_num_rows($rowExists) === 0)
+            {
+            $tableFields = mysql_list_fields("ARCHIVE", $table);
+            //Set up archive query insert
+            $archive_query = "INSERT INTO archive." . $table
+                    . " (SELECT " . $tableFields
+                    . " FROM " . $table
+                    . " WHERE " . $colCheck
+                    . " ='" . $id . "');";
+
+            $archive_result = mysql_query($archive_query);
+            } else
+            {
+            $archive_result = null;
+            }
+
+        //Validate whether these queries have returned expected results
+        if ($archive_result)
+            {
+            mysql_query("COMMIT;");
+            $success = true;
+            } elseif (!isset($archive_result) || !$archive_result)
+            {
+            mysql_query("ROLLBACK;");
+            $success = false;
+            } else
+            {
+            throw new Exception("This shouldn't happen");
+            }
+        $db->close();
+        return $success;
         }
 
     }

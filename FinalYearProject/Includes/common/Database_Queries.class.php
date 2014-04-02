@@ -91,29 +91,36 @@ class Database_Queries extends Database
         $db = new Database();
         $db->connect();
 
-        if (!isset($setQuery))
+        if (!isset($setQuery) && isset($paramID))
             {
+            //Filter the variables
             $paramID = trim($paramID, "'");
 
             $check = array($table, $colCheck, $paramID);
             $db->filterParameters($check);
             //Before any deletes are run, archive the data
-
             $archSuccess = self::archive($check[0], $check[1], $check[2]);
             if (!$archSuccess)
                 {
                 echo "<br/>" . $table . " was already archived.<br/>";
                 }
+                //Reconnect to the database
             $db->connect();
-//Query uses a transactional statement to allow rollback if 
-//scaled to an automated process
+
+            //Query uses a transactional statement to allow rollback if 
+            //scaled to an automated process
             $query = " DELETE FROM " . $check[0]
                     . " WHERE " . $check[1]
                     . " ='" . $check[2] . "'; ";
-            } else
+            //If a query has been provided run that.
+            } elseif (isset($setQuery))
             {
             $query = $setQuery;
             }
+            //If paramID isn't set then there is nothing in the table to delete
+            elseif(!isset($paramID)) {
+                return true;
+                }
         //Start the delete transaction 
         mysql_query("START TRANSACTION;");
         //Run the query to delete
@@ -179,13 +186,13 @@ class Database_Queries extends Database
             $numFields = mysql_num_fields($rowExists);
             $fields = array();
             //Loop through the fields and assign each to the $fields array
-            for ($i = 0; $i < $numFields -1; $i++)
+            for ($i = 0; $i < $numFields - 1; $i++)
                 {
                 array_push($fields, mysql_field_name($rowExists, $i));
                 }
-                //Insert null value to be updated to current timestamp
-                array_push($fields, "NULL");
-                //Implode array components for use in query string
+            //Insert null value to be updated to current timestamp
+            array_push($fields, "NULL");
+            //Implode array components for use in query string
             $tableFields = implode(", ", $fields);
             //Set up archive query insert
             $archive_query = "INSERT INTO ARCHIVE." . $table
@@ -194,11 +201,10 @@ class Database_Queries extends Database
                     . " WHERE " . $colCheck
                     . " ='" . $id . "')"
                     . " ON DUPLICATE KEY UPDATE "
-                    . $colCheck . "=" . $id . ";";
+                    . $colCheck . "='" . $id . "';";
 
             $archive_result = mysql_query($archive_query);
-            echo mysql_error();
-            echo "<br/>"  . $archive_query;
+            echo "<br/>" . $archive_query;
             } else
             {
             $archive_result = null;
@@ -210,6 +216,7 @@ class Database_Queries extends Database
             } elseif (!isset($archive_result) || !$archive_result)
             {
             mysql_query("ROLLBACK;");
+            echo "rolled back";
             } else
             {
             throw new Exception("This shouldn't happen");

@@ -103,9 +103,22 @@ class Project_Model extends Validator_Model
         $proj_id = trim($proj_id);
 
         $project = new Project_Model($proj_id);
-        if(!isset($project)){
+        if (!isset($project))
+            {
             return false;
             }
+            //Loop through all tasks associated with the project and remove each one
+            $deleteTask = Task_Model::getAllTasks($proj_id);
+            if (!$deleteTask)
+                {
+                return false;
+                }
+            foreach ($deleteTask as $delete)
+                {
+                Task_Model::deleteTask($delete);
+                }
+            die("PROJECT_MODEL - LINE 120");
+            
         $estimation = Estimation_Model::delete($project->estimate);
         if (!isset($estimation))
             {
@@ -117,38 +130,14 @@ class Project_Model extends Validator_Model
             }
         if (isset($estRef) && $estRef)
             {
+
             //Delete project from base table - PROJECT
             $projectDelete = Database_Queries::deleteFrom("PROJECT", "proj_id", $proj_id, null);
-    
-        //Disassociate project reference to user in USER_PROJECT
+            //Disassociate project reference to user in USER_PROJECT
             $user_projectDelete = Database_Queries::deleteFrom("USER_PROJECT", "proj_id", $proj_id, null);
-            die();
-                echo "user proj deleted.. " . var_dump($user_projectDelete);
-        
             } else
             {
             return false;
-            }
-        //Delete from reference table between PROJECT and ESTIMATION
-        if ($projectDelete && $user_projectDelete)
-            {
-            //Loop through all tasks associated with the project and remove each one
-            $deleteTask = Task_Model::getAllTasks($proj_id);
-                echo "delete task found.. " . var_dump($deleteTask);
-        die("died");
-            if (!$deleteTask)
-                {
-                return false;
-                }
-            foreach ($deleteTask as $delete)
-                {
-                $taskResult = Task_Model::deleteTask($delete->tsk_id());
-                if (!$taskResult)
-                    {
-                    return false;
-                    }
-                }
-            $del = true;
             }
 
         $db->close();
@@ -276,5 +265,5 @@ class Project_Model extends Validator_Model
             }
         return null;
         }
-        
+
     }

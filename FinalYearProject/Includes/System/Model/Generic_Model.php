@@ -19,11 +19,8 @@ class Generic_Model
         {
         //Trim beginning and end of $var for ' character
         $var = trim($var, "'");
-        //Return query as a string
-        $delete = Database_Queries::deleteFrom_String($table, $field)
-                . "='" . $var . "';";
         //Run the query
-        $success = Database_Queries::deleteFrom(null, null, null, $delete);
+        $success = Database_Queries::deleteFrom($table, $field, $var, null);
         //If the query hasn't been succesful then alert.
         if (!$success)
             {

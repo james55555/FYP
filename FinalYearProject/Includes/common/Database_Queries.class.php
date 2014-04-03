@@ -30,11 +30,17 @@ class Database_Queries extends Database
             {
             $check[0] = implode(", ", $check[0]);
             }
+        if (is_object($check[3]))
+            {
+            $id = $check[3]->$colCheck;
+            } else
+            {
+            $id = $check[3];
+            }
         $query = "SELECT distinct " . $check[0]
                 . " FROM " . $check[1]
                 . " WHERE " . $check[2]
-                . "='" . $check[3] . "'";
-
+                . "='" . $id . "';";
         //Process result and return object
         $result = Database_Queries::processResult($query, $model);
         return $result;
@@ -104,7 +110,7 @@ class Database_Queries extends Database
                 {
                 echo "<br/>" . $table . " was already archived.<br/>";
                 }
-                //Reconnect to the database
+            //Reconnect to the database
             $db->connect();
 
             //Query uses a transactional statement to allow rollback if 
@@ -117,10 +123,11 @@ class Database_Queries extends Database
             {
             $query = $setQuery;
             }
-            //If paramID isn't set then there is nothing in the table to delete
-            elseif(!isset($paramID)) {
-                return true;
-                }
+        //If paramID isn't set then there is nothing in the table to delete
+        elseif (!isset($paramID))
+            {
+            return true;
+            }
         //Start the delete transaction 
         mysql_query("START TRANSACTION;");
         //Run the query to delete
@@ -204,7 +211,6 @@ class Database_Queries extends Database
                     . $colCheck . "='" . $id . "';";
 
             $archive_result = mysql_query($archive_query);
-            echo "<br/>" . $archive_query;
             } else
             {
             $archive_result = null;

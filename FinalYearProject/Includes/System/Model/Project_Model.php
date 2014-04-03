@@ -25,10 +25,7 @@ class Project_Model extends Validator_Model
             function __construct($proj_id)
         {
         $row = $this->getProject($proj_id);
-        if (!$row)
-            {
-            $row = null;
-            }
+
         $this->proj_id = $row->proj_id;
         $this->proj_nm = $row->proj_nm;
         $this->proj_descr = $row->proj_descr;
@@ -107,18 +104,18 @@ class Project_Model extends Validator_Model
             {
             return false;
             }
-            //Loop through all tasks associated with the project and remove each one
-            $deleteTask = Task_Model::getAllTasks($proj_id);
-            if (!$deleteTask)
-                {
-                return false;
-                }
-            foreach ($deleteTask as $delete)
-                {
-                Task_Model::deleteTask($delete);
-                }
-            die("PROJECT_MODEL - LINE 120");
-            
+        //Loop through all tasks associated with the project and remove each one
+        $deleteTask = Task_Model::getAllTasks($proj_id);
+        if (!$deleteTask)
+            {
+            return false;
+            }
+        foreach ($deleteTask as $delete)
+            {
+            Task_Model::deleteTask($delete);
+            }
+        die("PROJECT_MODEL - LINE 120");
+
         $estimation = Estimation_Model::delete($project->estimate);
         if (!isset($estimation))
             {
@@ -139,9 +136,12 @@ class Project_Model extends Validator_Model
             {
             return false;
             }
-
+        if (!$projectDelete || !$user_projectDelete)
+            {
+            return false;
+            }
         $db->close();
-        return $del;
+        return true;
         }
 
     public static function addProject($fields)

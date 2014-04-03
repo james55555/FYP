@@ -68,7 +68,7 @@
                             <th>Actions</th>
                         </tr>
                         <?php
-                        if ($this->registry->project_tasks !== null)
+                        if (isset($this->registry->project_tasks))
                             {
                             foreach ($this->registry->project_tasks as $task)
                                 {

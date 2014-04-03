@@ -21,11 +21,11 @@ class Task_Model
             $web_addr;
     private
             $tsk_dscr;
-    private 
+    private
             $estimation;
-    private 
+    private
             $staff;
-    private 
+    private
             $dpnd;
 
     /*
@@ -36,6 +36,7 @@ class Task_Model
             function __construct($tsk_id)
         {
         $row = $this->getTask($tsk_id);
+        
         $this->tsk_id = $row->TSK_ID;
         //Get the project corresponding to the linked id
         if (isset($_GET['proj_id']))
@@ -120,28 +121,26 @@ class Task_Model
         {
         $fields = array("TSK_ID, PROJ_ID, STATUS, "
             . "TASK_NM, WEB_ADDR", "TSK_DESCR");
-        $task = Database_Queries::selectFrom("TASK_MODEL", 
-                $fields, "TASK", "TSK_ID", $tsk_id);
-        if(!isset($task)){
-            $task = null;
-            }
+        $task = Database_Queries::selectFrom("TASK_MODEL", $fields, "TASK", "TSK_ID", $tsk_id);
         return $task;
         }
-/*
- * Function to return all tasks in an array for a given project
- * @param $proj_id (String) This is the project id, used to identify associated tasks
- * 
- * @return $tasks array     This is the array of tasks returned
- */
+
+    /*
+     * Function to return all tasks in an array for a given project
+     * @param $proj_id (String) This is the project id, used to identify associated tasks
+     * 
+     * @return $tasks array     This is the array of tasks returned
+     */
+
     public static
             function getAllTasks($proj_id)
         {
         $fields = array("TSK_ID, PROJ_ID, STATUS, "
             . "TASK_NM, WEB_ADDR", "TSK_DESCR");
-        $tasks = Database_Queries::selectFrom("TASK_MODEL", 
-                $fields, "TASK", "PROJ_ID", $proj_id);
-                
-        if(!isset($tasks)){
+        $tasks = Database_Queries::selectFrom("TASK_MODEL", $fields, "TASK", "PROJ_ID", $proj_id);
+
+        if (!isset($tasks))
+            {
             $tasks = null;
             }
         return $tasks;
@@ -165,39 +164,31 @@ class Task_Model
 
     public static function deleteTask($task_id)
         {
-        $task = Task_Model::getTask($task_id);
+        $task = new Task_Model($task_id);
         //Prepare queries
         //Delete staff data
         $staffRef = StaffTask_Model::delete($task_id);
-        if ($staffRef)
+        $staff = Staff_Model::delete($task->staff());
+        if (!$staff || !$staffRef)
             {
-            $staff = Staff_Model::delete($task->staff);
+            return false;
             }
-        if ($staff)
+        //Delete estimation data
+        $estimateRef = TaskEstimation_Model::delete($task_id);
+        $estimate = Estimation_Model::delete($task->estimation());
+        if (!$estimateRef || $estimate)
             {
-            //Delete estimation data
-            $estimateRef = TaskEstimation_Model::delete($task_id);
+            return false;
             }
-        if ($estimateRef)
+//Delete dependency data
+        $dpndRef = TaskDependency_Model::delete($task_id);
+        $dependency = Dependency_Model::delete($task->dpnd());
+        if (!$dpndRef || !$dependency)
             {
-            $estimate = Estimation_Model::delete($task->estimation);
+            return false;
             }
-        if ($estimate)
-            {
-            $dpndRef = TaskDependency_Model::delete($task_id);
-            }
-        if ($dpndRef)
-            {
-            $dependency = Dependency_Model::delete($task->dpnd);
-            }
-        if ($dependency)
-            {
-            //Set up deletion of task from task table
-            $query = Database_Queries::deleteFrom_String("TASK", "TSK_ID")
-                    . "='" . $task_id . "';";
+        $result = Database_Queries::deleteFrom("TASK", "TSK_ID", $task_id, null);
 
-            $result = Database_Queries::deleteFrom(null, null, null, $query);
-            }
         if (!$result)
             {
             return false;

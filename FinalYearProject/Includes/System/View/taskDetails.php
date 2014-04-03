@@ -178,7 +178,9 @@
                                 <?php
                                 if (isset($dependencies))
                                     {
-                                    echo $dependencies->DEPENDENCY_ID;
+                                    echo "<a href=\"?page=Task&action=details&task_id=
+                                        {$dependencies->DEPENDENCY_ID}\">
+                                            {$dependencies->DEPENDENCY_ID}</a>";
                                     } else
                                     {
                                     echo "Not set";

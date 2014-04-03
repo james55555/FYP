@@ -30,10 +30,14 @@ class TaskEstimation_Model extends Estimation_Model
 
     public static function getEstimationId($tsk_id)
         {
-        $row = Database_Queries::selectFrom(null, "est_id", 
+        $row = Database_Queries::selectFrom("TaskEstimation_Model", "tsk_id, est_id", 
                 "TASK_ESTIMATION", "tsk_id", $tsk_id);
-        
+        if(isset($row)){
         $est_id = $row->est_id;
+            }
+            else {
+                $est_id = null;
+                }
         return $est_id;
         }
         /*$db = new Database();

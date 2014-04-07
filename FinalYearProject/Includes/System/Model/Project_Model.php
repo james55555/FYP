@@ -106,15 +106,20 @@ class Project_Model extends Validator_Model
             }
         //Loop through all tasks associated with the project and remove each one
         $deleteTask = Task_Model::getAllTasks($proj_id);
-        if (!$deleteTask)
+        //If the task returns false and not null then fail
+        if (!$deleteTask && isset($deleteTask))
             {
             return false;
             }
-        foreach ($deleteTask as $delete)
+            //If the task is set but not false then it must be valid
+            elseif (isset($deleteTask))
             {
-            Task_Model::deleteTask($delete);
+            foreach ($deleteTask as $delete)
+                {
+                Task_Model::deleteTask($delete);
+                }
             }
-        die("PROJECT_MODEL - LINE 120");
+
 
         $estimation = Estimation_Model::delete($project->estimate);
         if (!isset($estimation))
@@ -159,14 +164,15 @@ class Project_Model extends Validator_Model
         $pln_hr = $fields['pln_hr'];
         //GET user who is adding project
         $account = $_SESSION['user'];
-        
+
 
         $valid = Project_Model::validateArray($fields);
         if (is_array($valid) || is_string($valid))
             {
             return $valid;
             }
-        if (strtotime($proj_start) > strtotime($proj_deadline)){
+        if (strtotime($proj_start) > strtotime($proj_deadline))
+            {
             return "Start date can't be after the deadline date!";
             }
         //Start the transaction

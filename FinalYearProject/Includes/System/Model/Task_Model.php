@@ -221,6 +221,7 @@ class Task_Model
             {
             return $valid;
             }
+
         $project = new Project_Model($proj_id);
         $projEstimate = Estimation_Model::get($project->estimation());
         //Check that tasks dates are between project dates and start is before end
@@ -229,7 +230,7 @@ class Task_Model
             return "Ensure dates are correct</br>"
                     . "Remember task dates must be within the time span of their project.";
             }
-            //Start insert transaction
+        //Start insert transaction
         mysql_query("START TRANSACTION;");
         //Set insert into TASK string
         $task_insert = "INSERT INTO TASK ("
@@ -246,6 +247,95 @@ class Task_Model
                 . " '" . $tName . "',"
                 . " '" . $web_addr . "',"
                 . " '" . $tDescr . "');";
+        //Run the query and get the task ID
+        $task_result = mysql_query($task_insert);
+        $task_id = $db->getInsertId();
+        //Set insert into ESTIMATION
+        $estimation_insert = "INSERT INTO ESTIMATION ("
+                . "EST_ID, "
+                . "ACT_HR, "
+                . "PLN_HR, "
+                . "START_DT, "
+                . "ACT_END_DT, "
+                . "EST_END_DT) "
+                . "VALUES( "
+                . "NULL, "
+                . "NULL, "
+                . "'" . $pln_hr . "', "
+                . "'" . $tStart . "', "
+                . "NULL, "
+                . "'" . $tDeadline . "');";
+        //Run query and get estimation id.
+        $estimation_result = mysql_query($estimation_insert);
+        $est_id = $db->getInsertId();
+        //Set query to create link between TASK and ESTIMATION
+        $taskEst_insert = "INSERT INTO TASK_ESTIMATION ("
+                . "tsk_id,"
+                . " est_id)"
+                . " VALUES( "
+                . " '" . $task_id . "',"
+                . " '" . $est_id . "');";
+        $taskEst_result = mysql_query($taskEst_insert);
+        //Foreach dependency selected, insert into DEPENDENCY tables
+        // Tables: DEPENDENCY, TASK_DEPENDENCY
+        foreach ($dpnd as $id)
+            {
+            //Set query for DEPENDENCY insert
+            $dpnd_insert = "INSERT INTO DEPENDENCY ("
+                    . "DEPENDENCY_ID,"
+                    . " DEPENDENCY_ON)"
+                    . " VALUES ( "
+                    . "NULL, "
+                    . "'" . $id . "');";
+            //Insert into DEPENDENCY table
+            $dpnd_result = mysql_query($dpnd_insert);
+            $dpnd_id = $db->getInsertId();
+            //Set query for TASK_DEPENDENCY insert
+            $taskDpnd_insert = "INSERT INTO TASK_DEPENDENCY ("
+                    . "DEPENDENCY_ID,"
+                    . " TSK_ID)"
+                    . " VALUES ("
+                    . " '" . $task_id . "',"
+                    . " '" . $dpnd_id . "');";
+            //Insert into TASK_DEPENDENCY table
+            $taskDpnd_result = mysql_query($dpnd_insert);
+            }
+
+        //Set insert into STAFF
+        $staff_insert = "INSERT INTO STAFF ("
+                . "STAFF_ID,"
+                . " STAFF_FIRST_NM,"
+                . " STAFF_LAST_NM,"
+                . " STAFF_PHONE,"
+                . " STAFF_EMAIL)"
+                . " VALUES ("
+                . " NULL,"
+                . " '" . $stFirst . "',"
+                . " '" . $stLast . "',"
+                . " '" . $stTel . "',"
+                . " '" . $stEmail . "');";
+        //Run query to insert into table and get the STAFF_ID
+        $staff_result = mysql_query($staff_insert);
+        $staff_id = $db->getInsertId();
+        //Set insert into STAFF_TASK
+        $staffTask_insert = "INSERT INTO STAFF_TASK ("
+                . "TSK_ID,"
+                . " STAFF_ID)"
+                . " VALUES ("
+                . " '" . $task_id . "',"
+                . " '" . $staff_id . "');";
+        //Run the query to insert into table
+        $staffTask_result = mysql_query($staffTask_insert);
+
+        if ($task_result && $estimation_result && $taskEst_result && $dpnd_result && $taskDpnd_result && $staff_result && $staffTask_result)
+            {
+            mysql_query("COMMIT;");
+            } else
+            {
+            mysql_query("ROLLBACK;");
+            return "Error inserting into the database<br/>";
+            }
+        return true;
         }
 
     /* public static

@@ -46,12 +46,20 @@ class Add_Controller extends Main_Controller
         $this->isProject = false;
         //assign to an array
         $fields = array();
-
+        //TASK data
         $fields['tName'] = $_POST['tName'];
         $fields['tDescr'] = $_POST['tDescr'];
+        $fields['dpnd'] = $_POST['tDpnd'];
+        $fields['status'] = $_POST['status'];
+        //ESTIMATION data
         $fields['tStart'] = $_POST['tStart'];
-        $fields['tDead'] = $_POST['pDeadline'];
+        $fields['tDeadline'] = $_POST['tDeadline'];
         $fields['pln_hr'] = $_POST['pln_hr'];
+        //STAFF data
+        $fields['stFirst'] = $_POST['stFirst'];
+        $fields['stLast'] = $_POST['stLast'];
+        $fields['stTel'] = $_POST['stTel'];
+        $fields['stEmail'] = $_POST['stEmail'];
 
         $this->newtask = Task_Model::addTask($fields);
 

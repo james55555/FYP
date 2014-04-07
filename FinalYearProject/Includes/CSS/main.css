@@ -52,6 +52,13 @@ table, th, td
     border: 1px solid black;
     text-align: center;
 }
+input[type=date] {
+    -webkit-align-items: center;
+    font-family: Calibri, sans-serif;
+    overflow: hidden;
+    padding: 1px;
+    
+}
 /*Set #container defaults*/
 #container
 {

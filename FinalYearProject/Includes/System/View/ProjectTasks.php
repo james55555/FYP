@@ -41,7 +41,7 @@
                         <p>Project Start Date: <?php
                             if (isset($stCheck))
                                 {
-                                echo $stCehck;
+                                echo $stCheck;
                                 } else
                                 {
                                 echo $noEstimate;

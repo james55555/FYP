@@ -28,8 +28,10 @@
                         maxlength="200"
                         name="tDescr"
                         placeholder="Limit of 200 characters"></textarea>
+                    <label>Web Address: </label><input type="text" name="web_addr"
+                                                       placeholder="(Optional)"/>                    
                     <label>Status: </label>
-                        <select>
+                        <select name="status">
                             <option>Not Started</option>
                             <option>In Progress</option>
                             <option>Finished</option>
@@ -47,7 +49,7 @@
                             {
                             echo "<label>{$task->task_nm()}</label>"
                             . "<input type=\"checkbox\" name=\"tDpnd\" "
-                            . "id=\"{$task->tsk_id()}\" placeholder=\"Optional\"/>";
+                            . "id=\"{$task->tsk_id()}\" placeholder=\"(Optional)\"/>";
                             }
                         }
                     ?>

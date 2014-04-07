@@ -28,7 +28,9 @@ class Home_Controller extends Main_Controller
         if ($this->success)
             {
             $this->registry->heading = "Success";
-            $this->registry->message = "Project successfully deleted";
+            $this->registry->message = "Project successfully deleted<br/>"
+                    ."Click <a href=\"?page=\Home\"> here </a>" .
+                        " to view your projects";
             } else
             {
             $this->registry->error = true;

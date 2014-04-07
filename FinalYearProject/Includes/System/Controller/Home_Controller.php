@@ -28,7 +28,7 @@ class Home_Controller extends Main_Controller
         if ($this->success)
             {
             $this->registry->heading = "Success";
-            $this->registry->message = "User successfully deleted";
+            $this->registry->message = "Project successfully deleted";
             } else
             {
             $this->registry->error = true;

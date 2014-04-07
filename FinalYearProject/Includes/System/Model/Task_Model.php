@@ -137,7 +137,6 @@ class Task_Model
         $fields = array("TSK_ID, PROJ_ID, STATUS, "
             . "TASK_NM, WEB_ADDR", "TSK_DESCR");
         $tasks = Database_Queries::selectFrom("TASK_MODEL", $fields, "TASK", "PROJ_ID", $proj_id);
-
         if (!isset($tasks))
             {
             $tasks = null;
@@ -193,6 +192,60 @@ class Task_Model
             return false;
             }
         return true;
+        }
+
+    public static function addTask($fields)
+        {
+        $db = new Database();
+        $db->connect();
+        $fields = $db->filterParameters($fields);
+        $proj_id = $fields['proj_id'];
+        //TASK data
+        $tName = $fields['tName'];
+        $tDescr = $fields['tDescr'];
+        $web_addr = $fields['web_addr'];
+        $dpnd = $fields['tDpnd'];
+        $status = $fields['status'];
+        //ESTIMATION data
+        $tStart = $fields['tStart'];
+        $tDeadline = $fields['tDeadline'];
+        $pln_hr = $fields['pln_hr'];
+        //STAFF data
+        $stFirst = $fields['stFirst'];
+        $stLast = $fields['stLast'];
+        $stTel = $fields['stTel'];
+        $stEmail = $fields['stEmail'];
+
+        $valid = Task_Model::validateArray($fields);
+        if (is_array($valid) || is_string($valid))
+            {
+            return $valid;
+            }
+        $project = new Project_Model($proj_id);
+        $projEstimate = Estimation_Model::get($project->estimation());
+        //Check that tasks dates are between project dates and start is before end
+        if (strtotime($projEstimate->start_dt()) < strtotime($tStart) && strtotime($projEstimate->est_end_dt() > strtotime($tDeadline) && strtotime($tStart) < strtotime($tDeadline)))
+            {
+            return "Ensure dates are correct</br>"
+                    . "Remember task dates must be within the time span of their project.";
+            }
+            //Start insert transaction
+        mysql_query("START TRANSACTION;");
+        //Set insert into TASK string
+        $task_insert = "INSERT INTO TASK ("
+                . " TSK_ID,"
+                . " PROJ_ID,"
+                . " STATUS,"
+                . " TASK_NM,"
+                . " WEB_ADDR,"
+                . " TSK_DESCR"
+                . ") VALUES ("
+                . "NULL,"
+                . " '" . $proj_id . "',"
+                . " '" . $status . "',"
+                . " '" . $tName . "',"
+                . " '" . $web_addr . "',"
+                . " '" . $tDescr . "');";
         }
 
     /* public static

@@ -36,7 +36,6 @@ class Task_Model
             function __construct($tsk_id)
         {
         $row = $this->getTask($tsk_id);
-        
         $this->tsk_id = $row->TSK_ID;
         //Get the project corresponding to the linked id
         if (isset($_GET['proj_id']))
@@ -45,7 +44,7 @@ class Task_Model
             $this->proj_id = $_assocProj->proj_id;
             } else
             {
-            $this->proj_id = $this->proj_id();
+            $this->proj_id = $row->PROJ_ID;
             }
 
         $this->status = $row->STATUS;
@@ -176,7 +175,7 @@ class Task_Model
         //Delete estimation data
         $estimateRef = TaskEstimation_Model::delete($task_id);
         $estimate = Estimation_Model::delete($task->estimation());
-        if (!$estimateRef || $estimate)
+        if (!$estimateRef || !$estimate)
             {
             return false;
             }
@@ -193,6 +192,7 @@ class Task_Model
             {
             return false;
             }
+        return true;
         }
 
     /* public static

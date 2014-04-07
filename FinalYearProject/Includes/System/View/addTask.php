@@ -19,38 +19,57 @@
             include("header.php");
             ?> 
             <h1>Add Project</h1>
-            <div id="addTaskForm">
-                <form id="adddTask" action="?page=Add&action=addTask" 
-                      method="post" onsubmit="return projectValidation()">
-                    <label>Name: <input type="text" name="tName"/></label><br/>
-                    <label>Description:  <textarea 
-                            form="Task"
-                            rows="4"
-                            coles="50"
-                            maxlength="200"
-                            name="tDescr"></textarea></label><br/>
-                    <label>Choose any Task Dependencies: </label>
+            <form id="addTask" action="?page=Add&action=addTask" 
+                      method="post" onsubmit="return taskValidation()">
+            <div id="details">
+                <h2>Details</h2>
+                    <label>Name: </label><input type="text" name="tName"/><br/>
+                    <label>Description:  </label><textarea 
+                        maxlength="200"
+                        name="tDescr"
+                        placeholder="Limit of 200 characters"></textarea>
+            </div> <!--End of details div-->
+            <div id="dependencies">
                     <?php
-                    foreach ($this->registry->user_tasks as $task)
+                    //only show task dependencies if their are tasks associated
+                    //with the project in question
+                    if (isset($this->registry->projTasks))
                         {
-
-                        echo "<label><input type=\"checkbox\" name=\"pDpnd\" "
-                        . "id=\"{$task->tsk_id()}\"/>{$task->task_nm()}/></label><br/>";
+                        echo "<label>Choose any Task Dependencies: </label>";
+                       //Set up checkbox for all tasks in the same project
+                        foreach ($this->registry->projTasks as $task)
+                            {
+                            echo "<label>{$task->task_nm()}</label>"
+                            . "<input type=\"checkbox\" name=\"tDpnd\" "
+                            . "id=\"{$task->tsk_id()}\"/>";
+                            }
                         }
                     ?>
-                    <br>
+            </div><!--End of dendendencies-->
+            <div id="estimation">
                     <h2>Project Dates</h2>
-                    <label>Start Date: <input type="date" name="pStart"/></label>
-                    <label>Deadline: <input type="date" name="pDeadline"/></label>
-                    <br>
-
+                    <label title="When will the task start?">
+                        Start Date: </label><input type="date" name="pStart"/>
+                    <label title="When will the task end?">
+                        Deadline: </label><input type="date" name="pDeadline"/>
+                    <label title="How many hours will be assigned to the task?">
+                        Estimate</label><input type="text" name="pln_hr"/>
+            </div>
+            <!--Optional for user-->
+            <div id="staff">
+                <h2>Associated Staff Members</h2>
+                <label>First Name: </label><input type="text" name="stF_nm"/>
+                <label>Last Name: </label><input type="text" name="stL_nm"/>
+                <label>Phone number: </label><input type="tel" name="stTel"/>
+                <label>Email: </label><input type="text" name="stEmail"/>
+            </div> <!--End of staff-->
+            
                     <input type="submit" value="Submit" class="button" id="newUser"/>
 
                 </form>
-            </div><!--end of form-->
-        </div>
-<?php
-include("footer.php");
-?>
-</body>
+        </div> <!--End of container-->
+        <?php
+        include("footer.php");
+        ?>
+    </body>
 </html>

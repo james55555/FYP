@@ -49,6 +49,7 @@ class Add_Controller extends Main_Controller
         //TASK data
         $fields['tName'] = $_POST['tName'];
         $fields['tDescr'] = $_POST['tDescr'];
+        $fields['web_addr'] = $_POST['web_addr'];
         $fields['dpnd'] = $_POST['tDpnd'];
         $fields['status'] = $_POST['status'];
         //ESTIMATION data

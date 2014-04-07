@@ -28,6 +28,12 @@
                         maxlength="200"
                         name="tDescr"
                         placeholder="Limit of 200 characters"></textarea>
+                    <label>Status: </label>
+                        <select>
+                            <option>Not Started</option>
+                            <option>In Progress</option>
+                            <option>Finished</option>
+                        </select>
             </div> <!--End of details div-->
             <div id="dependencies">
                     <?php
@@ -45,7 +51,7 @@
                             }
                         }
                     ?>
-            </div><!--End of dendendencies-->
+            </div><!--End of dependencies-->
             <div id="estimation">
                     <h2>Project Dates</h2>
                     <label title="When will the task start?">

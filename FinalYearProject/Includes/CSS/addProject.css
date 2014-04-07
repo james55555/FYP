@@ -7,21 +7,33 @@
     /*Position block*/
     margin: 0 auto;
     background-color: #FFFFFF;
-    margin-top: 10px;
+    margin-top: 2.5%;
     text-align: center;
     width: 40%;
-    height: 70%;
-    box-shadow: none;
+    height: 60%;
 }
 #content label {
     float:left;
     width: 50%
 }
-#content input {
+#content input[type=text],
+    #content input[type=date] {
     float:left;
     width: 50%;
+    padding: 2px;
 }
-#content input textarea {
-    max-width: 50%;
-    max-height: 20px;
+#content textarea {
+    max-width: 49%;
+    max-height: 75px; 
+}
+#content input[type=submit]{
+    position: relative;
+}
+
+#content #details, #content #projDates {
+    padding: 4px;
+}
+#content #projdates h2, #content #details h2 {
+    margin-bottom: 2px;
+    text-decoration: underline;
 }

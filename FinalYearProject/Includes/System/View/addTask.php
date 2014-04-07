@@ -23,7 +23,7 @@
                       method="post" onsubmit="return taskValidation()">
             <div id="details">
                 <h2>Details</h2>
-                    <label>Name: </label><input type="text" name="tName"/><br/>
+                    <label>Name: </label><input type="text" name="tName"/>
                     <label>Description:  </label><textarea 
                         maxlength="200"
                         name="tDescr"
@@ -35,13 +35,13 @@
                     //with the project in question
                     if (isset($this->registry->projTasks))
                         {
-                        echo "<label>Choose any Task Dependencies: </label>";
+                        echo "<h2>Choose Task Dependencies: </h2>";
                        //Set up checkbox for all tasks in the same project
                         foreach ($this->registry->projTasks as $task)
                             {
                             echo "<label>{$task->task_nm()}</label>"
                             . "<input type=\"checkbox\" name=\"tDpnd\" "
-                            . "id=\"{$task->tsk_id()}\"/>";
+                            . "id=\"{$task->tsk_id()}\" placeholder=\"Optional\"/>";
                             }
                         }
                     ?>
@@ -49,17 +49,17 @@
             <div id="estimation">
                     <h2>Project Dates</h2>
                     <label title="When will the task start?">
-                        Start Date: </label><input type="date" name="pStart"/>
+                        Start Date: </label><input type="date" name="tStart"/>
                     <label title="When will the task end?">
-                        Deadline: </label><input type="date" name="pDeadline"/>
+                        Deadline: </label><input type="date" name="tDeadline"/>
                     <label title="How many hours will be assigned to the task?">
                         Estimate</label><input type="text" name="pln_hr"/>
             </div>
             <!--Optional for user-->
             <div id="staff">
                 <h2>Associated Staff Members</h2>
-                <label>First Name: </label><input type="text" name="stF_nm"/>
-                <label>Last Name: </label><input type="text" name="stL_nm"/>
+                <label>First Name: </label><input type="text" name="stFirst"/>
+                <label>Last Name: </label><input type="text" name="stLast"/>
                 <label>Phone number: </label><input type="tel" name="stTel"/>
                 <label>Email: </label><input type="text" name="stEmail"/>
             </div> <!--End of staff-->

@@ -17,13 +17,11 @@ private $project;
         {
 
         $this->registry->project_tasks = Task_Model::getAllTasks($_GET['proj_id']);
-        if (sizeof($this->registry->project_tasks) === 0)
-            {
-            $this->registry->project_tasks = null;
-            }
+
         $this->project = new Project_Model($_GET['proj_id']);
         $this->registry->projectEstimation = Estimation_Model::get($this->project->estimation());
-        //Show the projectTasks view
+     
+//Show the projectTasks view
         $this->registry->View_Template->show('projectTasks');
         }
 
@@ -51,7 +49,23 @@ private $project;
 
     public function delete()
         {
-        
+        if (isset($_GET['task_id']))
+            {
+            //Run the delete function and return a boolean
+            $this->success = Task_Model::deleteTask($_GET['task_id']);
+            var_dump($this->success);
+            }
+        if ($this->success)
+            {
+            $this->registry->heading = "Success";
+            $this->registry->message = "Task successfully deleted";
+            } else
+            {
+            $this->registry->error = true;
+            $this->registry->heading = "Error Deleting..";
+            $this->registry->message = "We don't know what happened here.";
+            }
+        $this->registry->View_Template->show('showMessage');
         }
 
     }

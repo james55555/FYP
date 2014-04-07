@@ -338,6 +338,76 @@ class Task_Model
         return true;
         }
 
+    public static function validateArray($fields)
+        {
+        $type = "string";
+        $validated = null;
+
+        foreach ($fields as $field => $content)
+            {
+            //run through task details information
+            if ($field === "tName")
+                {
+                $length = 30;
+                $field = "Task Name";
+                } elseif ($field === "tDescr")
+                {
+                $length = 200;
+                $field = "Task description";
+                }
+            //Run through task estimation dates
+            elseif ($field === "tStart")
+                {
+                $field = "Start date";
+                $validated = Validator_Model::validateDate($content);
+                } elseif ($field === "tDeadline")
+                {
+                $field = "Deadline";
+                $validated = Validator_Model::validateDate($content);
+                } elseif ($field === "pln_hr")
+                {
+                $field = "Estimated hours";
+                $length = 4;
+                $type = "numeric";
+                } elseif ($field === "stFirst" || $field = "stLast")
+                {
+                $field = "Staff name";
+                $length = 30;
+                } elseif ($field === "stEmail")
+                {
+                $field = "Staff email";
+                $validated = Validator_Model::validateEmail($content, $field);
+                } elseif ($field === "web_addr")
+                {
+                if (!filter_var($content, FILTER_VALIDATE_URL) &&
+                        ($content !== '' || isset($content)))
+                    {
+                    $validated = "Web address provided is invalid!";
+                    }
+                } elseif ($field === "stTel")
+                {
+                $pattern = "/^(\+44\s?7\d{3}|\(?07\d{3}\)?)\s?\d{3}\s?\d{3}$/";
+                $match = preg_match($pattern, $content);
+                if (!$match)
+                    {
+                    $validated = "Invalid phone number!";
+                    }
+                } elseif ($field === "status")
+                {
+                
+                }
+            //DEPENDENCY && WEB ADDR NEED SPECIAL VALIDATION
+            elseif ($field === "dpnd")
+                {
+                
+                }
+            if (isset($validated))
+                {
+                return $validated;
+                }
+            }
+        }
+
     /* public static
       function addNewTask($row)
       {

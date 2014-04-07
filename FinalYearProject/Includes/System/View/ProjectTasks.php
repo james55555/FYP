@@ -26,15 +26,22 @@
                     <h1 id="title">Tasks for project: <?php echo $_GET['proj_id']; ?></h1><br/>
                     <?php
                     $projEstimate = $this->registry->projectEstimation;
+                    $noEstimate = "No estimate set.";
+                    if(isset($projEstimate)){
                     $stCheck = $projEstimate->start_dt;
                     $edCheck = $projEstimate->est_end_dt;
-                    $noEstimate = "No estimate set.";
+                    }
+                    else {
+                        $stCheck = $noEstimate;
+                        $edCheck = $noEstimate;
+                        }
+                    
                     ?>
                     <div class="Proj_Details" id="start">
                         <p>Project Start Date: <?php
                             if (isset($stCheck))
                                 {
-                                echo $projEstimate->start_dt;
+                                echo $stCehck;
                                 } else
                                 {
                                 echo $noEstimate;
@@ -46,7 +53,7 @@
                         <p>Project Deadline: <?php
                             if (isset($edCheck))
                                 {
-                                echo $projEstimate->est_end_dt;
+                                echo $edCheck;
                                 } else
                                 {
                                 echo $noEstimate;
@@ -68,10 +75,13 @@
                             <th>Actions</th>
                         </tr>
                         <?php
-                        if (isset($this->registry->project_tasks))
+                        if ($this->registry->project_tasks !== null)
                             {
                             foreach ($this->registry->project_tasks as $task)
                                 {
+                                if(is_string($task)){
+                                    $task = new Task_Model($task);
+                                    }
                                 //for every task obtain the staff member
                                 $staff = Staff_Model::get($task->staff());
                                 $tsk_id = $task->tsk_id();
@@ -96,7 +106,7 @@
                                         </button>
 
                                         <button type="submit" id="delT">                                
-                                            <a href="?page=Task&action=delete&proj_id=<?php echo $_GET['proj_id']; ?>">
+                                            <a href="?page=Task&action=delete&task_id=<?php echo $task->tsk_id() ?>">
                                                 <img src="Includes/CSS/img/Icons/delete.png" 
                                                      alt="edit" title="Delete Task"
                                                      width="20" height="20"/>

@@ -159,12 +159,15 @@ class Project_Model extends Validator_Model
         $pln_hr = $fields['pln_hr'];
         //GET user who is adding project
         $account = $_SESSION['user'];
-
+        
 
         $valid = Project_Model::validateArray($fields);
         if (is_array($valid) || is_string($valid))
             {
             return $valid;
+            }
+        if (strtotime($proj_start) > strtotime($proj_deadline)){
+            return "Start date can't be after the deadline date!";
             }
         //Start the transaction
         mysql_query("START TRANSACTION;");

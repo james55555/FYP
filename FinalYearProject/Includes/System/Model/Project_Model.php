@@ -122,14 +122,12 @@ class Project_Model extends Validator_Model
 
 
         $estimation = Estimation_Model::delete($project->estimate);
-        if (!isset($estimation))
+        if (!$estimation && isset($estimation))
             {
             return false;
             }
-        if ($estimation)
-            {
             $estRef = ProjectEstimation_Model::delete($project->estimate);
-            }
+            
         if (isset($estRef) && $estRef)
             {
 
@@ -141,7 +139,8 @@ class Project_Model extends Validator_Model
             {
             return false;
             }
-        if (!$projectDelete || !$user_projectDelete)
+        if ((!$projectDelete && isset($projectDelete))
+                || (!$user_projectDelete && isset($user_projectDelete)))
             {
             return false;
             }

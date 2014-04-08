@@ -222,7 +222,6 @@ class Database_Queries extends Database
             } elseif (!isset($archive_result) || !$archive_result)
             {
             mysql_query("ROLLBACK;");
-            echo "rolled back";
             } else
             {
             throw new Exception("This shouldn't happen");

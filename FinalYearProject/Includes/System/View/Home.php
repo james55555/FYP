@@ -21,11 +21,10 @@
     </head>
 
     <body>
-        <!--Information Body-->
+        <?php
+        include("header.php");
+        ?>`
         <div id="container">
-            <?php
-            include("header.php");
-            ?>`
             <div class="upper">
                 <h1>My Projects</h1>
                 <!--Image button to represent add new project-->

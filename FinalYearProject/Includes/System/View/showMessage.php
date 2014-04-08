@@ -15,17 +15,16 @@
         <link rel="stylesheet" type="text/css" href="Includes/CSS/showMessage.css"/>
     </head>
     <body>
+        <?php
+        if (isset($_SESSION['user']))
+            {
+            include 'header.php';
+            } else
+            {
+            echo "<a href=\"?page=register\">Return to registration<a/>";
+            }
+        ?>            
         <div id="container">
-            <?php
-            if (isset($_SESSION['user']))
-                {
-                include 'header.php';
-                } else
-                {
-                echo "<a href=\"?page=register\">Return to registration<a/>";
-                }
-            ?>            
-
             <h1><?php echo $this->registry->heading; ?></h1>
             <div id="showMsg">
 

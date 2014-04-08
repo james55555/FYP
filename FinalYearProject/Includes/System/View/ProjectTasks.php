@@ -17,25 +17,24 @@
             <link rel="stylesheet" type="text/css" href="Includes/CSS/projectTasks.css"/>
         </head>
         <body>
+            <?php
+            include("header.php");
+            ?>
             <div id="container">
-
-                <?php
-                include("header.php");
-                ?>
                 <div class="Proj_Details">
                     <h1 id="title">Tasks for project: <?php echo $_GET['proj_id']; ?></h1><br/>
                     <?php
                     $projEstimate = $this->registry->projectEstimation;
                     $noEstimate = "No estimate set.";
-                    if(isset($projEstimate)){
-                    $stCheck = $projEstimate->start_dt;
-                    $edCheck = $projEstimate->est_end_dt;
-                    }
-                    else {
+                    if (isset($projEstimate))
+                        {
+                        $stCheck = $projEstimate->start_dt;
+                        $edCheck = $projEstimate->est_end_dt;
+                        } else
+                        {
                         $stCheck = $noEstimate;
                         $edCheck = $noEstimate;
                         }
-                    
                     ?>
                     <div class="Proj_Details" id="start">
                         <p>Project Start Date: <?php
@@ -61,9 +60,9 @@
                             ?></p>
                     </div>
                     <!--Image button to represent add new project-->
-                <input type="submit" class="button" value="Add New"
-                       onclick="javascript:location.href =
-                                       '?page=Task&action=addTask&isProj=false'"/>
+                    <input type="submit" class="button" value="Add New"
+                           onclick="javascript:location.href =
+                                           '?page=Task&action=addTask&isProj=false&proj_id=<?php echo $_GET['proj_id']; ?>'"/>
                 </div>
                 <br/>
 
@@ -82,7 +81,8 @@
                             {
                             foreach ($this->registry->project_tasks as $task)
                                 {
-                                if(is_string($task)){
+                                if (is_string($task))
+                                    {
                                     $task = new Task_Model($task);
                                     }
                                 //for every task obtain the staff member

@@ -15,10 +15,10 @@
         <title>Time Management System for Professionals - Add New Project page</title>
     </head>
     <body>
+        <?php
+        include("header.php");
+        ?>
         <div id="container">
-            <?php
-            include("header.php");
-            ?>
             <div id="content" class="centralBox"> 
                 <h1>Add Project</h1>
 
@@ -28,9 +28,9 @@
                         <h2>Details</h2>
                         <label>Name: </label><input type="text" name="pName"/><br/>
                         <label>Description:  </label><textarea 
-                                maxlength="200"
-                                name="pDescr"
-                                placeholder="Limit of 200 characters"></textarea>
+                            maxlength="200"
+                            name="pDescr"
+                            placeholder="Limit of 200 characters"></textarea>
                     </div> <!--End of details-->
                     <div id="projDates">
                         <h2>Project Dates</h2>

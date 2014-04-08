@@ -67,5 +67,7 @@ private $project;
             }
         $this->registry->View_Template->show('showMessage');
         }
-
+public function addTask(){
+            $this->registry->View_Template->show('addTask');
+            }
     }

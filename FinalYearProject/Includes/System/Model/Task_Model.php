@@ -226,11 +226,10 @@ class Task_Model
             }
         //Remove the tDpnd index from $fields array
         unset($fields['tDpnd']);
-
-
-
+        //Run the fields through validation
         $valid = Task_Model::validateArray($fields);
         $validDependencies = Task_Model::ValidateDependencies($dependencies);
+        //If errors are returned from either then return error message
         if (is_array($valid) || is_string($valid))
             {
             return $valid;
@@ -365,7 +364,11 @@ class Task_Model
             {
             echo "<br/>field: " . $field . "///Content: " . $content;
             //run through task details information
-            if ($field === "tName")
+            if ($field === "proj_id")
+                {
+                $length = 10;
+                $field = "Project ID";
+                } elseif ($field === "tName")
                 {
                 $length = 30;
                 $field = "Task Name";
@@ -388,7 +391,7 @@ class Task_Model
                 $field = "Estimated hours";
                 $length = 4;
                 $type = "numeric";
-                } elseif ($field === "stFirst" || $field = "stLast")
+                } elseif ($field === "stFirst" || $field === "stLast")
                 {
                 $field = "Staff name";
                 $length = 30;
@@ -398,10 +401,13 @@ class Task_Model
                 $validated = Validator_Model::validateEmail($content, $field);
                 } elseif ($field === "web_addr")
                 {
-                if (!filter_var($content, FILTER_VALIDATE_URL) &&
-                        ($content !== '' || isset($content)))
+                    $field = "Web Address";
+                if ($content !== '')
                     {
-                    $validated = "Web address provided is invalid!";
+                    if (!filter_var($content, FILTER_VALIDATE_URL))
+                        {
+                        $validated = "Web address provided is invalid!";
+                        }
                     }
                 } elseif ($field === "stTel")
                 {
@@ -422,7 +428,7 @@ class Task_Model
                 }
             //!Important - The logic requires that the Validator_Model 
             //              function is run before the @return
-            if (!isset($validated))
+            if (!isset($validated) && $field !== "Web Address")
                 {
                 $validated = Validator_Model::variableCheck($field, $content, $type, $length);
                 } else

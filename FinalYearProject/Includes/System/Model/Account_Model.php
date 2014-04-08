@@ -197,6 +197,7 @@ class Account_Model extends Validator_Model
                 } elseif ($field === "email")
                 {
                 $field = "Email";
+                $length = 200;
                 $validated = Validator_Model::validateEmail($content, $field);
                 }
                 //!Important - The logic requires that the Validator_Model 

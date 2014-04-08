@@ -32,15 +32,14 @@ abstract class Validator_Model
             {
             $emptyErr = $field . " can't be empty";
             array_push($errors, $emptyErr);
-            }
-        elseif (!$type($string))
+            } elseif (!$type($string))
             {
             $typeErr = "String and type don't match!<br>"
                     . "Field is: " . $field . "<br>"
                     . "Trying to run: " . $type . "(" . $string . ")";
             array_push($errors, $typeErr);
             }
-        
+
         // then we check how long the string is
         elseif (strlen($string) > $length)
             {
@@ -132,25 +131,52 @@ abstract class Validator_Model
      * @return boolean $valid   : This returns boolean based on whether date is valid
      * 
      */
+
     public static function validateDate($date)
         {
         $valid = true;
         if (isset($date) && $date !== '')
             {
             $parts = explode("-", $date);
-            if (checkdate($parts[0], $parts[1], $parts[2]))
+            //If the date is passed in American format then remove and reinsert year to the end
+            if(strlen($parts[0]) === 4){
+                $temp = $parts[0];
+                array_splice($parts, 0, 1);
+                array_push($parts, $temp); 
+                }
+                //Run checkdate validation function
+            if (!checkdate($parts[0], $parts[1], $parts[2]))
                 {
-                $valid = true;
-                }
                 return "Invalid date format!";
-            }
-            else {
-                return "A date field is empty!";
                 }
-            
+            $valid = true;
+            } else
+            {
+            return "A date field is empty!";
+            }
+
         return $valid;
         }
 
+    /*
+     * Function to validate provided website URL
+     * @param (String) $url         This is the provided web address
+     * @param (boolean) $optional   This is whether the field can be empty or not
+     * 
+     * @return (boolean) $success   This is returned if validated, String is returned otherwise
+     */
+
+    public static function validateWebAddr($url)
+        {
+        if ($url !== '')
+            {
+            if (!filter_var($url, FILTER_VALIDATE_URL))
+                {
+                return "Web address provided invalid!";
+                }
+            }
+            return true;
+        }
     }
 
 ?>

@@ -226,10 +226,14 @@ class Task_Model
             }
         //Remove the tDpnd index from $fields array
         unset($fields['tDpnd']);
+
+        $validDependencies = Task_Model::ValidateDependencies($dependencies);
+        //Validate URL separately and remove from $fields
+        $validWeb = Validator_Model::validateWebAddr($fields['web_addr']);
+        unset($fields['web_addr']);
         //Run the fields through validation
         $valid = Task_Model::validateArray($fields);
-        $validDependencies = Task_Model::ValidateDependencies($dependencies);
-        //If errors are returned from either then return error message
+//If errors are returned from then return the provided error message
         if (is_array($valid) || is_string($valid))
             {
             return $valid;
@@ -237,12 +241,15 @@ class Task_Model
                 is_string($validDependencies))
             {
             return $validDependencies;
+            } elseif (is_string($validWeb))
+            {
+            return $validWeb;
             }
 
         $project = new Project_Model($proj_id);
         $projEstimate = Estimation_Model::get($project->estimation());
         //Check that tasks dates are between project dates and start is before end
-        if (strtotime($projEstimate->start_dt()) < strtotime($tStart) && strtotime($projEstimate->est_end_dt() > strtotime($tDeadline) && strtotime($tStart) < strtotime($tDeadline)))
+        if (strtotime($projEstimate->start_dt) < strtotime($tStart) && strtotime($projEstimate->est_end_dt > strtotime($tDeadline) && strtotime($tStart) < strtotime($tDeadline)))
             {
             return "Ensure dates are correct</br>"
                     . "Remember task dates must be within the time span of their project.";
@@ -295,7 +302,7 @@ class Task_Model
         $taskEst_result = mysql_query($taskEst_insert);
         //Foreach dependency selected, insert into DEPENDENCY tables
         // Tables: DEPENDENCY, TASK_DEPENDENCY
-        foreach ($dpnd as $id)
+        foreach ($dependencies as $id)
             {
             //Set query for DEPENDENCY insert
             $dpnd_insert = "INSERT INTO DEPENDENCY ("
@@ -399,16 +406,6 @@ class Task_Model
                 {
                 $field = "Staff email";
                 $validated = Validator_Model::validateEmail($content, $field);
-                } elseif ($field === "web_addr")
-                {
-                    $field = "Web Address";
-                if ($content !== '')
-                    {
-                    if (!filter_var($content, FILTER_VALIDATE_URL))
-                        {
-                        $validated = "Web address provided is invalid!";
-                        }
-                    }
                 } elseif ($field === "stTel")
                 {
                 $pattern = "/^(\+44\s?7\d{3}|\(?07\d{3}\)?)\s?\d{3}\s?\d{3}$/";
@@ -428,7 +425,7 @@ class Task_Model
                 }
             //!Important - The logic requires that the Validator_Model 
             //              function is run before the @return
-            if (!isset($validated) && $field !== "Web Address")
+            if (!isset($validated))
                 {
                 $validated = Validator_Model::variableCheck($field, $content, $type, $length);
                 } else

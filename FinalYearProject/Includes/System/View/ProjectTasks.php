@@ -60,7 +60,10 @@
                                 }
                             ?></p>
                     </div>
-                    <input type="button" class="button" value="Add New"/>
+                    <!--Image button to represent add new project-->
+                <input type="submit" class="button" value="Add New"
+                       onclick="javascript:location.href =
+                                       '?page=Task&action=addTask&isProj=false'"/>
                 </div>
                 <br/>
 

@@ -216,9 +216,13 @@ class Task_Model
         $stEmail = $fields['stEmail'];
         //Assign dependencies to an array
         $dependencies = array();
-        foreach ($fields['tDpnd'] as $dpnd)
+        //If the posted dependencies are set then validate each one
+        if (!empty($fields['tDpnd']))
             {
-            array_push($dependencies, $dpnd);
+            foreach ($fields['tDpnd'] as $dpnd)
+                {
+                array_push($dependencies, $dpnd);
+                }
             }
         //Remove the tDpnd index from $fields array
         unset($fields['tDpnd']);

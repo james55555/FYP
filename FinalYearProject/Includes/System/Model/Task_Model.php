@@ -256,8 +256,9 @@ class Task_Model
             }
         //Start insert transaction
         mysql_query("START TRANSACTION;");
+        echo var_dump($db);
         //Set insert into TASK string
-        $task_insert = "INSERT INTO TASK ("
+        $task_insert = "INSERT INTO task ("
                 . " TSK_ID,"
                 . " PROJ_ID,"
                 . " STATUS,"
@@ -273,9 +274,10 @@ class Task_Model
                 . " '" . $tDescr . "');";
         //Run the query and get the task ID
         $task_result = mysql_query($task_insert);
+        die("<br/>die... " . mysql_error() . "*");
         $task_id = $db->getInsertId();
-        //Set insert into ESTIMATION
-        $estimation_insert = "INSERT INTO ESTIMATION ("
+//Set insert into ESTIMATION
+        $estimation_insert = "INSERT INTO estimation ("
                 . "EST_ID, "
                 . "ACT_HR, "
                 . "PLN_HR, "
@@ -292,6 +294,11 @@ class Task_Model
         //Run query and get estimation id.
         $estimation_result = mysql_query($estimation_insert);
         $est_id = $db->getInsertId();
+        $err = mysql_error();
+        if (isset($err))
+            {
+            die("<br/>die... " . mysql_error());
+            }
         //Set query to create link between TASK and ESTIMATION
         $taskEst_insert = "INSERT INTO TASK_ESTIMATION ("
                 . "tsk_id,"
@@ -354,9 +361,12 @@ class Task_Model
         if ($task_result && $estimation_result && $taskEst_result && $dpnd_result && $taskDpnd_result && $staff_result && $staffTask_result)
             {
             mysql_query("COMMIT;");
+            $db->close();
             } else
             {
+            echo "rollback  " . mysql_error();
             mysql_query("ROLLBACK;");
+            $db->close();
             return "Error inserting into the database<br/>";
             }
         return true;
@@ -369,7 +379,6 @@ class Task_Model
         var_dump($fields);
         foreach ($fields as $field => $content)
             {
-            echo "<br/>field: " . $field . "///Content: " . $content;
             //run through task details information
             if ($field === "proj_id")
                 {
@@ -385,13 +394,9 @@ class Task_Model
                 $field = "Task description";
                 }
             //Run through task estimation dates
-            elseif ($field === "tStart")
+            elseif ($field === "tStart" || $field === "tDeadline")
                 {
-                $field = "Start date";
-                $validated = Validator_Model::validateDate($content);
-                } elseif ($field === "tDeadline")
-                {
-                $field = "Deadline";
+                $field = "Task dates";
                 $validated = Validator_Model::validateDate($content);
                 } elseif ($field === "pln_hr")
                 {
@@ -428,11 +433,13 @@ class Task_Model
             if (!isset($validated))
                 {
                 $validated = Validator_Model::variableCheck($field, $content, $type, $length);
-                } else
+                }
+            if (is_array($validated) || is_string($validated))
                 {
                 return $validated;
                 }
             }
+        return null;
         }
 
     /*

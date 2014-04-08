@@ -8,6 +8,8 @@
 <html>
     <!DOCTYPE html>
     <head>
+        <script type="text/javascript" src="Includes/common/Scripts/confirmAction.js"></script>
+        
         <link rel="stylesheet" type="text/css" href="Includes/CSS/reset.css"/>
         <link rel="stylesheet" type="text/css" href="Includes/CSS/main.css"/>
         <link rel="stylesheet" type="text/css" href="Includes/CSS/addProject.css"/>
@@ -44,6 +46,9 @@
                     <input type="button" value="Back" class="button"
                                onclick="history.go(-1);"/>
                     <input type="submit" value="Submit" class="button" id="newProj"/>
+                    <input type="reset" value="Reset" class="button" 
+                           onclick="return confirmAction('reset',
+                           'all values')"/>
                 </form>    
             </div><!--End of content-->
         </div><!--End of container-->

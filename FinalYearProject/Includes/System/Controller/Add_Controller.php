@@ -47,6 +47,7 @@ class Add_Controller extends Main_Controller
         //assign to an array
         $fields = array();
         //TASK data
+        $fields['proj_id'] = $_POST['proj_id'];
         $fields['tName'] = $_POST['tName'];
         $fields['tDescr'] = $_POST['tDescr'];
         $fields['web_addr'] = $_POST['web_addr'];
@@ -68,9 +69,9 @@ class Add_Controller extends Main_Controller
         $fields['stTel'] = $_POST['stTel'];
         $fields['stEmail'] = $_POST['stEmail'];
 
-        $this->newtask = Task_Model::addTask($fields);
+        $this->newTask = Task_Model::addTask($fields);
 
-        return showView();
+        return $this->showView();
         }
 
     /*
@@ -104,7 +105,7 @@ class Add_Controller extends Main_Controller
                 {
                 $this->registry->error = true;
                 $this->registry->heading = "Error adding task!";
-                $this->registry->message = $this->newProject;
+                $this->registry->message = $this->newTask;
                 } else
                 {
                 $this->registry->heading = "Task Added!";

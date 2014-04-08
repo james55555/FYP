@@ -74,7 +74,6 @@ input[type=date] {
 */
 /*Style for buttons throughout the website*/
 .button{
-
     padding:6px 10px;
     outline:none;
     border:none;
@@ -104,8 +103,7 @@ input[type=date] {
 }
 /*Positioning and dimensions of block elements throughout the website*/
 .centralBox{
-    width:250px;
-    height:250px;	
+    width:250px;	
     padding:20px;
     box-shadow:2px 2px 10px 10px #ccc;
     -webkit-box-shadow:2px 2px 10px 10px #ccc;

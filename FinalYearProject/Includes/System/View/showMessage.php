@@ -29,36 +29,28 @@
             <div id="showMsg">
 
                 <?php
-                if (!$this->registry->error)
-                    {
-                    echo "err reset";
-                    $this->registry->error = false;
-                    }
-                elseif ($this->registry->error)
-                    {
-                    ?>
-                    <p class="error">   
-                        <?php
-                        if (is_array($this->registry->message))
-                            {
-                            echo implode("<br/>", $this->registry->message);
-                            } else
-                            {
-                            echo $this->registry->message;
-                            }
+                    if (is_array($this->registry->message))
+                        {
+                        $this->registry->message = implode("<br/>", $this->registry->message);
+                        }
+                    if (isset($this->registry->error) 
+                            && $this->registry->error)
+                        {
                         ?>
-                    </p>
-                    <br/>
-                    <a href="javascript:history.go(-1);">
-                        Return to previous page
-                    </a>
-                    <?php
-                    } else
-                    {
-                    ?>
-                    <p class="error">Message hasn't been set properly!</p>
-                    <?php
-                    }
+                        <p class="error">   
+                            <?php
+                            echo $this->registry->message;
+                            ?>
+                        </p>
+                        <br/>
+                        <a href="javascript:history.go(-1);">
+                            Return to previous page
+                        </a>
+                        <?php
+                        } else
+                        {
+                        echo "<p>" . $this->registry->message . "</p>";
+                        }
                 //Reset registry error
                 $this->registry->error = false;
                 ?>

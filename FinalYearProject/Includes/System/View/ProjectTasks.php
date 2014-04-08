@@ -63,8 +63,7 @@
                     <!--Image button to represent add new project-->
                     <input type="submit" class="button" value="Add New"
                            onclick="javascript:location.href =
-                                           '?page=Task&ampaction=addTask&amp\n\
-                            isProj=false&ampproj_id=<?php echo $proj_id; ?>'"/>
+                                           '?page=Task&action=addTask&isProj=false&proj_id=<?php echo $proj_id; ?>'"/>
                 </div>
                 <br/>
 

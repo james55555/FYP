@@ -99,7 +99,7 @@ class Add_Controller extends Main_Controller
                         to view your projects";
                 }
             } elseif (!$this->isProject)
-            {
+            {  
             if (is_array($this->newTask) ||
                     is_string($this->newTask))
                 {

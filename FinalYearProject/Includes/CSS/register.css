@@ -8,16 +8,6 @@
  * 
  */ 
 
-#banner{
-    width: 100%;
-    color: #FFFFFF;
-    display: inline-block;
-}
-#banner #title{
-    float: left;
-    margin-left: 10px;
-    text-shadow: none;
-}
 #content{
     /*Position block*/
     margin: 0 auto;
@@ -25,10 +15,21 @@
     margin-top: 10px;
     text-align: center;
     width: 25%;
-    height: 70%;
-    box-shadow: none;
+    display:block;
+    overflow:auto;
 }
-
+#content h1, #content #personal, #content #credentials {
+    border-bottom: 1px solid #aaa;
+}
+ #content #personal, #content #credentials {
+    padding-bottom: .75em;
+}
+#content #personal {
+    padding-top: .75em;
+}
+#content #credentials {
+    margin-top: -.75em;
+}
 .regInput input[type=text], .regInput input[type=password]{
     width: 100%;
     padding: 4px;

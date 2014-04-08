@@ -25,13 +25,9 @@
 
     </head>
     <body>
-        <div id="container" class="blockColour">
-            <div id="banner">
-                <div id="title">
-                    <h1>Thanks for choosing us</h1>
-                </div>
-            </div>
+        <div id="container">
             <div id="content" class="centralBox">
+                <h1>Registration</h1>
                 <form id="register" name="register" action="?page=Register&action=submitForm" 
                       method="post">
                     <div id="personal" class="regInput">

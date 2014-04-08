@@ -95,8 +95,7 @@ class Estimation_Model extends Generic_Model
         $db = new Database();
         $db->connect();
 
-//  Query returns all estimation models for all associated tasks whcih are associated with projects which are associated with users in the current session
-
+    //Query returns all estimation models for all associated tasks whcih are associated with projects which are associated with users in the current session
         $query = "SELECT EST_ID, ACT_HR, PLN_HR, START_DT,"
                 . " ACT_END_DT, EST_END_DT, EST.TSK_ID"
                 . " FROM ESTIMATION EST"

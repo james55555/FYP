@@ -50,7 +50,13 @@ class Add_Controller extends Main_Controller
         $fields['tName'] = $_POST['tName'];
         $fields['tDescr'] = $_POST['tDescr'];
         $fields['web_addr'] = $_POST['web_addr'];
-        $fields['dpnd'] = $_POST['tDpnd'];
+        if (!isset($_POST['tDpnd']))
+            {
+            $fields['tDpnd'] = null;
+            } else
+            {
+            $fields['tDpnd'] = $_POST['tDpnd'];
+            }
         $fields['status'] = $_POST['status'];
         //ESTIMATION data
         $fields['tStart'] = $_POST['tStart'];

@@ -29,28 +29,27 @@
             <div id="showMsg">
 
                 <?php
-                    if (is_array($this->registry->message))
-                        {
-                        $this->registry->message = implode("<br/>", $this->registry->message);
-                        }
-                    if (isset($this->registry->error) 
-                            && $this->registry->error)
-                        {
-                        ?>
-                        <p class="error">   
-                            <?php
-                            echo $this->registry->message;
-                            ?>
-                        </p>
-                        <br/>
-                        <a href="javascript:history.go(-1);">
-                            Return to previous page
-                        </a>
+                if (is_array($this->registry->message))
+                    {
+                    $this->registry->message = implode("<br/>", $this->registry->message);
+                    }
+                if ($this->registry->error)
+                    {
+                    ?>
+                    <p class="error">   
                         <?php
-                        } else
-                        {
-                        echo "<p>" . $this->registry->message . "</p>";
-                        }
+                        echo $this->registry->message;
+                        ?>
+                    </p>
+                    <br/>
+                    <a href="javascript:history.go(-1);">
+                        Return to previous page
+                    </a>
+                    <?php
+                    } else
+                    {
+                    echo "<p>" . $this->registry->message . "</p>";
+                    }
                 //Reset registry error
                 $this->registry->error = false;
                 ?>

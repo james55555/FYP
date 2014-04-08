@@ -111,8 +111,8 @@ class Project_Model extends Validator_Model
             {
             return false;
             }
-            //If the task is set but not false then it must be valid
-            elseif (isset($deleteTask))
+        //If the task is set but not false then it must be valid
+        elseif (isset($deleteTask))
             {
             foreach ($deleteTask as $delete)
                 {
@@ -126,8 +126,8 @@ class Project_Model extends Validator_Model
             {
             return false;
             }
-            $estRef = ProjectEstimation_Model::delete($project->estimate);
-            
+        $estRef = ProjectEstimation_Model::delete($project->estimate);
+
         if (isset($estRef) && $estRef)
             {
 
@@ -139,8 +139,7 @@ class Project_Model extends Validator_Model
             {
             return false;
             }
-        if ((!$projectDelete && isset($projectDelete))
-                || (!$user_projectDelete && isset($user_projectDelete)))
+        if ((!$projectDelete && isset($projectDelete)) || (!$user_projectDelete && isset($user_projectDelete)))
             {
             return false;
             }
@@ -265,7 +264,10 @@ class Project_Model extends Validator_Model
                 $field = "Project Dates";
                 $validated = Validator_Model::validateDate($content);
                 }
-            $validated = Validator_Model::variableCheck($field, $content, $type, $length);
+            if (!isset($validated))
+                {
+                $validated = Validator_Model::variableCheck($field, $content, $type, $length);
+                }
             if (is_array($validated) || is_string($validated))
                 {
                 return $validated;

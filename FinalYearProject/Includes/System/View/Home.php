@@ -30,8 +30,8 @@
                 <h1>My Projects</h1>
                 <!--Image button to represent add new project-->
                 <input type="submit" class="button" value="Add New"
-                       onclick="javascript:location.href=
-                                   '?page=Add&action=addProj&isProj=true'"/>
+                       onclick="javascript:location.href =
+                                       '?page=Add&action=addProj&isProj=true'"/>
             </div>
             <table id="myProjects" class="table">
                 <tr>

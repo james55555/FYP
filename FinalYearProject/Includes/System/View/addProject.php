@@ -41,7 +41,8 @@
                         <label title="How many hours will be assigned to the project?">
                             Estimate: </label><input type="text" name="pln_hr"/>
                     </div> <!--End of projDates-->
-
+                    <input type="button" value="Back" class="button"
+                               onclick="history.go(-1);"/>
                     <input type="submit" value="Submit" class="button" id="newProj"/>
                 </form>    
             </div><!--End of content-->

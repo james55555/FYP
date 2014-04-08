@@ -66,10 +66,8 @@
                                      width="20" height="20"/>
                             </a>
                         </button>
-                        <button id="delP" onclick="return confirmAction('delete', 
-                                <?php
-                                echo "\'" . $project->proj_nm() . "\'";
-                                ?>);">
+                        <button id="delP" onclick="return confirmAction('delete',
+                                '<?php echo $project->proj_nm(); ?>')">
                             <a href="?page=Home&action=delete&proj_id=
                                <?php echo $projid; ?>">
                                 <img src="Includes/CSS/img/Icons/delete.png"

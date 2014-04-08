@@ -30,26 +30,24 @@
             <div id="showMsg">
 
                 <?php
-                if(!isset($this->registry->error)){
-                    $this->registry->error = true;
+                if (!isset($this->registry->error))
+                    {
+                    $this->registry->error = false;
                     }
                 if ($this->registry->error)
                     {
-                    //Reset registry error
-                    $this->registry->error = false;
-                    if (is_array($this->registry->message))
-                        {
-                        echo "<p class=\"error\">" .
-                        implode("<br/>", $this->registry->message)
-                        . "</p>";
-                        } else
-                        {
-                        ?>
-                        <p class="error"><?php echo $this->registry->message; ?></p>
-                        <?php
-                        }
                     ?>
-
+                    <p class="error">
+                        <?php
+                        if (is_array($this->registry->message))
+                            {
+                            echo implode("<br/>", $this->registry->message);
+                            } else
+                            {
+                            echo $this->registry->message;
+                            }
+                        ?>
+                    </p>
                     <br/>
                     <a href="javascript:history.go(-1);">
                         Return to previous page
@@ -57,11 +55,11 @@
                     <?php
                     } else
                     {
-                        var_dump($this->registry->message);
                     echo "<p>" . $this->registry->message . "</p>";
                     }
+                //Reset registry error
+                $this->registry->error = false;
                 ?>
-
             </div> <!--End of showMsg div-->
         </div> <!--End of container div-->
     </body>

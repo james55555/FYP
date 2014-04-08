@@ -32,8 +32,10 @@ private $project;
 
     public function details()
         {
-        $this->registry->project = $this->project;
+        
         $this->registry->task = new Task_Model($_GET['task_id']);
+        $this->registry->project = new Project_Model
+                ($this->registry->task->proj_id());
         $this->registry->taskEstimation = Estimation_Model::get($this->registry->task->estimation());
         $this->registry->taskStaff = Staff_Model::get($this->registry->task->staff());
         $this->registry->taskDependencies = Dependency_Model::get($this->registry->task->dpnd());

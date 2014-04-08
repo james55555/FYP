@@ -70,10 +70,15 @@
                     <label>Last Name: </label><input type="text" name="stLast"/>
                     <label>Phone number: </label><input type="tel" name="stTel"/>
                     <label>Email: </label><input type="text" name="stEmail"/>
+                    <input type="hidden" value="<?php echo $_GET['proj_id']; ?>"
+                           name="proj_id"/>
                 </div> <!--End of staff-->
-
+                <input type="button" value="Back" class="button"
+                       onclick="history.go(-1);"/>
                 <input type="submit" value="Submit" class="button" id="newUser"/>
-
+                <input type="reset" value="Reset" class="button" 
+                       onclick="return confirmAction('reset',
+                                           'all values')"/>
             </form>
         </div> <!--End of container-->
         <?php

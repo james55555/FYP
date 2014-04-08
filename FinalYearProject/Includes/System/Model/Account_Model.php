@@ -10,7 +10,7 @@
 class Account_Model extends Validator_Model
     {
 
-    //instantiate variables from ACCOUNT
+//instantiate variables from ACCOUNT
     private
             $accCreate_ts;
     private
@@ -103,19 +103,19 @@ class Account_Model extends Validator_Model
             function addUser($registrationFields)
         {
 
-        //Set up the database connection and validate the user entered fields.
+//Set up the database connection and validate the user entered fields.
         $db = new Database();
         $db->connect();
         $db->filterParameters($registrationFields);
 
-        //Assign array variables to abbreviations for later use
+//Assign array variables to abbreviations for later use
         $user_id = $registrationFields['user_id'];
         $password = $registrationFields['password'];
         $fName = $registrationFields['fname'];
         $lName = $registrationFields['lname'];
         $em = $registrationFields['email'];
 
-        //Validate variables
+//Validate variables
         $valid = Account_Model::validateArray($registrationFields);
         if (is_array($valid))
             {
@@ -128,7 +128,7 @@ class Account_Model extends Validator_Model
         $testQuery = mysql_query($existingQuery);
         if ($db->querySuccess($testQuery))
             {
-            //Number of entries with that username
+//Number of entries with that username
             $numExisting = mysql_num_rows($testQuery);
             } else
             {
@@ -172,7 +172,7 @@ class Account_Model extends Validator_Model
 
     private static function validateArray($registrationFields)
         {
-        //Set var validation variables
+//Set var validation variables
         $type = "String";
         $validated = null;
 
@@ -199,12 +199,12 @@ class Account_Model extends Validator_Model
                 $field = "Email";
                 $validated = Validator_Model::validateEmail($content, $field);
                 }
-            if ($validated !== null)
+                //!Important - The logic requires that the Validator_Model 
+                //              function is run before the @return
+            if (!isset($validated))
                 {
                 $validated = Validator_Model::variableCheck($field, $content, $type, $length);
-                }
-
-            if (isset($validated))
+                } else
                 {
                 return $validated;
                 }

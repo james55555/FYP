@@ -154,7 +154,7 @@ abstract class Validator_Model
             {
             return "A date field is empty!";
             }
-
+            
         return $valid;
         }
 

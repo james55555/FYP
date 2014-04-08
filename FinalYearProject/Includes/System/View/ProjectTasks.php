@@ -22,7 +22,8 @@
             ?>
             <div id="container">
                 <div class="Proj_Details">
-                    <h1 id="title">Tasks for project: <?php echo $_GET['proj_id']; ?></h1><br/>
+                    <?php $proj_id = $_GET['proj_id']; ?>
+                    <h1 id="title">Tasks for project: <?php echo $proj_id ?></h1><br/>
                     <?php
                     $projEstimate = $this->registry->projectEstimation;
                     $noEstimate = "No estimate set.";
@@ -62,7 +63,8 @@
                     <!--Image button to represent add new project-->
                     <input type="submit" class="button" value="Add New"
                            onclick="javascript:location.href =
-                                           '?page=Task&action=addTask&isProj=false&proj_id=<?php echo $_GET['proj_id']; ?>'"/>
+                                           '?page=Task&ampaction=addTask&amp\n\
+                            isProj=false&ampproj_id=<?php echo $proj_id; ?>'"/>
                 </div>
                 <br/>
 

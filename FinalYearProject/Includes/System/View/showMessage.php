@@ -29,14 +29,15 @@
             <div id="showMsg">
 
                 <?php
-                if (!isset($this->registry->error))
+                if (!$this->registry->error)
                     {
+                    echo "err reset";
                     $this->registry->error = false;
                     }
-                if ($this->registry->error)
+                elseif ($this->registry->error)
                     {
                     ?>
-                    <p class="error">
+                    <p class="error">   
                         <?php
                         if (is_array($this->registry->message))
                             {
@@ -54,7 +55,9 @@
                     <?php
                     } else
                     {
-                    echo "<p>" . $this->registry->message . "</p>";
+                    ?>
+                    <p class="error">Message hasn't been set properly!</p>
+                    <?php
                     }
                 //Reset registry error
                 $this->registry->error = false;

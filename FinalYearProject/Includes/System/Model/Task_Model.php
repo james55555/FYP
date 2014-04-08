@@ -384,6 +384,8 @@ class Task_Model
                     {
                     $validated = "Web address provided is invalid!";
                     }
+                $field = "Web Address";
+                $length = 200;
                 } elseif ($field === "stTel")
                 {
                 $pattern = "/^(\+44\s?7\d{3}|\(?07\d{3}\)?)\s?\d{3}\s?\d{3}$/";
@@ -392,16 +394,27 @@ class Task_Model
                     {
                     $validated = "Invalid phone number!";
                     }
+                $field = "Staff Telephone number";
+                $length = 32;
                 } elseif ($field === "status")
                 {
-                
+                if (!in_array($content, array("", "Not Started", "In Progress", "Finished")))
+                    {
+                    return "Correct status needs to be supplied";
+                    }
                 }
             //DEPENDENCY && WEB ADDR NEED SPECIAL VALIDATION
             elseif ($field === "dpnd")
                 {
-                
+                $length = 10;
+                $field = "Task dependency ID";
                 }
-            if (isset($validated))
+                //!Important - The logic requires that the Validator_Model 
+                //              function is run before the @return
+            if (!isset($validated))
+                {
+                $validated = Validator_Model::variableCheck($field, $content, $type, $length);
+                } else
                 {
                 return $validated;
                 }

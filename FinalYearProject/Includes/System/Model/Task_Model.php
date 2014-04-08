@@ -204,7 +204,6 @@ class Task_Model
         $tName = $fields['tName'];
         $tDescr = $fields['tDescr'];
         $web_addr = $fields['web_addr'];
-        $dpnd = $fields['tDpnd'];
         $status = $fields['status'];
         //ESTIMATION data
         $tStart = $fields['tStart'];
@@ -215,11 +214,26 @@ class Task_Model
         $stLast = $fields['stLast'];
         $stTel = $fields['stTel'];
         $stEmail = $fields['stEmail'];
+        //Assign dependencies to an array
+        $dependencies = array();
+        foreach ($fields['tDpnd'] as $dpnd)
+            {
+            array_push($dependencies, $dpnd);
+            }
+        //Remove the tDpnd index from $fields array
+        unset($fields['tDpnd']);
+
+
 
         $valid = Task_Model::validateArray($fields);
+        $validDependencies = Task_Model::ValidateDependencies($dependencies);
         if (is_array($valid) || is_string($valid))
             {
             return $valid;
+            } elseif (is_array($validDependencies) ||
+                is_string($validDependencies))
+            {
+            return $validDependencies;
             }
 
         $project = new Project_Model($proj_id);
@@ -298,7 +312,7 @@ class Task_Model
                     . " '" . $task_id . "',"
                     . " '" . $dpnd_id . "');";
             //Insert into TASK_DEPENDENCY table
-            $taskDpnd_result = mysql_query($dpnd_insert);
+            $taskDpnd_result = mysql_query($taskDpnd_insert);
             }
 
         //Set insert into STAFF
@@ -342,9 +356,10 @@ class Task_Model
         {
         $type = "string";
         $validated = null;
-
+        var_dump($fields);
         foreach ($fields as $field => $content)
             {
+            echo "<br/>field: " . $field . "///Content: " . $content;
             //run through task details information
             if ($field === "tName")
                 {
@@ -384,8 +399,6 @@ class Task_Model
                     {
                     $validated = "Web address provided is invalid!";
                     }
-                $field = "Web Address";
-                $length = 200;
                 } elseif ($field === "stTel")
                 {
                 $pattern = "/^(\+44\s?7\d{3}|\(?07\d{3}\)?)\s?\d{3}\s?\d{3}$/";
@@ -403,14 +416,8 @@ class Task_Model
                     return "Correct status needs to be supplied";
                     }
                 }
-            //DEPENDENCY && WEB ADDR NEED SPECIAL VALIDATION
-            elseif ($field === "dpnd")
-                {
-                $length = 10;
-                $field = "Task dependency ID";
-                }
-                //!Important - The logic requires that the Validator_Model 
-                //              function is run before the @return
+            //!Important - The logic requires that the Validator_Model 
+            //              function is run before the @return
             if (!isset($validated))
                 {
                 $validated = Validator_Model::variableCheck($field, $content, $type, $length);
@@ -421,20 +428,28 @@ class Task_Model
             }
         }
 
-    /* public static
-      function addNewTask($row)
-      {
-      $db = new Database();
-      $db->connect();
-      if (!isset($row->web_addr()))
-      {
-      $row->web_addr() = null;
-      }
-      if (!isset($row->tsk_descr()))
-      {
-      $row->tsk_descr() = null;
-      }
-      $query = "INSERT INTO task VALUES ('$row')";
-      }
+    /*
+     * Funtion to run through provided dependencies array and 
+     * validate each provided value
+     * @param $array (array)    This is the values provided
+     * 
+     * @return boolean          This returns an error or true
      */
+
+    private static function ValidateDependencies($array)
+        {
+        $type = "numeric";
+        $length = 10;
+        foreach ($array as $field => $content)
+            {
+            $field = "dependencies";
+            $validated = Validator_Model::variableCheck($field, $content, $type, $length);
+            if (isset($validated))
+                {
+                return $validated;
+                }
+            }
+        return false;
+        }
+
     }

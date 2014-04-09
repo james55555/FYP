@@ -34,8 +34,8 @@ class Task_Model
 
     public
             function __construct($tsk_id)
-        {
-        $row = $this->getTask($tsk_id);
+        {        
+            $row = $this->getTask($tsk_id);
         $this->tsk_id = $row->TSK_ID;
 //Get the project corresponding to the linked id
         if (isset($_GET['proj_id']))
@@ -55,6 +55,7 @@ class Task_Model
         $this->estimation = TaskEstimation_Model::getEstimationId($row->TSK_ID);
         $this->staff = StaffTask_Model::getStaffId($row->TSK_ID);
         $this->dpnd = TaskDependency_Model::getDpID($row->TSK_ID);
+        
         }
 
     public

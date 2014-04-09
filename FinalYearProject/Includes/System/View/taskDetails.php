@@ -32,7 +32,7 @@
                 <div class="upper" id="start">
                     <p>Task Start Date: 
                         <?php
-                        if (is_object($taskEstimation))
+                        if (isset($taskEstimation))
                             {
                             echo $taskEstimation->start_dt;
                             } else
@@ -45,7 +45,7 @@
                 <div class="upper" id="end">
                     <p>Task Deadline: 
                         <?php
-                        if (is_object($taskEstimation))
+                        if (isset($taskEstimation))
                             {
                             echo $taskEstimation->est_end_dt;
                             } else
@@ -91,7 +91,7 @@
                                 $web = $task->web_addr();
                                 if (isset($descr))
                                     {
-                                    echo $descr . "</div>";
+                                    echo $descr;
                                     } else
                                     {
                                     echo "No task description available.";
@@ -117,10 +117,10 @@
                         <li><div class="infoTitle">Staff associated: </div>
                             <div class="info">
                                 <?php
-                                if (is_object($taskStaff))
+                                if (isset($taskStaff))
                                     {
-                                    echo $taskStaff->staff_first_nm()
-                                    . " " . $taskStaff->staff_last_nm();
+                                    echo $taskStaff->STAFF_FIRST_NM
+                                    . " " . $taskStaff->STAFF_LAST_NM;
                                     } else
                                     {
                                     echo "No staff member associated with task";
@@ -132,7 +132,7 @@
 
                     <div class="details" id="estimation">
                         <?php
-                        if (is_object($taskEstimation))
+                        if (isset($taskEstimation))
                             {
                             ?>
                             <li><div class="infoTitle">Planned Hours: </div>
@@ -158,7 +158,7 @@
                                         echo $actual_hours;
                                         } else
                                         {
-                                        echo "Not set";
+                                        echo "Not set.";
                                         }
                                     ?>
                                 </div>
@@ -174,7 +174,7 @@
                                         {
                                         echo "Not set";
                                         }
-                                    } //End of is_object if statement
+                                    } //End of isset if statement
                                 ?>
                             </div> <!--End of info-->
                         </li>
@@ -198,7 +198,29 @@
                         </li>
                     </div> <!--End of dependencies-->
                 </ul>
-                <div id="down"></div>
+                <div id="down">
+                    <div id="actions">
+                        <!--Buttons to take users to edit or delete for each project-->
+                        <button type="submit" id="editT">
+                            <a href="?page=edit&isProject=false">
+                                <img src="Includes/CSS/img/Icons/edit.png" 
+                                     alt="edit" title="Edit Task"
+                                     width="30" height="30"/>
+                            </a>
+                        </button>
+
+                        <button type="submit" id="delT" onclick="return confirmAction('delete',
+                                        '<?php echo $task->tsk_nm(); ?>')">
+                            <a href="?page=task&action=delete&task_id=
+                               <?php echo $task->tsk_id(); ?>">                                
+                                <a href="?page=Task&action=delete&task_id=<?php echo $task->tsk_id() ?>">
+                                    <img src="Includes/CSS/img/Icons/delete.png" 
+                                         alt="edit" title="Delete Task"
+                                         width="30" height="30"/>
+                                </a>
+                        </button>    
+                    </div>
+                </div>
             </div> <!--End of content-->
         </div> <!--End of container-->
         <?php

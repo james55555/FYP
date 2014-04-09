@@ -126,6 +126,7 @@ class Database
         
         /*
          * Get current status of connection
+         * **Used for testing purposes
          */
         public function getConn(){
             return $this->conn;

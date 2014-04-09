@@ -68,7 +68,7 @@
                     <h2>Associated Staff Members</h2>
                     <label>First Name: </label><input type="text" name="stFirst"/>
                     <label>Last Name: </label><input type="text" name="stLast"/>
-                    <label>Phone number: </label><input type="tel" name="stTel"/>
+                    <label>Phone Extension: </label><input type="tel" name="stTel"/>
                     <label>Email: </label><input type="text" name="stEmail"/>
                     <input type="hidden" value="<?php echo $_GET['proj_id']; ?>"
                            name="proj_id"/>

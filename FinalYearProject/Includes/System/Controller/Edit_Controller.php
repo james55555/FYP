@@ -5,8 +5,14 @@
 #
 #Document: Edit_Controller
 #@author: James
-class Edit_Controller extends Main_Controller {
-    public function main(){
+
+class Edit_Controller extends Main_Controller
+    {
+
+    private $isProject = false;
+
+    public function main()
+        {
         //if is task or is project
         if ($_GET['isProj'])
             {
@@ -16,4 +22,51 @@ class Edit_Controller extends Main_Controller {
             $this->registry->View_Template->show('editTask');
             }
         }
+
+    public function editProject()
+        {
+        $this->isProject = true;
+        //Assign posted fields to an array
+        $fields = array();
+
+        $fields['pName'] = $_POST['pName'];
+        $fields['pDescr'] = $_POST['pDescr'];
+        $fields['pStart'] = $_POST['pStart'];
+        $fields['pDead'] = $_POST['pDeadline'];
+        $fields['pln_hr'] = $_POST['pln_hr'];
+        //boolean to return true on success, false otherwise
+        $updated = Project_Model::editProject($fields);
+
+        return $this->showView($updated);
+        }
+
+    private function showView($success)
+        {
+        try {
+        $link = "<a href=\"?page=Home\"> home </a>";
+        if ($this->isProject)
+            {
+            $model = "Project";
+            } else
+            {
+            $model = "Task";
+            }
+
+        if ($success)
+            {
+            $this->registry->error = false;
+            $this->registry->heading = $model . " updated!";
+            $this->regisry->message = "Return " . $link;
+            } else
+            {
+            throw new Exception("Error Updating . " . $model);
+            }
+        }
+        catch(Exception $e){
+            $this->registry->error = true;
+            $this->registry->heading = $e->getMessage();
+            $this->registry->message = "System error: " . $e->getTraceAsString();
+            }
+        }
+
     }

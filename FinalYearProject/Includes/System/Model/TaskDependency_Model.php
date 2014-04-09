@@ -35,7 +35,12 @@ class TaskDependency_Model extends Dependency_Model
         {
         $row = Database_Queries::selectFrom("DEPENDENCY", "DEPENDENCY_ID", 
                 "TASK_DEPENDENCY", "TSK_ID", $tsk_id);
+        if(isset($row)){
         $dpId = $row->DEPENDENCY_ID;
+        }
+        else {
+            $dpId = null;
+            }
         return $dpId;
         }
 

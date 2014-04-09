@@ -94,9 +94,10 @@ class Add_Controller extends Main_Controller
                 $this->registry->message = $this->newProject;
                 } else
                 {
+                $this->registry->error = false;
                 $this->registry->heading = "Project Added!";
-                $this->registry->message = "Click <a href=\"?page=\Home\"> here </a>
-                        to view your projects";
+                $this->registry->message = "Click <a href=\"?page=\Home\"> here </a> "
+                        . "to view your projects";
                 }
             } elseif (!$this->isProject)
             {  
@@ -108,6 +109,7 @@ class Add_Controller extends Main_Controller
                 $this->registry->message = $this->newTask;
                 } else
                 {
+                $this->registry->error = false;
                 $this->registry->heading = "Task Added!";
                 $this->registry->message = "Possibly add click here to navigate to new task??";
                 }

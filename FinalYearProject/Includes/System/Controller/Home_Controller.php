@@ -20,10 +20,17 @@ class Home_Controller extends Main_Controller
 
     public function delete()
         {
+        try {
         if (isset($_GET['proj_id']))
             {
-            //Run the delete function and return a boolean
+            $exists = Project_Model::getProject($_GET['proj_id']);
+            if(isset($exists)){
+                //Run the delete function and return a boolean
             $this->success = Project_Model::deleteProject($_GET['proj_id']);
+                }
+            else {
+                throw new Exception("Project has already been deleted!");
+                }
             }
         if ($this->success)
             {
@@ -33,9 +40,13 @@ class Home_Controller extends Main_Controller
                         " to view your projects";
             } else
             {
+                throw new Exception("Something went wrong!");
+            }
+        }
+        catch(Exception $e){
             $this->registry->error = true;
             $this->registry->heading = "Error Deleting..";
-            $this->registry->message = "We don't know what happened here.";
+            $this->registry->message = $e->getMessage();
             }
         $this->registry->View_Template->show('showMessage');
         }

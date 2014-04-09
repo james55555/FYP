@@ -50,21 +50,36 @@ class Task_Controller extends Main_Controller
 
     public function delete()
         {
-        if (isset($_GET['task_id']))
+        try
             {
-            //Run the delete function and return a boolean
-            $this->success = Task_Model::deleteTask($_GET['task_id']);
-            }
-        if ($this->success)
-            {
-            $this->registry->error = false;
-            $this->registry->heading = "Success";
-            $this->registry->message = "Task successfully deleted";
-            } else
+            if (isset($_GET['task_id']))
+                {
+                //Check if the task has already been deleted
+                $exists = Task_Model::getTask($_GET['task_id']);
+                if (isset($exists))
+                    {
+                    //Run the delete function and return a boolean
+                    $this->success = Task_Model::deleteTask($_GET['task_id']);
+                    } else
+                    {
+                    throw new Exception("Task has already been deleted!");
+                    }
+                }
+            if ($this->success)
+                {
+                $this->registry->error = false;
+                $this->registry->heading = "Success";
+                $this->registry->message = "Task successfully deleted";
+                } else
+                {
+                throw new Exception("Something went wrong!");
+                }
+            }//End of try
+        catch (Exception $e)
             {
             $this->registry->error = true;
             $this->registry->heading = "Error Deleting..";
-            $this->registry->message = "We don't know what happened here.";
+            $this->registry->message = $e->getMessage();
             }
         $this->registry->View_Template->show('showMessage');
         }

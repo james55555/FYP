@@ -68,7 +68,7 @@
                 <br/>
                 <div id="tasks">
                     <?php
-                    if ($this->registry->project_tasks !== null)
+                    if (sizeof($this->registry->project_tasks) > 0)
                         {
                         ?>
                         <table id="myTasks" class="table">
@@ -82,10 +82,8 @@
                             <?php
                             foreach ($this->registry->project_tasks as $task)
                                 {
-                                if (is_string($task))
-                                    {
-                                    $task = new Task_Model($task);
-                                    }
+                                $task = new Task_Model($task->tsk_id());
+
                                 //for every task obtain the staff member
                                 $staff = Staff_Model::get($task->staff());
                                 $tsk_id = $task->tsk_id();

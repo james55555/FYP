@@ -56,8 +56,8 @@
                     </p>
                 </div> <!--End of end date div-->
                 <button id="up" 
-                        onclick="javascript:location.href='?page=Task&proj_id=\n\
-<?php echo $project->proj_id();?>'">
+                        onclick="javascript:location.href = '?page=Task&proj_id=\n\
+                        <?php echo $project->proj_id(); ?>'">
                     <img src="Includes/CSS/img/Icons/up.png" 
                          alt="up" title="Return to task list"
                          width="20" height="20"/>
@@ -91,13 +91,7 @@
                                 $web = $task->web_addr();
                                 if (isset($descr))
                                     {
-                                    echo $descr;
-                                    if (isset($web))
-                                        {
-                                        echo "<br/>"
-                                        . "<div class=\"info\">"
-                                        . "Web Link: </div>" . $web;
-                                        }
+                                    echo $descr . "</div>";
                                     } else
                                     {
                                     echo "No task description available.";
@@ -105,6 +99,18 @@
                                 ?>
                             </div>
                         </li>
+                        <?php
+                        if (isset($web) && $web !== '')
+                            {
+                            ?>
+                            <li><div class="infoTitle">Web Address: </div>
+                                <div class="info">
+                                    <?php
+                                    echo $web;
+                                    ?>
+                                </div>
+                            </li>
+                        <?php } ?>
                     </div> <!--End of direct task info-->
 
                     <div class="details" id="staff">

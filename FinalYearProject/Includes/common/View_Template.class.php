@@ -41,32 +41,49 @@ Class View_Template
     public
             function show($viewName)
         {
-        //Assign path to view name
-        if (substr($viewName, 0, 3) !== 'err')   {
-            $fullViewName = __VIEW_PATH . DIRECTORY_SEPARATOR .
-                $viewName . '.php';
-            }
-        else    {
-            $fullViewName = __VIEW_PATH . DIRECTORY_SEPARATOR . 'ErrorMessages' 
-                    . DIRECTORY_SEPARATOR .
-                $viewName . '.php';
-            }
-
-        if (file_exists($fullViewName))
+        try
             {
-            //Load variables
-            foreach ($this->variables as $key => $value)
+            //Assign path to view name
+            if (substr($viewName, 0, 3) !== 'err')
                 {
-                //variable declaration within function hence $$
-                $$key = $value;
+                $fullViewName = __VIEW_PATH . DIRECTORY_SEPARATOR .
+                        $viewName . '.php';
+                } else
+                {
+                throw new Exception(0);
                 }
-            }
-        else
+
+            if (file_exists($fullViewName))
+                {
+                //Load variables
+                foreach ($this->variables as $key => $value)
+                    {
+                    //variable declaration within function hence $$
+                    $$key = $value;
+                    }
+                } else
+                {
+                throw new Exception(1);
+                }
+                //If there are errors then catch the exceptions and redirect 
+                //the user to the show message page and display error
+            } catch (Exception $e)
             {
-            throw new Exception('<br/>View not found in ' . $fullViewName);
-            
+            $this->registry->error = true;
+            if ($e->getCode() === 0)
+                {
+                $this->registry->heading = "Error 404 - Redirect Error";
+                $this->registry->message = "There has been an issue taking you to this page."
+                        . "<br/>Error here: " . $fullViewName;
+                } elseif ($e->getCode() === 1)
+                {
+                $this->registry->heading = "File doesn't exist!";
+                $this->registry->message = "The view attempted to load but the file didn't exist."
+                        . "<br/>Error here: " . $fullViewName;
+                }
+                $fullViewName = $this->show('showMessage');
             }
-            include $fullViewName;
+        include $fullViewName;
         }
 
     }

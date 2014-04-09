@@ -31,7 +31,6 @@
    margin: 0 auto;
    width: 400px;
    box-shadow: 1px 1px 10px 5px #DCDCDC;
-   overflow: auto;
    display:block;
 }
 #content li{
@@ -50,4 +49,16 @@
 }
 #down {
     clear:both;
+}
+#actions {
+    text-align: center;
+    padding-top: 20px;
+}
+#actions #editT {
+    margin: 10px;
+    background: #f1f1f1;
+}
+#actions #delT {
+    margin: 10px;
+    background: #f1f1f1;
 }

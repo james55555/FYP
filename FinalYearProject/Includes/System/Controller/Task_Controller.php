@@ -11,16 +11,17 @@ class Task_Controller extends Main_Controller
      * Function to set task variables based on project data and 
      * display high-level task view
      */
-private $project;
+
+    private $project;
+
     public
             function main()
         {
 
         $this->registry->project_tasks = Task_Model::getAllTasks($_GET['proj_id']);
-
         $this->project = new Project_Model($_GET['proj_id']);
         $this->registry->projectEstimation = Estimation_Model::get($this->project->estimation());
-     
+
 //Show the projectTasks view
         $this->registry->View_Template->show('projectTasks');
         }
@@ -32,7 +33,6 @@ private $project;
 
     public function details()
         {
-        
         $this->registry->task = new Task_Model($_GET['task_id']);
         $this->registry->project = new Project_Model
                 ($this->registry->task->proj_id());
@@ -42,7 +42,6 @@ private $project;
 
         $this->registry->View_Template->show('taskDetails');
         }
-
 
     public function editTask()
         {
@@ -55,10 +54,10 @@ private $project;
             {
             //Run the delete function and return a boolean
             $this->success = Task_Model::deleteTask($_GET['task_id']);
-            var_dump($this->success);
             }
         if ($this->success)
             {
+            $this->registry->error = false;
             $this->registry->heading = "Success";
             $this->registry->message = "Task successfully deleted";
             } else
@@ -69,7 +68,10 @@ private $project;
             }
         $this->registry->View_Template->show('showMessage');
         }
-public function addTask(){
-            $this->registry->View_Template->show('addTask');
-            }
+
+    public function addTask()
+        {
+        $this->registry->View_Template->show('addTask');
+        }
+
     }

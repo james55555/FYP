@@ -37,7 +37,7 @@ class Task_Model
         {
         $row = $this->getTask($tsk_id);
         $this->tsk_id = $row->TSK_ID;
-        //Get the project corresponding to the linked id
+//Get the project corresponding to the linked id
         if (isset($_GET['proj_id']))
             {
             $_assocProj = Project_Model::getProject($_GET['proj_id']);
@@ -51,7 +51,7 @@ class Task_Model
         $this->task_nm = $row->TASK_NM;
         $this->web_addr = $row->WEB_ADDR;
         $this->tsk_dscr = $row->TSK_DESCR;
-        //Set up associated objects with task
+//Set up associated objects with task
         $this->estimation = TaskEstimation_Model::getEstimationId($row->TSK_ID);
         $this->staff = StaffTask_Model::getStaffId($row->TSK_ID);
         $this->dpnd = TaskDependency_Model::getDpID($row->TSK_ID);
@@ -163,15 +163,15 @@ class Task_Model
     public static function deleteTask($task_id)
         {
         $task = new Task_Model($task_id);
-        //Prepare queries
-        //Delete staff data
+//Prepare queries
+//Delete staff data
         $staffRef = StaffTask_Model::delete($task_id);
         $staff = Staff_Model::delete($task->staff());
         if (!$staff || !$staffRef)
             {
             return false;
             }
-        //Delete estimation data
+//Delete estimation data
         $estimateRef = TaskEstimation_Model::delete($task_id);
         $estimate = Estimation_Model::delete($task->estimation());
         if (!$estimateRef || !$estimate)
@@ -199,24 +199,26 @@ class Task_Model
         $db = new Database();
         $db->connect();
         $fields = $db->filterParameters($fields);
+        //Close database connection for encapsulation purposes
+        $db->close();
         $proj_id = $fields['proj_id'];
-        //TASK data
+//TASK data
         $tName = $fields['tName'];
         $tDescr = $fields['tDescr'];
         $web_addr = $fields['web_addr'];
         $status = $fields['status'];
-        //ESTIMATION data
+//ESTIMATION data
         $tStart = $fields['tStart'];
         $tDeadline = $fields['tDeadline'];
         $pln_hr = $fields['pln_hr'];
-        //STAFF data
+//STAFF data
         $stFirst = $fields['stFirst'];
         $stLast = $fields['stLast'];
         $stTel = $fields['stTel'];
         $stEmail = $fields['stEmail'];
-        //Assign dependencies to an array
+//Assign dependencies to an array
         $dependencies = array();
-        //If the posted dependencies are set then validate each one
+//If the posted dependencies are set then validate each one
         if (!empty($fields['tDpnd']))
             {
             foreach ($fields['tDpnd'] as $dpnd)
@@ -224,14 +226,14 @@ class Task_Model
                 array_push($dependencies, $dpnd);
                 }
             }
-        //Remove the tDpnd index from $fields array
+//Remove the tDpnd index from $fields array
         unset($fields['tDpnd']);
 
         $validDependencies = Task_Model::ValidateDependencies($dependencies);
-        //Validate URL separately and remove from $fields
+//Validate URL separately and remove from $fields
         $validWeb = Validator_Model::validateWebAddr($fields['web_addr']);
         unset($fields['web_addr']);
-        //Run the fields through validation
+//Run the fields through validation
         $valid = Task_Model::validateArray($fields);
 //If errors are returned from then return the provided error message
         if (is_array($valid) || is_string($valid))
@@ -245,20 +247,22 @@ class Task_Model
             {
             return $validWeb;
             }
-
         $project = new Project_Model($proj_id);
+        //The SELECT query run in this function closes the database connection.
         $projEstimate = Estimation_Model::get($project->estimation());
-        //Check that tasks dates are between project dates and start is before end
+//Check that tasks dates are between project dates and start is before end
         if (strtotime($projEstimate->start_dt) < strtotime($tStart) && strtotime($projEstimate->est_end_dt > strtotime($tDeadline) && strtotime($tStart) < strtotime($tDeadline)))
             {
             return "Ensure dates are correct</br>"
                     . "Remember task dates must be within the time span of their project.";
             }
-        //Start insert transaction
+//Re-open database connection to run queries agains
+        $db->connect();
+//Start insert transaction
         mysql_query("START TRANSACTION;");
-        echo var_dump($db);
-        //Set insert into TASK string
-        $task_insert = "INSERT INTO task ("
+
+//Set insert into TASK string
+        $task_insert = "INSERT INTO fyp.task ("
                 . " TSK_ID,"
                 . " PROJ_ID,"
                 . " STATUS,"
@@ -272,12 +276,12 @@ class Task_Model
                 . " '" . $tName . "',"
                 . " '" . $web_addr . "',"
                 . " '" . $tDescr . "');";
-        //Run the query and get the task ID
+//Run the query and get the task ID
         $task_result = mysql_query($task_insert);
-        die("<br/>die... " . mysql_error() . "*");
         $task_id = $db->getInsertId();
+
 //Set insert into ESTIMATION
-        $estimation_insert = "INSERT INTO estimation ("
+        $estimation_insert = "INSERT INTO fyp.estimation ("
                 . "EST_ID, "
                 . "ACT_HR, "
                 . "PLN_HR, "
@@ -291,50 +295,45 @@ class Task_Model
                 . "'" . $tStart . "', "
                 . "NULL, "
                 . "'" . $tDeadline . "');";
-        //Run query and get estimation id.
+
+//Run query and get estimation id.
         $estimation_result = mysql_query($estimation_insert);
         $est_id = $db->getInsertId();
-        $err = mysql_error();
-        if (isset($err))
-            {
-            die("<br/>die... " . mysql_error());
-            }
-        //Set query to create link between TASK and ESTIMATION
-        $taskEst_insert = "INSERT INTO TASK_ESTIMATION ("
+//Set query to create link between TASK and ESTIMATION
+        $taskEst_insert = "INSERT INTO fyp.TASK_ESTIMATION ("
                 . "tsk_id,"
                 . " est_id)"
                 . " VALUES( "
                 . " '" . $task_id . "',"
                 . " '" . $est_id . "');";
         $taskEst_result = mysql_query($taskEst_insert);
-        //Foreach dependency selected, insert into DEPENDENCY tables
-        // Tables: DEPENDENCY, TASK_DEPENDENCY
+//Foreach dependency selected, insert into DEPENDENCY tables
+// Tables: DEPENDENCY, TASK_DEPENDENCY
         foreach ($dependencies as $id)
             {
-            //Set query for DEPENDENCY insert
-            $dpnd_insert = "INSERT INTO DEPENDENCY ("
+//Set query for DEPENDENCY insert
+            $dpnd_insert = "INSERT INTO fyp.DEPENDENCY ("
                     . "DEPENDENCY_ID,"
                     . " DEPENDENCY_ON)"
                     . " VALUES ( "
                     . "NULL, "
                     . "'" . $id . "');";
-            //Insert into DEPENDENCY table
+//Insert into DEPENDENCY table
             $dpnd_result = mysql_query($dpnd_insert);
             $dpnd_id = $db->getInsertId();
-            //Set query for TASK_DEPENDENCY insert
-            $taskDpnd_insert = "INSERT INTO TASK_DEPENDENCY ("
+//Set query for TASK_DEPENDENCY insert
+            $taskDpnd_insert = "INSERT INTO fyp.TASK_DEPENDENCY ("
                     . "DEPENDENCY_ID,"
                     . " TSK_ID)"
                     . " VALUES ("
                     . " '" . $task_id . "',"
                     . " '" . $dpnd_id . "');";
-            //Insert into TASK_DEPENDENCY table
+//Insert into TASK_DEPENDENCY table
             $taskDpnd_result = mysql_query($taskDpnd_insert);
             }
-
-        //Set insert into STAFF
-        $staff_insert = "INSERT INTO STAFF ("
-                . "STAFF_ID,"
+//Set insert into STAFF
+        $staff_insert = "INSERT INTO fyp.STAFF ("
+                . " STAFF_ID,"
                 . " STAFF_FIRST_NM,"
                 . " STAFF_LAST_NM,"
                 . " STAFF_PHONE,"
@@ -345,11 +344,11 @@ class Task_Model
                 . " '" . $stLast . "',"
                 . " '" . $stTel . "',"
                 . " '" . $stEmail . "');";
-        //Run query to insert into table and get the STAFF_ID
+//Run query to insert into table and get the STAFF_ID
         $staff_result = mysql_query($staff_insert);
         $staff_id = $db->getInsertId();
         //Set insert into STAFF_TASK
-        $staffTask_insert = "INSERT INTO STAFF_TASK ("
+        $staffTask_insert = "INSERT INTO fyp.STAFF_TASK ("
                 . "TSK_ID,"
                 . " STAFF_ID)"
                 . " VALUES ("
@@ -357,29 +356,33 @@ class Task_Model
                 . " '" . $staff_id . "');";
         //Run the query to insert into table
         $staffTask_result = mysql_query($staffTask_insert);
-
+        if (!isset($dpnd_result) || !isset($taskDpnd_result))
+            {
+            $dpnd_result = true;
+            $taskDpnd_result = true;
+            }
+            //If all queries have returned true then COMMIT the TRANSACTION
         if ($task_result && $estimation_result && $taskEst_result && $dpnd_result && $taskDpnd_result && $staff_result && $staffTask_result)
             {
             mysql_query("COMMIT;");
-            $db->close();
             } else
             {
-            echo "rollback  " . mysql_error();
             mysql_query("ROLLBACK;");
             $db->close();
             return "Error inserting into the database<br/>";
             }
+        $db->close();
         return true;
         }
 
     public static function validateArray($fields)
         {
-        $type = "string";
+
         $validated = null;
-        var_dump($fields);
         foreach ($fields as $field => $content)
             {
-            //run through task details information
+            $type = "string";
+//run through task details information
             if ($field === "proj_id")
                 {
                 $length = 10;
@@ -393,16 +396,11 @@ class Task_Model
                 $length = 200;
                 $field = "Task description";
                 }
-            //Run through task estimation dates
+//Run through task estimation dates
             elseif ($field === "tStart" || $field === "tDeadline")
                 {
                 $field = "Task dates";
                 $validated = Validator_Model::validateDate($content);
-                } elseif ($field === "pln_hr")
-                {
-                $field = "Estimated hours";
-                $length = 4;
-                $type = "numeric";
                 } elseif ($field === "stFirst" || $field === "stLast")
                 {
                 $field = "Staff name";
@@ -410,26 +408,36 @@ class Task_Model
                 } elseif ($field === "stEmail")
                 {
                 $field = "Staff email";
+                $length = 200;
                 $validated = Validator_Model::validateEmail($content, $field);
-                } elseif ($field === "stTel")
-                {
-                $pattern = "/^(\+44\s?7\d{3}|\(?07\d{3}\)?)\s?\d{3}\s?\d{3}$/";
-                $match = preg_match($pattern, $content);
-                if (!$match)
-                    {
-                    $validated = "Invalid phone number!";
-                    }
-                $field = "Staff Telephone number";
-                $length = 32;
                 } elseif ($field === "status")
                 {
                 if (!in_array($content, array("", "Not Started", "In Progress", "Finished")))
                     {
                     return "Correct status needs to be supplied";
                     }
+                } elseif ($field === "stTel")
+                {
+                if ($content !== '')
+                    {
+                    $pattern = "[\d{4}]";
+                    $match = preg_match($pattern, $content);
+                    if (!$match)
+                        {
+                        $validated = "Invalid phone number!";
+                        }
+                    }
+                $type = "numeric";
+                $field = "Staff Extension";
+                $length = 4;
+                } elseif ($field === "pln_hr")
+                {
+                $field = "Estimated hours";
+                $length = 4;
+                $type = "numeric";
                 }
-            //!Important - The logic requires that the Validator_Model 
-            //              function is run before the @return
+//!Important - The logic requires that the Validator_Model 
+//              function is run before the @return
             if (!isset($validated))
                 {
                 $validated = Validator_Model::variableCheck($field, $content, $type, $length);

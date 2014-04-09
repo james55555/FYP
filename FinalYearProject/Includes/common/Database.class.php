@@ -38,6 +38,7 @@ class Database
     /*
      * Function to close database connection
      */
+
     public
             function close()
         {
@@ -104,6 +105,31 @@ class Database
         {
         return mysql_insert_id($this->conn);
         }
+
+    /*
+     * Function to run query and return either result or error message
+     * @param (String) $query   This is a string containing the query
+     * 
+     * @return $result          If there is an SQL error then this is an error string
+     *                          Else it is the query result
+     */
+
+    public function query($query)
+        {
+        $result = mysql_result(mysql_query($query, $this->conn));
+        if (!$this->querySuccess($result))
+            {
+            $result = mysql_error($this->conn);
+            }
+        return $result;
+        }
+        
+        /*
+         * Get current status of connection
+         */
+        public function getConn(){
+            return $this->conn;
+            }
 
     /*
      * Function to ascertain success of mysql_result 

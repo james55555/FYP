@@ -201,19 +201,20 @@
                 <div id="down">
                     <div id="actions">
                         <!--Buttons to take users to edit or delete for each project-->
+                        <!--Edit button-->
                         <button type="submit" id="editT">
-                            <a href="?page=edit&isProject=false">
+                            <a href="?page=edit&isProj=false&task_id=<?php echo $task->tsk_id();?>">
                                 <img src="Includes/CSS/img/Icons/edit.png" 
                                      alt="edit" title="Edit Task"
                                      width="30" height="30"/>
                             </a>
                         </button>
-
+                        <!--Delete button-->
                         <button type="submit" id="delT" onclick="return confirmAction('delete',
                                         '<?php echo $task->tsk_nm(); ?>')">
                             <a href="?page=task&action=delete&task_id=
                                <?php echo $task->tsk_id(); ?>">                                
-                                <a href="?page=Task&action=delete&task_id=<?php echo $task->tsk_id() ?>">
+                                <a href="?page=Task&action=delete&task_id=<?php echo $task->tsk_id();?>">
                                     <img src="Includes/CSS/img/Icons/delete.png" 
                                          alt="edit" title="Delete Task"
                                          width="30" height="30"/>

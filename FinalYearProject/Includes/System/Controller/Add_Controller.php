@@ -13,8 +13,7 @@ class Add_Controller extends Main_Controller
 
     public function main()
         {
-        //if is task or is project
-
+        //Direct to page depending on whether the object is project or task
         if ($_GET['isProj'])
             {
             $this->registry->View_Template->show('addProject');

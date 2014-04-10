@@ -20,7 +20,8 @@ class Database_Queries extends Database
      * @return null     null result is returned if query has failed
      */
 
-    public static function selectFrom($model, $reqCol, $table, $colCheck, $paramID)
+    public static function selectFrom($model, $reqCol, $table, $colCheck,
+            $paramID)
         {
         $db = new Database();
         //Ensure paramaters are set up correctly

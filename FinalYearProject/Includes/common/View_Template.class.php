@@ -67,8 +67,8 @@ Class View_Template
             
                 $this->registry->heading = $e->getMessage();
                 $this->registry->message = "There has been an issue taking you to this page."
-                        . "<br/>Error here: " . $this->fullViewName;
-                $this->fullViewName = $this->show('showMessage');
+                        . "<br/>File doesn't exist.";
+                $this->show('showMessage');
             }
         include $fullViewName;
         }

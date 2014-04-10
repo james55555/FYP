@@ -328,9 +328,9 @@ class Project_Model extends Validator_Model
                     . " proj_descr='" . $proj_descr . "'"
                     . " WHERE proj_id='" . $proj_id . "';";
             $project_result = mysql_query($project_update);
-            if ($project_result)
+            if (!$project_result && mysql_affected_rows() === 0)
                 {
-                throw new Exception("Updated no project rows!");
+                throw new Exception("Updated no project rows!<br/>" . $project_update);
                 }
                 
             //Run the update query against the ESTIMATION table
@@ -346,7 +346,7 @@ class Project_Model extends Validator_Model
                     . " EST_END_DT='" . $proj_deadline . "'"
                     . " WHERE EST_ID='" . $est_id . "';";
             $estimation_result = mysql_query($estimation_update);
-                if (mysql_affected_rows($estimation_result) === 0)
+                if (!$estimation_result && mysql_affected_rows() === 0)
                 {
                 throw new Exception("Updated no estimation rows!");
                 }

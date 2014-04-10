@@ -327,24 +327,38 @@ class Project_Model extends Validator_Model
                     . " proj_descr='" . $proj_descr . "'"
                     . " WHERE proj_id='" . $proj_id . "';";
             $project_result = mysql_query($project_update);
-            if(mysql_affected_rows($project_result) === 0)
+            if (mysql_affected_rows($project_result) === 0)
                 {
-                throw new Exception("Updated no rows!");
+                throw new Exception("Updated no project rows!");
                 }
-                //Run the update query against the ESTIMATION table
-                $est_id = ProjectEstimation_Model::getEstimationId($proj_id);
-                $estimation = Estimation_Model::get($est_id);
+            //Run the update query against the ESTIMATION table
+            $est_id = ProjectEstimation_Model::getEstimationId($proj_id);
+            if(!isset($est_id) || !$est_id){
+                throw new Exception("EST_ID wasn't set!");
+                }
+            $estimation = Estimation_Model::get($est_id);
+            if(!isset($estimation) || !$estimation){
+                throw new Exception("Estimation object hasn't been set!");
+                }
             $estimation_update = "UPDATE ESTIMATION SET"
-                                . " EST_ID='" . $estimation->est_id() . "',"
-                                . " ACT_HR='" . $estimation->act_hr() . "',"
-                                . " PLN_HR='" . $estimation->pln_hr() . "',"
-                                . " START_DT='" . $estimation->start_dt() . "',"
-                                . " ACT_END_DT='" . $estimation->act_end_dt() . "',"
-                                . " EST_END_DT='" . $estimation->est_end_dt() . "';";
+                    . " ACT_HR='" . $estimation->act_hr() . "',"
+                    . " PLN_HR='" . $estimation->pln_hr() . "',"
+                    . " START_DT='" . $estimation->start_dt() . "',"
+                    . " ACT_END_DT='" . $estimation->act_end_dt() . "',"
+                    . " EST_END_DT='" . $estimation->est_end_dt() . "'"
+                    . " WHERE EST_ID='" . $estimation->est_id() . "';";
+            $estimation_result = mysql_query($estimation_update);
+                if (mysql_affected_rows($estimation_result) === 0)
+                {
+                throw new Exception("Updated no estimation rows!");
+                }
             } catch (Exception $ex)
             {
+            mysql_query("ROLLBACK;");
             return $ex->getMessage();
             }
+        mysql_query("COMMIT;");
+        return true;
         }
 
     }

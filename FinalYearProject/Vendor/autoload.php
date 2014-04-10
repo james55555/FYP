@@ -39,23 +39,31 @@ include __COMMON_PATH . 'Database_Queries.class.php';
 
 function __autoload($className)
     {
-    if(substr($className, -5 == 'Model'))
+    try
         {
-        $fileName = str_replace('\\', '/', (__MODEL_PATH .
-                $className . '.php'));
-        }  else
-        {
-        $fileName = str_replace('\\', '/', (__SITE_PATH . $className . '.class.php'));
-        }
+        if (substr($className, -5) === 'Model')
+            {
+            $fileName = str_replace('\\', '/', (__MODEL_PATH .
+                    $className . '.php'));
+            } elseif (substr($className, 10) === 'Controller')
+            {
+            $fileName = str_replace('\\', '/', (__CONTROLLER_PATH . $className . '.php'));
+            } else
+            {
+            $fileName = $className;
+            }
 //If the class exists then load, else run the error controller.
-    if (file_exists($fileName))
+        if (file_exists($fileName))
+            {
+            require $fileName;
+            } else
+            {
+            throw new Exception("Error404");
+            }
+        } catch (Exception $e)
         {
-        require $fileName;
-        } else
-        {
-            
-        throw new Exception("File not found: " . $className
-        . " // Location: " . $fileName);
+        $fileName = str_replace('\\', '/', (__CONTROLLER_PATH . $e->getMessage()
+                . '.php'));
         }
     }
 

@@ -35,27 +35,11 @@ class ProjectEstimation_Model extends Estimation_Model
 
     public static function getEstimationId($proj_id)
         {
-        $db = new Database();
-        $db->connect();
-
-        $query = "SELECT distinct est_id"
-                . " FROM project_estimation"
-                . " WHERE proj_id='" . $proj_id . "'";
-
-
-        if ($db->querySuccess($query))
-            {
-            $result = mysql_query($query);
-
-            $row = mysql_fetch_object($result);
-
-            $est_id = parent::getEst_Id($row);
-
-            $db->close();
-
-
-            return $est_id;
-            }
+        $columns = array("proj_id", "est_id");
+        $estimate = Database_Queries::selectFrom("Estimation_Model", $columns, "PROJECT_ESTIMATION", 
+                "PROJ_ID", $proj_id);
+        $est_id = $estimate->est_id;
+        return $est_id;
         }
         
        public static function delete($est_id)

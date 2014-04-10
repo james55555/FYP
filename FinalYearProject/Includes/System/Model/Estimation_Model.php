@@ -24,8 +24,17 @@ class Estimation_Model extends Generic_Model
     public
             function __construct($est_id)
         {
+        try {
             $row = $this->get($est_id);
+            if(!isset($row)){
+                throw new Exception("Error in Estimation_Model<br/>"
+                    . "Row has been set to " . print_r($row));
+                }
+            } catch (Exception $ex) {
+            return $ex->getMessage();
+            }
             
+            //If the no error has been thrown then continue creating object
             $this->est_id = $row->est_id;
             $this->act_hr = $row->act_hr;
             $this->pln_hr = $row->pln_hr;

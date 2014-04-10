@@ -20,7 +20,7 @@
         <?php
         include("header.php");
         $project = $this->registry->project;
-        $estimation = $this->registry->esitmation;
+        $estimation = $this->registry->estimation;
         ?>
         <div id="container">
             <div id="content" class="centralBox"> 
@@ -32,14 +32,13 @@
                         <h2>Details</h2>
                         <!--Print out current project name-->
                         <label>Name: </label>
-                        <input type="text" name="pName"> 
-                        <?php echo $project->proj_nm(); ?>
+                        <input type="text" name="pName" value="<?php echo $project->proj_nm(); ?>"/> 
+
                         <br/>
                         <!--Print out current project description-->
                         <label>Description:  </label><textarea 
                             maxlength="200"
-                            name="pDescr">
-                                <?php echo $project->proj_descr(); ?>
+                            name="pDescr"><?php echo $project->proj_descr(); ?>
                         </textarea>
                     </div> <!--End of details-->
                     <div id="projDates">
@@ -50,7 +49,7 @@
                         <input type="date" name="pStart" value="<?php echo $estimation->start_dt(); ?>">
                         <label title="The actual hours assigned to the project">
                             Actual hours: 
-                        </label><input type="text" name="act_hr"><?php echo $estimation->act_hr(); ?>
+                        </label><input type="text" name="act_hr" value="<?php echo $estimation->act_hr(); ?>"/>
                         <label title="The date the project actually finished">
                             Actual End Date: 
                             <input type="date" name="pActEnd" value="<?php echo $estimation->act_end_dt(); ?>"/>
@@ -60,12 +59,11 @@
                         </label><input type="date" name="pDeadline" 
                                        value="<?php echo $estimation->est_end_dt(); ?>"/>
                         <label>
-                            Estimate: </label><input type="text" name="pln_hr"><?php echo $estimation->pln_hr();?>
-                    </div> <!--End of projDates-->
+                            Estimate: </label><input type="text" name="pln_hr" value="<?php echo $estimation->pln_hr(); ?>"/>                    </div> <!--End of projDates-->
                     <input type="hidden" value="<?php echo $_GET['proj_id']; ?>" name="proj_id"/>
                     <input type="button" value="Back" class="button"
                            onclick="history.go(-1);"/>
-                    <input type="submit" value="Submit" class="button" id="newProj"/>
+                    <input type="submit" value="Submit" class="button" id="submit"/>
                     <input type="reset" value="Reset" class="button" 
                            onclick="return confirmAction('reset',
                                            'all values')"/>

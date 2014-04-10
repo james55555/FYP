@@ -321,13 +321,29 @@ class Project_Model extends Validator_Model
             }
         try
             {
-            $project = "UPDATE PROJECT SET"
+            //Run the update query against the PROJECT table
+            $project_update = "UPDATE PROJECT SET"
                     . " proj_nm='" . $proj_nm . "',"
                     . " proj_descr='" . $proj_descr . "'"
                     . " WHERE proj_id='" . $proj_id . "';";
+            $project_result = mysql_query($project_update);
+            if(mysql_affected_rows($project_result) === 0)
+                {
+                throw new Exception("Updated no rows!");
+                }
+                //Run the update query against the ESTIMATION table
+                $est_id = ProjectEstimation_Model::getEstimationId($proj_id);
+                $estimation = Estimation_Model::get($est_id);
+            $estimation_update = "UPDATE ESTIMATION SET"
+                                . " EST_ID='" . $estimation->est_id() . "',"
+                                . " ACT_HR='" . $estimation->act_hr() . "',"
+                                . " PLN_HR='" . $estimation->pln_hr() . "',"
+                                . " START_DT='" . $estimation->start_dt() . "',"
+                                . " ACT_END_DT='" . $estimation->act_end_dt() . "',"
+                                . " EST_END_DT='" . $estimation->est_end_dt() . "';";
             } catch (Exception $ex)
             {
-            
+            return $ex->getMessage();
             }
         }
 

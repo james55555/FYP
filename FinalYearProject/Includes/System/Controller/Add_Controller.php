@@ -10,6 +10,7 @@ class Add_Controller extends Main_Controller
 
     private $isProject = false;
     protected $newProject;
+    protected $newTask;
 
     public function main()
         {
@@ -79,7 +80,7 @@ class Add_Controller extends Main_Controller
      * @param String $errDetails - then print out details
      */
 
-    public function showView()
+    private function showView()
         {
         //Identify whether or not the object is a project or task
         if ($this->isProject)
@@ -95,7 +96,7 @@ class Add_Controller extends Main_Controller
                 {
                 $this->registry->error = false;
                 $this->registry->heading = "Project Added!";
-                $this->registry->message = "Click <a href=\"?page=\Home\"> here </a> "
+                $this->registry->message = "Click <a href=\"?page=Home\"> here </a> "
                         . "to view your projects";
                 }
             } elseif (!$this->isProject)

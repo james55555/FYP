@@ -15,7 +15,6 @@ Class Registry
      * @param String    key
      * @param any       value
      */
-
     public
             function __set($key, $value)
         {
@@ -27,7 +26,6 @@ Class Registry
      * @param String key
      * @return obj vars
      */
-
     public
             function __get($key)
         {

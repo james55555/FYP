@@ -10,18 +10,18 @@
         <script type="text/javascript" src="Includes/common/Scripts/Validation.js"></script>
         <link rel="stylesheet" type="text/css" href="Includes/CSS/reset.css"/>
         <link rel="stylesheet" type="text/css" href="Includes/CSS/main.css"/>
-        <link rel="stylesheet" type="text/css" href="Includes/CSS/register.css"/>
+        <link rel="stylesheet" type="text/css" href="Includes/CSS/addTask.css"/>
         <title>Time Management System for Professionals - Add New Task page</title>
     </head>
     <body>
         <?php
         include("header.php");
         ?> 
-        <div id="container">
+        <div id="container" class="centralBox">
             <h1>Add Task</h1>
             <form id="addTask" action="?page=Add&action=addTask" 
                   method="post" onsubmit="return taskValidation()">
-                <div id="details">
+                <div id="details" class="section">
                     <h2>Details</h2>
                     <label>Name: </label><input type="text" name="tName"/>
                     <label>Description:  </label><textarea 
@@ -37,7 +37,7 @@
                         <option>Finished</option>
                     </select>
                 </div> <!--End of details div-->
-                <div id="dependencies">
+                <div id="dependencies" class="section">
                     <?php
                     //only show task dependencies if their are tasks associated
                     //with the project in question
@@ -54,7 +54,7 @@
                         }
                     ?>
                 </div><!--End of dependencies-->
-                <div id="estimation">
+                <div id="estimation" class="section">
                     <h2>Project Dates</h2>
                     <label title="When will the task start?">
                         Start Date: </label><input type="date" name="tStart"/>
@@ -64,7 +64,7 @@
                         Estimate</label><input type="text" name="pln_hr"/>
                 </div>
                 <!--Optional for user-->
-                <div id="staff">
+                <div id="staff" class="section">
                     <h2>Associated Staff Members</h2>
                     <label>First Name: </label><input type="text" name="stFirst"/>
                     <label>Last Name: </label><input type="text" name="stLast"/>
@@ -73,12 +73,14 @@
                     <input type="hidden" value="<?php echo $_GET['proj_id']; ?>"
                            name="proj_id"/>
                 </div> <!--End of staff-->
-                <input type="button" value="Back" class="button"
-                       onclick="history.go(-1);"/>
-                <input type="submit" value="Submit" class="button" id="newUser"/>
-                <input type="reset" value="Reset" class="button" 
-                       onclick="return confirmAction('reset',
-                                           'all values')"/>
+                <div id="actions" class="section">
+                    <input type="button" value="Back" class="button"
+                           onclick="history.go(-1);"/>
+                    <input type="submit" value="Submit" class="button" id="newUser"/>
+                    <input type="reset" value="Reset" class="button" 
+                           onclick="return confirmAction('reset',
+                                       'all values')"/>
+                </div><!--End of actions-->
             </form>
         </div> <!--End of container-->
         <?php

@@ -16,9 +16,11 @@ class Edit_Controller extends Main_Controller
         //if is task or is project
         if ($_GET['isProj'])
             {
+            $this->registry->project = new Project_Model($_GET['proj_id']);
             $this->registry->View_Template->show('editProject');
             } else
             {
+            $this->registry->task = new Task_Model($_GET['task_id']);
             $this->registry->View_Template->show('editTask');
             }
         }
@@ -28,7 +30,7 @@ class Edit_Controller extends Main_Controller
         $this->isProject = true;
         //Assign posted fields to an array
         $fields = array();
-
+        $fields['proj_id'] = $_POST['proj_id'];
         $fields['pName'] = $_POST['pName'];
         $fields['pDescr'] = $_POST['pDescr'];
         $fields['pStart'] = $_POST['pStart'];
@@ -42,27 +44,28 @@ class Edit_Controller extends Main_Controller
 
     private function showView($success)
         {
-        try {
-        $link = "<a href=\"?page=Home\"> home </a>";
-        if ($this->isProject)
+        try
             {
-            $model = "Project";
-            } else
-            {
-            $model = "Task";
-            }
+            $link = "<a href=\"?page=Home\"> home </a>";
+            if ($this->isProject)
+                {
+                $model = "Project";
+                } else
+                {
+                $model = "Task";
+                }
 
-        if ($success)
+            if ($success)
+                {
+                $this->registry->error = false;
+                $this->registry->heading = $model . " updated!";
+                $this->regisry->message = "Return " . $link;
+                } else
+                {
+                throw new Exception("Error Updating . " . $model);
+                }
+            } catch (Exception $e)
             {
-            $this->registry->error = false;
-            $this->registry->heading = $model . " updated!";
-            $this->regisry->message = "Return " . $link;
-            } else
-            {
-            throw new Exception("Error Updating . " . $model);
-            }
-        }
-        catch(Exception $e){
             $this->registry->error = true;
             $this->registry->heading = $e->getMessage();
             $this->registry->message = "System error: " . $e->getTraceAsString();

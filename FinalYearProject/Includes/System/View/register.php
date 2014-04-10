@@ -59,7 +59,7 @@
                     <br/>
                     <div id="navigation">
                         <input type="button" value="Back" class="button"
-                               onclick="location.href = '?page=Login'"/>
+                               onclick="location.href ='?page=Login'"/>
                         <input name="submit" type="submit" value="Submit" class="button"/>
                     </div>
                 </form>

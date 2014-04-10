@@ -18,20 +18,20 @@ class Estimation_Model extends Generic_Model
             $act_end_dt;
     private
             $est_end_dt;
-    private $est_id;
+    private 
+            $est_id;
 
     public
-            function __construct($row)
+            function __construct($est_id)
         {
-        if (is_object($row))
-            {
+            $row = $this->get($est_id);
+            
             $this->est_id = $row->est_id;
             $this->act_hr = $row->act_hr;
             $this->pln_hr = $row->pln_hr;
             $this->start_dt = $row->start_dt;
             $this->act_end_dt = $row->act_end_dt;
             $this->est_end_dt = $row->est_end_dt;
-            }
         }
 
     public function est_id()
@@ -71,17 +71,6 @@ class Estimation_Model extends Generic_Model
         $estimation = Database_Queries::selectFrom("ESTIMATION_MODEL", $fields, 
                 "ESTIMATION", "EST_ID", $est_id);
         return $estimation;
-        }
-
-    /*
-     * Function to set an estimation date
-     * @param int $est_id
-     * @return bool $success
-     */
-
-    public static function set($est_id)
-        {
-        
         }
 
     /*

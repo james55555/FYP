@@ -281,17 +281,18 @@ class Project_Model extends Validator_Model
         $db = new Database();
 
         $fields = $db->filterParameters($fields);
-
+        //GET project variables
         $proj_id = $fields['proj_id'];
         $proj_nm = $fields['pName'];
         $proj_descr = $fields['pDescr'];
         //GET estimation vairables
         $proj_start = $fields['pStart'];
+        $pAct_hr = $fields['pAct_hr'];
+        $pAct_End = $fields['pActEnd'];
         $proj_deadline = $fields['pDead'];
         $pln_hr = $fields['pln_hr'];
-        //GET user who is adding project
-        $account = $_SESSION['user'];
-
+        
+        unset($fields['proj_id']);
         $valid = Project_Model::validateArray($fields);
         if (is_array($valid) || is_string($valid))
             {
@@ -327,26 +328,23 @@ class Project_Model extends Validator_Model
                     . " proj_descr='" . $proj_descr . "'"
                     . " WHERE proj_id='" . $proj_id . "';";
             $project_result = mysql_query($project_update);
-            if (mysql_affected_rows($project_result) === 0)
+            if ($project_result)
                 {
                 throw new Exception("Updated no project rows!");
                 }
+                
             //Run the update query against the ESTIMATION table
             $est_id = ProjectEstimation_Model::getEstimationId($proj_id);
             if(!isset($est_id) || !$est_id){
                 throw new Exception("EST_ID wasn't set!");
                 }
-            $estimation = Estimation_Model::get($est_id);
-            if(!isset($estimation) || !$estimation){
-                throw new Exception("Estimation object hasn't been set!");
-                }
             $estimation_update = "UPDATE ESTIMATION SET"
-                    . " ACT_HR='" . $estimation->act_hr() . "',"
-                    . " PLN_HR='" . $estimation->pln_hr() . "',"
-                    . " START_DT='" . $estimation->start_dt() . "',"
-                    . " ACT_END_DT='" . $estimation->act_end_dt() . "',"
-                    . " EST_END_DT='" . $estimation->est_end_dt() . "'"
-                    . " WHERE EST_ID='" . $estimation->est_id() . "';";
+                    . " ACT_HR='" . $pAct_hr . "',"
+                    . " PLN_HR='" . $pln_hr . "',"
+                    . " START_DT='" . $proj_start . "',"
+                    . " ACT_END_DT='" . $pAct_End . "',"
+                    . " EST_END_DT='" . $proj_deadline . "'"
+                    . " WHERE EST_ID='" . $est_id . "';";
             $estimation_result = mysql_query($estimation_update);
                 if (mysql_affected_rows($estimation_result) === 0)
                 {

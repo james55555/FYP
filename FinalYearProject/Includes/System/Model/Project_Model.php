@@ -276,4 +276,59 @@ class Project_Model extends Validator_Model
         return null;
         }
 
+    public static function editProject($fields)
+        {
+        $db = new Database();
+
+        $fields = $db->filterParameters($fields);
+
+        $proj_id = $fields['proj_id'];
+        $proj_nm = $fields['pName'];
+        $proj_descr = $fields['pDescr'];
+        //GET estimation vairables
+        $proj_start = $fields['pStart'];
+        $proj_deadline = $fields['pDead'];
+        $pln_hr = $fields['pln_hr'];
+        //GET user who is adding project
+        $account = $_SESSION['user'];
+
+        $valid = Project_Model::validateArray($fields);
+        if (is_array($valid) || is_string($valid))
+            {
+            return $valid;
+            }
+        if (strtotime($proj_start) > strtotime($proj_deadline))
+            {
+            return "Start date can't be after the deadline date!";
+            }
+        //Connect to database to run queries
+        $db->connect();
+        //Start the transaction
+        mysql_query("START TRANSACTION;");
+//Run the the row check to ensure the row to be updated exists
+        try
+            {
+            $rowExists = mysql_query("SELECT * FROM PROJECT"
+                    . " WHERE proj_id='" . $proj_id . "';");
+            if (mysql_num_rows($rowExists) === 0)
+                {
+                throw new Exception("Row doesn't exist");
+                }
+            } catch (Exception $e)
+            {
+            mysql_query("ROLLBACK;");
+            return $e->getMessage() . "<br/>" . mysql_error();
+            }
+        try
+            {
+            $project = "UPDATE PROJECT SET"
+                    . " proj_nm='" . $proj_nm . "',"
+                    . " proj_descr='" . $proj_descr . "'"
+                    . " WHERE proj_id='" . $proj_id . "';";
+            } catch (Exception $ex)
+            {
+            
+            }
+        }
+
     }

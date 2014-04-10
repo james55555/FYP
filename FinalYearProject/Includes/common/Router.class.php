@@ -82,7 +82,6 @@ Class Router
             $class = $this->controller . '_Controller';
             // new Login_Controller
             $controller = new $class($this->registry);
-
             //verify that the contents of the array can be called as a function
             if (is_callable(array($controller, $this->action)) == false)
                 {

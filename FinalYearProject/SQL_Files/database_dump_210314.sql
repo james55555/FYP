@@ -51,8 +51,8 @@ UNLOCK TABLES;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
-/*!50003 CREATE*/ /*!50017 DEFINER=`root`@`localhost`*/ /*!50003 TRIGGER `convertToMySQLNull` BEFORE INSERT ON `account` FOR EACH ROW BEGIN
-SET NEW.`email_addr`=NULLIF(NEW.`email_addr`,"NULL");
+/*!50003 CREATE*/ /*!50017 DEFINER=`root`@`localhost`*/ /*!50003 TRIGGER `convertToMySQLNull` BEFORE INSERT ON `account` FOR EACH ROW BEGIN
+SET NEW.`email_addr`=NULLIF(NEW.`email_addr`,"NULL");
 END */;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
@@ -197,8 +197,8 @@ UNLOCK TABLES;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'NO_AUTO_VALUE_ON_ZERO' */ ;
 DELIMITER ;;
-/*!50003 CREATE*/ /*!50017 DEFINER=`root`@`localhost`*/ /*!50003 TRIGGER `Add_After_Staff_Insert` AFTER INSERT ON `staff`
- FOR EACH ROW insert into staff_task
+/*!50003 CREATE*/ /*!50017 DEFINER=`root`@`localhost`*/ /*!50003 TRIGGER `Add_After_Staff_Insert` AFTER INSERT ON `staff`
+ FOR EACH ROW insert into staff_task
 values(staff.staff_id, null) */;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;

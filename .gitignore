@@ -1,0 +1,6 @@
+#PHP-Unit Testing installation
+/FinalYearProject/Vendor/bin/
+/FinalYearProject/Vendor/symfony/
+#Windows Files
+desktop.ini
+thumbs.db

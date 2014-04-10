@@ -68,7 +68,8 @@
                 <br/>
                 <div id="tasks">
                     <?php
-                    if (sizeof($this->registry->project_tasks) > 0)
+                    $tasks = $this->registry->project_tasks;
+                    if (sizeof($tasks) > 0)
                         {
                         ?>
                         <table id="myTasks" class="table">
@@ -80,9 +81,16 @@
                                 <th>Actions</th>
                             </tr>
                             <?php
-                            foreach ($this->registry->project_tasks as $task)
+                            foreach ($tasks as $task)
                                 {
-                                $task = new Task_Model($task->tsk_id());
+                                if (is_string($task))
+                                    {
+                                    $task_id = $task;
+                                    } elseif (is_object($task))
+                                    {
+                                    $task_id = $task->TSK_ID;
+                                    }
+                                $task = new Task_Model($task_id);
 
                                 //for every task obtain the staff member
                                 $staff = Staff_Model::get($task->staff());
@@ -100,7 +108,7 @@
                                     <div id="actions">
                                         <!--Buttons to take users to edit or delete for each project-->
                                         <button type="submit" id="editT">
-                                            <a href="?page=Task&action=edit&proj_id=<?php echo $_GET['proj_id']; ?>)">
+                                            <a href="?page=Task&action=edit&proj_id=<?php echo $_GET['proj_id']; ?>">
                                                 <img src="Includes/CSS/img/Icons/edit.png" 
                                                      alt="edit" title="Edit Task"
                                                      width="20" height="20"/>

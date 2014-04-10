@@ -30,7 +30,6 @@ class Task_Controller extends Main_Controller
      * Function to set individual task variables and 
      * show the task details page
      */
-
     public function details()
         {
         $this->registry->task = new Task_Model($_GET['task_id']);

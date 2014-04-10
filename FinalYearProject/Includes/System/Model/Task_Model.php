@@ -35,10 +35,9 @@ class Task_Model
     public
             function __construct($tsk_id)
         {   
-        $taskObject = $this->getTask($tsk_id);
-        $row = Validator_Model::objectToArray($taskObject);
-        $this->tsk_id = $row['TSK_ID'];
-//Get the project corresponding to the linked id
+        $row = $this->getTask($tsk_id);
+        $this->tsk_id = $row->TSK_ID;
+        //Get the project corresponding to the linked id
         if (isset($_GET['proj_id']))
             {
             $_assocProj = Project_Model::getProject($_GET['proj_id']);
@@ -52,11 +51,12 @@ class Task_Model
         $this->task_nm = $row->TASK_NM;
         $this->web_addr = $row->WEB_ADDR;
         $this->tsk_dscr = $row->TSK_DESCR;
-//Set up associated objects with task
+        //Set up associated objects with task
         $this->estimation = TaskEstimation_Model::getEstimationId($row->TSK_ID);
         $this->staff = StaffTask_Model::getStaffId($row->TSK_ID);
         $this->dpnd = TaskDependency_Model::getDpID($row->TSK_ID);
         }
+        
 
     public
             function tsk_id()
@@ -137,8 +137,11 @@ class Task_Model
         {
         $fields = array("TSK_ID, PROJ_ID, STATUS, "
             . "TASK_NM, WEB_ADDR", "TSK_DESCR");
-        $tasks = Database_Queries::selectFrom("TASK_MODEL", $fields, "TASK", "PROJ_ID", $proj_id);
-        
+        $databaseTasks = Database_Queries::selectFrom("TASK_MODEL", $fields, "TASK", "PROJ_ID", $proj_id);
+        //If database tasks isn't an array then create one
+        if(!is_array($databaseTasks)){
+            $tasks = array($databaseTasks);
+        }
         return $tasks;
         }
 

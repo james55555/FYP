@@ -44,15 +44,9 @@ Class View_Template
         try
             {
             //Assign path to view name
-            if (substr($viewName, 0, 3) !== 'err')
-                {
+            
                 $fullViewName = __VIEW_PATH . DIRECTORY_SEPARATOR .
                         $viewName . '.php';
-                } else
-                {
-                throw new Exception(0);
-                }
-
             if (file_exists($fullViewName))
                 {
                 //Load variables
@@ -63,25 +57,18 @@ Class View_Template
                     }
                 } else
                 {
-                throw new Exception(1);
+                throw new Exception("Error 404 - Redirect Error");
                 }
                 //If there are errors then catch the exceptions and redirect 
                 //the user to the show message page and display error
             } catch (Exception $e)
             {
             $this->registry->error = true;
-            if ($e->getCode() === 0)
-                {
-                $this->registry->heading = "Error 404 - Redirect Error";
+            
+                $this->registry->heading = $e->getMessage();
                 $this->registry->message = "There has been an issue taking you to this page."
-                        . "<br/>Error here: " . $fullViewName;
-                } elseif ($e->getCode() === 1)
-                {
-                $this->registry->heading = "File doesn't exist!";
-                $this->registry->message = "The view attempted to load but the file didn't exist."
-                        . "<br/>Error here: " . $fullViewName;
-                }
-                $fullViewName = $this->show('showMessage');
+                        . "<br/>Error here: " . $this->fullViewName;
+                $this->fullViewName = $this->show('showMessage');
             }
         include $fullViewName;
         }

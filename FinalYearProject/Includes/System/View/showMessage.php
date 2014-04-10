@@ -23,11 +23,24 @@
             {
             echo "<a href=\"?page=register\">Return to registration<a/>";
             }
+            try {
         ?>            
         <div id="container">
+            <?php
+            if(!empty($this->registry->heading)){
+                throw new Exception("Internal error, heading not set.");
+            }
+            elseif(!empty($this->registry->message)){
+                throw new Exception("Internal error, message not set.");
+            }
+            elseif(!empty($this->registry->error)){
+                throw new Exception("Internal error, error not set.");
+            }
+            ?>
             <h1><?php echo $this->registry->heading; ?></h1>
             <div id="showMsg">
-
+                <?php
+            ?>
                 <?php
                 if (is_array($this->registry->message))
                     {
@@ -52,6 +65,10 @@
                     }
                 //Reset registry error
                 $this->registry->error = false;
+                } //End of try
+                catch(Exception $e){
+                    echo "<p class=\"error\">" . $e->getMessage() . "</p>";
+                    }
                 ?>
             </div> <!--End of showMsg div-->
         </div> <!--End of container div-->

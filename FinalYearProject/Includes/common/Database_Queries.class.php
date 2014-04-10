@@ -44,6 +44,7 @@ class Database_Queries extends Database
                 . "='" . $id . "';";
         //Process result and return object
         $result = Database_Queries::processResult($query, $model);
+        
         return $result;
         }
 

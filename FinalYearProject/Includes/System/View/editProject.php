@@ -19,6 +19,7 @@
     <body>
         <?php
         include("header.php");
+        $project = $this->registry->project;
         ?>
         <div id="container">
             <div id="content" class="centralBox"> 
@@ -28,16 +29,23 @@
                       method="post"> <!--onsubmit="return projectValidation()"-->
                     <div id="details">
                         <h2>Details</h2>
-                        <label>Name: </label><input type="text" name="pName"/><br/>
+                        <!--Print out current project name-->
+                        <label>Name: </label>
+                        <input type="text" name="pName"> 
+                            <?php echo $project->proj_nm(); ?>
+                        <br/>
+                        <!--Print out current project description-->
                         <label>Description:  </label><textarea 
                             maxlength="200"
-                            name="pDescr"
-                            placeholder="Limit of 200 characters"></textarea>
+                            name="pDescr">
+                                <?php echo $project->proj_descr(); ?>
+                        </textarea>
                     </div> <!--End of details-->
                     <div id="projDates">
                         <h2>Project Dates</h2>
                         <label>
-                            Start Date: </label><input type="date" name="pStart"/>
+                            Start Date: </label>
+                        <input type="date" name="pStart"/>
                         <label>
                             Deadline: </label><input type="date" name="pDeadline"/>
                         <label>

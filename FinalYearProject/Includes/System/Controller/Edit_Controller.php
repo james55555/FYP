@@ -17,12 +17,16 @@ class Edit_Controller extends Main_Controller
         if ($_GET['isProj'])
             {
             $this->registry->project = new Project_Model($_GET['proj_id']);
-            $this->registry->View_Template->show('editProject');
+            $view = 'editProject';
+            $est_id = $this->registry->project->estimation();
             } else
             {
             $this->registry->task = new Task_Model($_GET['task_id']);
-            $this->registry->View_Template->show('editTask');
+            $view = 'editTask';
+            $est_id = $this->registry->task->estimation();
             }
+            $this->registry->estimation = new Estimation_Model($est_id);
+            $this->registry->View_Template->show($view);
         }
 
     public function editProject()

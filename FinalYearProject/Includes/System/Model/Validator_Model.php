@@ -165,7 +165,6 @@ abstract class Validator_Model
      * 
      * @return (boolean) $success   This is returned if validated, String is returned otherwise
      */
-
     public static function validateWebAddr($url)
         {
         if ($url !== '')
@@ -177,6 +176,33 @@ abstract class Validator_Model
             }
             return true;
         }
+
+        /*
+         * Function to convert object into array (Used mainly for stdClass issues)
+         * @param (object) $d   This is the object to be onverted
+         * 
+         * @return (array) $d   This is the array to be returned
+         */
+public static function objectToArray($d) 
+{
+    if (is_object($d)) {
+        // Gets the properties of the given object
+        // with get_object_vars function
+        $d = get_object_vars($d);
+    }
+
+    if (is_array($d)) {
+        /*
+        * Return array converted to object
+        * Using __FUNCTION__ (Magic constant)
+        * for recursive call
+        */
+        return array_map(__FUNCTION__, $d);
+    } else {
+        // Return array
+        return $d;
+    }
+}
     }
 
 ?>

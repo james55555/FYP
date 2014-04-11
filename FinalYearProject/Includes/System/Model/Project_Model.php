@@ -291,7 +291,10 @@ class Project_Model extends Validator_Model
         $pAct_End = $fields['pActEnd'];
         $proj_deadline = $fields['pDead'];
         $pln_hr = $fields['pln_hr'];
-        
+
+        //Get the esimation ID for use in the ESTIMATION table insert
+        $est_id = ProjectEstimation_Model::getEstimationId($proj_id);
+
         unset($fields['proj_id']);
         $valid = Project_Model::validateArray($fields);
         if (is_array($valid) || is_string($valid))
@@ -328,14 +331,14 @@ class Project_Model extends Validator_Model
                     . " proj_descr='" . $proj_descr . "'"
                     . " WHERE proj_id='" . $proj_id . "';";
             $project_result = mysql_query($project_update);
-            if (!$project_result && mysql_affected_rows() === 0)
+
+            if (!$project_result)
                 {
                 throw new Exception("Updated no project rows!<br/>" . $project_update);
                 }
-                
-            //Run the update query against the ESTIMATION table
-            $est_id = ProjectEstimation_Model::getEstimationId($proj_id);
-            if(!isset($est_id) || !$est_id){
+            //Run the update query against the ESTIMATION table    
+            if (!isset($est_id) || !$est_id)
+                {
                 throw new Exception("EST_ID wasn't set!");
                 }
             $estimation_update = "UPDATE ESTIMATION SET"
@@ -346,7 +349,7 @@ class Project_Model extends Validator_Model
                     . " EST_END_DT='" . $proj_deadline . "'"
                     . " WHERE EST_ID='" . $est_id . "';";
             $estimation_result = mysql_query($estimation_update);
-                if (!$estimation_result && mysql_affected_rows() === 0)
+            if (!$estimation_result && mysql_affected_rows() === 0)
                 {
                 throw new Exception("Updated no estimation rows!");
                 }

@@ -150,7 +150,10 @@ class Task_Model
 
     /*
      * Function to edit/update a task given the provided parameters
-     * @param int tsk_id, int proj_id, int status_id, String tsk_nm, String web_addr, String tsk_descr, obj Model estimation, obj Model dependency
+     * @param (array) $fields       These are the fields passed from the Controller
+     * 
+     * @param (bool || String)      This is true if successful and error message otherwise.
+     * 
      */
 
     public static
@@ -198,6 +201,12 @@ class Task_Model
         return true;
         }
 
+        /*
+         * Function to addTask and return the newly added task for use in the Controller
+         * @param (array) $fields           These are the fields passed from the Controller
+         * 
+         * @return (object) new Task_Model  This is the newly added task to be made available to the controller
+         */
     public static function addTask($fields)
         {
         $db = new Database();

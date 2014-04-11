@@ -138,8 +138,8 @@ class Task_Model
         $fields = array("TSK_ID, PROJ_ID, STATUS, "
             . "TASK_NM, WEB_ADDR", "TSK_DESCR");
         $databaseTasks = Database_Queries::selectFrom("TASK_MODEL", $fields, "TASK", "PROJ_ID", $proj_id);
-        //If database tasks isn't an array then create one
-        if(!is_array($databaseTasks)){
+        //If database tasks isn't an array and issset then create one
+        if(!is_array($databaseTasks) && isset($databaseTasks)){
             $tasks = array($databaseTasks);
         }
         return $tasks;

@@ -111,7 +111,6 @@ class Add_Controller extends Main_Controller
                 {
                 $this->registry->error = false;
                 $this->registry->heading = "Task Added!";
-                var_dump($this->newTask);
                 $this->registry->message = "Click <a href=\"?page=Task&action=details&task_id=" . $this->newTask->tsk_id() . "\">"
                         . " here </a> to view tasks.";
                 }

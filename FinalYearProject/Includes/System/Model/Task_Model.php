@@ -242,7 +242,12 @@ class Task_Model
 //If errors are returned from then return the provided error message
         if (is_array($valid) || is_string($valid))
             {
+            //Retrospective handling for empty staff field (11-04-2014)
+            
+            if(!substr($valid[0], 0, 5) === "Staff"
+                    && !substr($valid[0], -5) === "empty"){
             return $valid;
+                }
             } elseif (is_array($validDependencies) ||
                 is_string($validDependencies))
             {
@@ -376,7 +381,7 @@ class Task_Model
             return "Error inserting into the database<br/>";
             }
         $db->close();
-        return true;
+        return new Task_Model($task_id);
         }
 
     public static function validateArray($fields)

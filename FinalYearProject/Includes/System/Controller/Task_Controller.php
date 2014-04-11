@@ -49,8 +49,11 @@ class Task_Controller extends Main_Controller
                 {
                 //Check if the task has already been deleted
                 $exists = Task_Model::getTask($_GET['task_id']);
+                
                 if (isset($exists))
                     {
+                    //Get the project id for redirect to task list
+                    $proj_id = $exists->PROJ_ID;
                     //Run the delete function and return a boolean
                     $this->success = Task_Model::deleteTask($_GET['task_id']);
                     } else
@@ -62,7 +65,9 @@ class Task_Controller extends Main_Controller
                 {
                 $this->registry->error = false;
                 $this->registry->heading = "Success";
-                $this->registry->message = "Task successfully deleted";
+                $this->registry->message = "Task successfully deleted<br/>"
+                        . "Return to <a href=\"?page=Task&proj_id=" . $proj_id . "\">"
+                        . "Task List</a>";
                 } else
                 {
                 throw new Exception("Something went wrong!");

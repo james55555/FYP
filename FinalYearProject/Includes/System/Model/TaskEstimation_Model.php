@@ -40,36 +40,7 @@ class TaskEstimation_Model extends Estimation_Model
                 }
         return $est_id;
         }
-        /*$db = new Database();
-        $db->connect();
         
-        $query = "SELECT distinct est_id"
-                . " FROM task_estimation"
-                . " WHERE tsk_id='" . $tsk_id . "'";
-
-
-        if ($db->querySuccess($query))
-            {
-            $result = mysql_query($query);
-
-            $row = mysql_fetch_object($result);
-
-            if (is_object($row))
-                {
-                $est_id = $row->est_id;
-                var_dump($est_id);
-                } else
-                {
-                return null;
-                }
-
-            $db->close();
-
-            return $est_id;
-         
-         
-            }*/
-
     public static function delete($tsk_id)
         {
         $table = "TASK_ESTIMATION";

@@ -77,9 +77,7 @@
                                     echo $status;
                                     } else
                                     {
-                                    echo "Not set. 
-                                    <a href=\"?page=task&action=update\"
-                                    value=\"Add a status?\"/>";
+                                    echo "Not set.";
                                     }
                                 ?>
                             </div>
@@ -186,9 +184,18 @@
                                 <?php
                                 if (isset($dependencies))
                                     {
-                                    echo "<a href=\"?page=Task&action=details&task_id=
-                                        {$dependencies->DEPENDENCY_ID}\">
-                                            {$dependencies->DEPENDENCY_ID}</a>";
+                                    if (is_array($dependencies))
+                                        {
+                                        foreach ($dependencies as $dpTask)
+                                            {
+                                            echo "<a href=\"?page=Task&action=details&task_id={$dpTask->DEPENDENCY_ID}\">
+                                            {$dpTask->DEPENDENCY_ID}</a>";
+                                            }
+                                        } elseif (is_string($dependencies))
+                                        {
+                                        echo "<a href=\"?page=Task&action=details&task_id={$dpTask->DEPENDENCY_ID}\">
+                                            {$dpTask->DEPENDENCY_ID}</a>";
+                                        }
                                     } else
                                     {
                                     echo "Not set";
@@ -203,7 +210,7 @@
                         <!--Buttons to take users to edit or delete for each project-->
                         <!--Edit button-->
                         <button type="submit" id="editT">
-                            <a href="?page=edit&isProj=false&task_id=<?php echo $task->tsk_id();?>">
+                            <a href="?page=Edit&isProject=false&task_id=<?php echo $task->tsk_id(); ?>">
                                 <img src="Includes/CSS/img/Icons/edit.png" 
                                      alt="edit" title="Edit Task"
                                      width="30" height="30"/>
@@ -214,7 +221,7 @@
                                         '<?php echo $task->tsk_nm(); ?>')">
                             <a href="?page=task&action=delete&task_id=
                                <?php echo $task->tsk_id(); ?>">                                
-                                <a href="?page=Task&action=delete&task_id=<?php echo $task->tsk_id();?>">
+                                <a href="?page=Task&action=delete&task_id=<?php echo $task->tsk_id(); ?>">
                                     <img src="Includes/CSS/img/Icons/delete.png" 
                                          alt="edit" title="Delete Task"
                                          width="30" height="30"/>

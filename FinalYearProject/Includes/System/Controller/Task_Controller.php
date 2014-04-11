@@ -42,11 +42,6 @@ class Task_Controller extends Main_Controller
         $this->registry->View_Template->show('taskDetails');
         }
 
-    public function editTask()
-        {
-        
-        }
-
     public function delete()
         {
         try

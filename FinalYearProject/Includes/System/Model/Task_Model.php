@@ -142,6 +142,9 @@ class Task_Model
         if(!is_array($databaseTasks) && isset($databaseTasks)){
             $tasks = array($databaseTasks);
         }
+        else {
+            $tasks = $databaseTasks;
+            }
         return $tasks;
         }
 

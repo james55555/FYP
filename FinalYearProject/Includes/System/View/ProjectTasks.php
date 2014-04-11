@@ -69,7 +69,8 @@
                 <div id="tasks">
                     <?php
                     $tasks = $this->registry->project_tasks;
-                    if (sizeof($tasks) > 0)
+                    
+                    if (sizeof($tasks) > 0 && isset($tasks))
                         {
                         ?>
                         <table id="myTasks" class="table">

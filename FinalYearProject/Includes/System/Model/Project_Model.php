@@ -91,7 +91,12 @@ class Project_Model extends Validator_Model
         $db->close();
         return $projects;
         }
-
+/*
+ * Function to delete Project
+ * @param (String) $proj_id     This will correspond with the proj_id field in the database
+ * 
+ * @return (bool)               Return true if successful, false otherwise
+ */
     public static function deleteProject($proj_id)
         {
         $db = new Database();
@@ -237,44 +242,10 @@ class Project_Model extends Validator_Model
         return true;
         }
 
-    private static function validateArray($fields)
-        {
-        //Set var validation variables
-        $type = "String";
-        $validated = null;
-
-        foreach ($fields as $field => $content)
-            {
-            if ($field === "pName")
-                {
-                $length = 30;
-                $field = "Project Name";
-                } elseif ($field === "pDescr")
-                {
-                $length = 200;
-                $field = "Project Description";
-                } elseif ($field === "pln_hr")
-                {
-                $length = 4;
-                $field = "Planned Hours";
-                //Assign field to numeric type as it is form input
-                $type = "numeric";
-                } elseif ($field === "pStart" || $field === "pDead")
-                {
-                $field = "Project Dates";
-                $validated = Validator_Model::validateDate($content);
-                }
-            if (!isset($validated))
-                {
-                $validated = Validator_Model::variableCheck($field, $content, $type, $length);
-                }
-            if (is_array($validated) || is_string($validated))
-                {
-                return $validated;
-                }
-            }
-        return null;
-        }
+ /*
+  * Function to edit a project based on the fields provided by the controller (taken from form in view)
+  * @param (array) $fields      Array of fields passed from view
+  */
 
     public static function editProject($fields)
         {
@@ -287,9 +258,9 @@ class Project_Model extends Validator_Model
         $proj_descr = $fields['pDescr'];
         //GET estimation vairables
         $proj_start = $fields['pStart'];
-        $pAct_hr = $fields['pAct_hr'];
+        $pAct_hr = $fields['act_hr'];
         $pAct_End = $fields['pActEnd'];
-        $proj_deadline = $fields['pDead'];
+        $proj_deadline = $fields['pDeadline'];
         $pln_hr = $fields['pln_hr'];
 
         //Get the esimation ID for use in the ESTIMATION table insert
@@ -360,6 +331,50 @@ class Project_Model extends Validator_Model
             }
         mysql_query("COMMIT;");
         return true;
+        }
+        /*
+         * Function to sanitize an array of fields to be used with the database.
+         * @param (array) $fields       Array of fields to sanitize
+         * 
+         * @return (String || null)     Return String if error found, null otherwise.
+         */
+           private static function validateArray($fields)
+        {
+        //Set var validation variables
+        $type = "String";
+        $validated = null;
+
+        foreach ($fields as $field => $content)
+            {
+            if ($field === "pName")
+                {
+                $length = 30;
+                $field = "Project Name";
+                } elseif ($field === "pDescr")
+                {
+                $length = 200;
+                $field = "Project Description";
+                } elseif ($field === "pln_hr")
+                {
+                $length = 4;
+                $field = "Planned Hours";
+                //Assign field to numeric type as it is form input
+                $type = "numeric";
+                } elseif ($field === "pStart" || $field === "pDead")
+                {
+                $field = "Project Dates";
+                $validated = Validator_Model::validateDate($content);
+                }
+            if (!isset($validated))
+                {
+                $validated = Validator_Model::variableCheck($field, $content, $type, $length);
+                }
+            if (is_array($validated) || is_string($validated))
+                {
+                return $validated;
+                }
+            }
+        return null;
         }
 
     }

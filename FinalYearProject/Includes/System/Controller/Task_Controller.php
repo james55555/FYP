@@ -18,7 +18,6 @@ class Task_Controller extends Main_Controller
             function main()
         {
         $this->registry->project_tasks = Task_Model::getAllTasks($_GET['proj_id']);
-        
         $this->project = new Project_Model($_GET['proj_id']);
         $this->registry->projectEstimation = Estimation_Model::
                 get($this->project->estimation());

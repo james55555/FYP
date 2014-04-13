@@ -23,6 +23,7 @@ class Edit_Controller extends Main_Controller
             {
             $this->registry->task = new Task_Model($_GET['task_id']);
             $this->registry->staff = new Staff_Model($this->registry->task->staff());
+            $this->registry->dependencies = new Dependency_Model($this->registry->task->dpnd());
             $view = 'editTask';
             $est_id = $this->registry->task->estimation();
             }

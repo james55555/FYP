@@ -16,20 +16,21 @@
     <body>
         <?php
         $task = $this->registry->task;
+        $estimation = $this->registry->estimation;
         include("header.php");
         ?> 
         <div id="container" class="centralBox">
             <h1>Edit Task</h1>
-            <form id="addTask" action="?page=Add&action=addTask" 
+            <form id="addTask" action="?page=Edit&action=editTask" 
                   method="post" onsubmit="return taskValidation()">
                 <div id="details" class="section">
                     <h2>Details</h2>
-                    <label>Name: </label><input type="text" name="tName"><?php echo $task->tsk_nm(); ?>
+                    <label>Name: </label><input type="text" name="tName" value="<?php echo $task->tsk_nm(); ?>"/>
                     <label>Description:  </label><textarea 
                         maxlength="200"
-                        name="tDescr"> <?php echo $task->tsk_descr(); ?></textarea>
+                        name="tDescr"><?php echo $task->tsk_dscr(); ?></textarea>
                     <label>Web Address: </label><input type="text" name="web_addr"
-                                                       ><?php echo $task->web_addr(); ?>                    
+                                                       value="<?php echo $task->web_addr(); ?>"/>                    
                     <label>Status: </label>
                     <select name="status">
                         <?php
@@ -37,7 +38,7 @@
                         $options = array('Not Started', 'In Progress', 'Finished');
                         foreach ($options as $option)
                             {
-                            if ($option === $task->status())
+                            if ($option === $task->tsk_status())
                                 {
                                 echo "<option selected=\"selected\">{$option}</option>";
                                 } else
@@ -52,20 +53,21 @@
                     <?php
                     //only show task dependencies if their are tasks associated
                     //with the project in question
-                    if (isset($this->registry->projTasks))
+                    if (isset($this->registry->dependencies))
                         {
                         echo "<h2>Choose Task Dependencies: </h2>";
                         //Set up checkbox for all tasks in the same project
-                        foreach ($this->registry->projTasks as $task)
+                        foreach ($this->registry->dependencies as $dpnd)
                             {
                             //This identifies this is an existing dependency or not
-                            if ($task === $task->dpnd())
+                            if ($dpnd === $task->dpnd())
                                 {
                                 $checked = " checked";
                                 } else
                                 {
                                 $checked = "";
                                 }
+                            //This doesn't work. Logic needs to be reworked regarding dependencies.
                             echo "<label>{$task->task_nm()}</label>"
                             . "<input type=\"checkbox\" name=\"tDpnd[]\" "
                             . "value=\"{$task->tsk_id()}\"{$checked}/>";
@@ -76,14 +78,19 @@
                 <div id="estimation" class="section">
                     <h2>Project Dates</h2>
                     <label title="When will the task start?">
-                        Start Date: </label><input type="date" name="tStart" value="<?php echo $task->start_dt(); ?>"/>
+                        Start Date: </label><input type="date" name="tStart" value="<?php echo $estimation->start_dt(); ?>"/>
+                    <label title="When did the task end?">
+                        Actual End date: </label><input type="date" name="tActEnd" value="<?php echo $estimation->act_end_dt(); ?>"/>
                     <label title="When will the task end?">
-                        Deadline: </label><input type="date" name="tDeadline" value="<?php echo $task->end_dt(); ?>"/>
+                        Deadline: </label><input type="date" name="tDeadline" value="<?php echo $estimation->est_end_dt(); ?>"/>
+                    <label title="How many hours were assigned to the project?">
+                        Actual Hours: </label><input type="text" name="tAct_hr" value="<?php echo $estimation->act_hr(); ?>"/>
                     <label title="How many hours will be assigned to the task?">
-                        Estimate</label><input type="text" name="pln_hr"><?php echo $task->pln_hr(); ?>
+                        Estimate</label><input type="text" name="tPln_hr" value="<?php echo $estimation->pln_hr(); ?>"/>
                 </div>
                 <!--Optional for user-->
-                <?php //Localise variable
+                <?php
+                //Localise variable
                 $staff = $this->registry->staff;
                 ?>
                 <div id="staff" class="section">
@@ -94,7 +101,12 @@
                     <label>Email: </label><input type="text" name="stEmail"/><?php echo $staff->staff_email(); ?>
                     <input type="hidden" value="<?php echo $_GET['proj_id']; ?>"
                            name="proj_id"/>
-                    <input type="hidden" value="<?php echo $task->tsk_id(); ?>" name="task_id"/>
+                    <input type="hidden" value="<?php echo $task->tsk_id(); ?>" 
+                           name="task_id"/>
+                    <input type="hidden" value="<?php echo $estimation->est_id(); ?>" 
+                           name="est_id"/>
+                    <input type="hidden" value="<?php echo $staff->staff_id(); ?>" 
+                           name="staff_id"/>
                 </div> <!--End of staff-->
                 <div id="actions" class="section">
                     <input type="button" value="Cancel" class="button"

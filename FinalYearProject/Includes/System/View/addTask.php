@@ -61,7 +61,7 @@
                     <label title="When will the task end?">
                         Deadline: </label><input type="date" name="tDeadline"/>
                     <label title="How many hours will be assigned to the task?">
-                        Estimate</label><input type="text" name="pln_hr"/>
+                        Estimate</label><input type="text" name="tPln_hr"/>
                 </div>
                 <!--Optional for user-->
                 <div id="staff" class="section">

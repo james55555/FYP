@@ -165,11 +165,11 @@ class Task_Model
         $proj_id = $fields['proj_id'];
         $est_id = $fields['est_id'];
         $task_id = $fields['task_id'];
+        $staff_id = $fields['staff_id'];
         foreach ($fields as $key => $field)
             {
             if (substr($key, -2) === "id")
                 {
-
                 //Assign hidden varaibles (not validated) to the $key name
                 ${$key} = $field;
 //Then remove them for array processsing
@@ -208,6 +208,92 @@ class Task_Model
             {
             return $valid;
             }
+        //Processing complete, now run update statement
+        $db->connect();
+        mysql_query("START TRANSACTION;");
+//Run the row checker against all tables affected by the update
+        try
+            {
+            //Check TASK table
+            $taskExists = mysql_query("SELECT * FROM TASK "
+                    . "WHERE TSK_ID='" . $task_id . "';");
+            if (mysql_num_rows($taskExists) === 0)
+                {
+                throw new Exception("Task doesn't exist");
+                }
+            //Check ESTIMATION table
+            $estimationExists = mysql_query("SELECT * FROM ESTIMATION "
+                    . "WHERE EST_ID='" . $est_id . "';");
+            if (mysql_num_rows($estimationExists) === 0)
+                {
+                throw new Exception("Estimation doesn't exist'");
+                }
+            } catch (Exception $ex)
+            {
+            mysql_query("ROLLBACK;");
+            return $ex->getMessage() . "<br/>" . mysql_error();
+            }
+        try
+            {
+            //Run the update query against the PROJECT table
+            $task_update = "UPDATE TASK SET"
+                    . " STATUS='" . $fields['status'] . "',"
+                    . " TASK_NM='" . $fields['tName'] . "',"
+                    . " WEB_ADDR='" . $fields['web_addr'] . "',"
+                    . " TSK_DESCR='" . $fields['tDescr'] . "',"
+                    . " TSK_ID='" . $task_id . "';";
+            $task_result = mysql_query($task_update);
+            if (!$task_result && msyql_affected_rows() === 0)
+                {
+                throw new Exception("No task rows updated!"
+                . "<br/>" . mysql_error());
+                }
+            //Run update query against ESTIMATION table
+            $est_update = "UPDATE ESTIMATION SET "
+                    . "ACT_HR='" . $fields['tAct_hr'] . "',"
+                    . " PLN_HR='" . $fields['tPln_hr'] . "',"
+                    . " START_DT='" . $fields['tStart'] . "',"
+                    . " ACT_END_DT='" . $fields['tActEnd'] . "',"
+                    . " EST_END_DT='" . $fields['tDeadline'] . "',"
+                    . " WHERE EST_ID='" . $est_id . "';";
+            $est_result = mysql_query($est_update);
+            if (!$est_result && msyql_affected_rows() === 0)
+                {
+                throw new Exception("No ESTIMATION rows updated!"
+                . "<br/>" . mysql_error());
+                }
+            //Run update query against STAFF table
+            $staff_update = "UPDATE STAFF SET "
+                    . "STAFF_FIRST_NM='" . $fields['stFirst'] . "',"
+                    . " STAFF_LAST_NM='" . $fields['stLast'] . "',"
+                    . " STAFF_PHONE='" . $fields['stTel'] . "',"
+                    . " STAFF_EMAIL='" . $fields['stEmail'] . "'"
+                    . " WHERE STAFF_ID='" . $staff_id . "';";
+            $staff_result = mysql_query($staff_update);
+
+            if (!$staff_result && mysql_affected_rows() === 0)
+                {
+                throw new Exception("No STAFF rows updated");
+                }
+            //Run update against DEPENDENCY table foreach dependency
+            //Associative array ($id = DP_ID && $on = DP_ON)
+            foreach ($dpnd as $id => $on)
+                {
+                $dpnd_update = "UPDATE DEPENDENCY SET "
+                        . "DEPENDENCY_ON='" . $on . "'"
+                        . "WHERE DEPENDENCY_ID='" . $id . "';";
+                if (!$dpnd_update && mysql_affected_rows() === 0)
+                    {
+                    throw new Exception("Dependency update failed!");
+                    }
+                }
+            } catch (Exception $ex)
+            {
+            mysql_query("ROLLBACK;");
+            return $ex->getMessage();
+            }
+            mysql_query("COMMIT;");
+            return true;
         }
 
     /*
@@ -463,8 +549,8 @@ class Task_Model
                 $length = 200;
                 $field = "Task description";
                 }
-                //Run through task estimation dates
-                elseif ($field === "tStart" || $field === "tDeadline" ||
+            //Run through task estimation dates
+            elseif ($field === "tStart" || $field === "tDeadline" ||
                     $field === "tActStart")
                 {
                 $field = "Task dates";
@@ -504,8 +590,8 @@ class Task_Model
                 $length = 4;
                 $type = "numeric";
                 }
-                //!Important - The logic requires that the Validator_Model 
-                //function is run before the @return
+            //!Important - The logic requires that the Validator_Model 
+            //function is run before the @return
             if (!isset($validated))
                 {
                 $validated = Validator_Model::variableCheck($field, $content, $type, $length);

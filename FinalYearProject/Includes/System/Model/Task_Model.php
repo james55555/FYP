@@ -162,21 +162,47 @@ class Task_Model
         $db = new Database();
 
         $fields = $db->filterParameters($fields);
-        var_dump($fields);
+        $proj_id = $fields['proj_id'];
+        $est_id = $fields['est_id'];
+        $task_id = $fields['task_id'];
         foreach ($fields as $key => $field)
             {
             if (substr($key, -2) === "id")
                 {
+
                 //Assign hidden varaibles (not validated) to the $key name
                 ${$key} = $field;
-                //Then remove them for array processsing
+//Then remove them for array processsing
                 unset($fields[$key]);
                 }
             }
         /*
          * !Key ID variables are now $est_id, $proj_id and $task_id
+         * VarList: tName
+          tDescr
+          web_addr
+          status
+          tStart
+          tActStart
+          tDeadline
+          tAct_hr
+          tPln_hr
+          stFirst
+          stLast
+          stTel
+          stEmail
+         * 
          */
+
+        //Vars are initialized in foreach
+        $validDates = Task_Model::validateDates($proj_id, $fields['tStart'], $fields['tDeadline']);
         die();
+        if (is_string($validDates))
+            {
+            return $validDates;
+            }
+        unset($fields['tStart']);
+        unset($fields['tDeadline']);
         $valid = Task_Model::validateArray($fields);
         if (is_string($valid) || is_array($valid))
             {
@@ -423,7 +449,7 @@ class Task_Model
         foreach ($fields as $field => $content)
             {
             $type = "string";
-//run through task details information
+            //Run through task details information
             if ($field === "proj_id")
                 {
                 $length = 10;
@@ -437,8 +463,9 @@ class Task_Model
                 $length = 200;
                 $field = "Task description";
                 }
-//Run through task estimation dates
-            elseif ($field === "tStart" || $field === "tDeadline")
+                //Run through task estimation dates
+                elseif ($field === "tStart" || $field === "tDeadline" ||
+                    $field === "tActStart")
                 {
                 $field = "Task dates";
                 $validated = Validator_Model::validateDate($content);
@@ -471,14 +498,14 @@ class Task_Model
                 $type = "numeric";
                 $field = "Staff Extension";
                 $length = 4;
-                } elseif ($field === "pln_hr")
+                } elseif ($field === "tPln_hr" || $field === "tAct_hr")
                 {
-                $field = "Estimated hours";
+                $field = "Hours";
                 $length = 4;
                 $type = "numeric";
                 }
-//!Important - The logic requires that the Validator_Model 
-//              function is run before the @return
+                //!Important - The logic requires that the Validator_Model 
+                //function is run before the @return
             if (!isset($validated))
                 {
                 $validated = Validator_Model::variableCheck($field, $content, $type, $length);
@@ -521,20 +548,17 @@ class Task_Model
      *                                  that holds the information to be used 
      *                                  to ensure the task is within the project timeline.
      * @param $start       (date)       This is the start date for the task
-     * @param $end         (date)       This is the end date for the task
-     * @param $actual      (date)       This is the actual date the task was 
-     *                                  completed on
+     * @param $end         (date)       This is the actual end date for the task
      * @param $deadline    (date)       This is the date the task was 
      *                                  predicted to be completed on
      * 
      * @return $valid       (Boolean)   This is true on success, false otherwise
      */
 
-    private static function validateDates($proj_id, $start, $end, $actual,
-            $deadline)
+    private static function validateDates($proj_id, $start, $deadline)
         {
         //Assign dates to an array for ease of processing
-        $dates = array($start, $end, $actual, $deadline);
+        $dates = array($start, $deadline);
         //Create new Estimation object using the project ID as an estimate identifier 
         $project_estimation = new Estimation_Model(ProjectEstimation_Model::getEstimationId($proj_id));
         //Validate date formats
@@ -549,7 +573,7 @@ class Task_Model
                 {
                 return $validFormat;
                 }
-                //Format for this date has been validted, now check the timing
+            //Format for this date has been validted, now check the timing
             $validTiming = Task_Model::isDateBetween($date, $project_estimation->est_end_dt(), $project_estimation->start_dt());
             if (is_string($validTiming))
                 {

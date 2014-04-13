@@ -196,7 +196,7 @@ class Task_Model
 
         //Vars are initialized in foreach
         $validDates = Task_Model::validateDates($proj_id, $fields['tStart'], $fields['tDeadline']);
-        die();
+
         if (is_string($validDates))
             {
             return $validDates;
@@ -275,6 +275,7 @@ class Task_Model
                 {
                 throw new Exception("No STAFF rows updated");
                 }
+            die("died");
             //Run update against DEPENDENCY table foreach dependency
             //Associative array ($id = DP_ID && $on = DP_ON)
             foreach ($dpnd as $id => $on)
@@ -292,8 +293,8 @@ class Task_Model
             mysql_query("ROLLBACK;");
             return $ex->getMessage();
             }
-            mysql_query("COMMIT;");
-            return true;
+        mysql_query("COMMIT;");
+        return true;
         }
 
     /*
@@ -366,6 +367,17 @@ class Task_Model
         $stEmail = $fields['stEmail'];
 //Assign dependencies to an array
         $dependencies = array();
+        //Sanitise $fields array and remove ID fields (these should be unchangeable)
+        foreach ($fields as $key => $field)
+            {
+            if (substr($key, -2) === "id")
+                {
+                //Assign hidden varaibles (not validated) to the $key name
+                ${$key} = $field;
+//Then remove them for array processsing
+                unset($fields[$key]);
+                }
+            }
 //If the posted dependencies are set then validate each one
         if (!empty($fields['tDpnd']))
             {
@@ -376,46 +388,34 @@ class Task_Model
             }
 //Remove the tDpnd index from $fields array
         unset($fields['tDpnd']);
-
         $validDependencies = Task_Model::ValidateDependencies($dependencies);
-//Validate URL separately and remove from $fields
-        $validWeb = Validator_Model::validateWebAddr($fields['web_addr']);
-        unset($fields['web_addr']);
+
+//Check that tasks dates are between project dates and start is before end
+        $validDates = Task_Model::validateDates($proj_id, $tStart, $tDeadline);
+        unset($fields['tStart']);
+        unset($fields['tDeadline']);
 //Run the fields through validation
         $valid = Task_Model::validateArray($fields);
 //If errors are returned from then return the provided error message
         if (is_array($valid) || is_string($valid))
             {
-            //Retrospective handling for empty staff field (11-04-2014)
-
-            if (!substr($valid[0], 0, 5) === "Staff" && !substr($valid[0], -5) === "empty")
-                {
-                return $valid;
-                }
+            return $valid;
             } elseif (is_array($validDependencies) ||
                 is_string($validDependencies))
             {
             return $validDependencies;
-            } elseif (is_string($validWeb))
+            } elseif (is_string($validDates))
             {
-            return $validWeb;
+            return $validDates;
             }
-        $project = new Project_Model($proj_id);
-        //The SELECT query run in this function closes the database connection.
-        $projEstimate = Estimation_Model::get($project->estimation());
-//Check that tasks dates are between project dates and start is before end
-        if (strtotime($projEstimate->start_dt) < strtotime($tStart) && strtotime($projEstimate->est_end_dt > strtotime($tDeadline) && strtotime($tStart) < strtotime($tDeadline)))
-            {
-            return "Ensure dates are correct</br>"
-                    . "Remember task dates must be within the time span of their project.";
-            }
+
 //Re-open database connection to run queries agains
         $db->connect();
 //Start insert transaction
         mysql_query("START TRANSACTION;");
 
 //Set insert into TASK string
-        $task_insert = "INSERT INTO fyp.task ("
+        $task_insert = "INSERT INTO TASK ("
                 . " TSK_ID,"
                 . " PROJ_ID,"
                 . " STATUS,"
@@ -434,7 +434,7 @@ class Task_Model
         $task_id = $db->getInsertId();
 
 //Set insert into ESTIMATION
-        $estimation_insert = "INSERT INTO fyp.estimation ("
+        $estimation_insert = "INSERT INTO ESTIMATION ("
                 . "EST_ID, "
                 . "ACT_HR, "
                 . "PLN_HR, "
@@ -453,7 +453,7 @@ class Task_Model
         $estimation_result = mysql_query($estimation_insert);
         $est_id = $db->getInsertId();
 //Set query to create link between TASK and ESTIMATION
-        $taskEst_insert = "INSERT INTO fyp.TASK_ESTIMATION ("
+        $taskEst_insert = "INSERT INTO TASK_ESTIMATION ("
                 . "tsk_id,"
                 . " est_id)"
                 . " VALUES( "
@@ -465,7 +465,7 @@ class Task_Model
         foreach ($dependencies as $id)
             {
 //Set query for DEPENDENCY insert
-            $dpnd_insert = "INSERT INTO fyp.DEPENDENCY ("
+            $dpnd_insert = "INSERT INTO DEPENDENCY ("
                     . "DEPENDENCY_ID,"
                     . " DEPENDENCY_ON)"
                     . " VALUES ( "
@@ -475,7 +475,7 @@ class Task_Model
             $dpnd_result = mysql_query($dpnd_insert);
             $dpnd_id = $db->getInsertId();
 //Set query for TASK_DEPENDENCY insert
-            $taskDpnd_insert = "INSERT INTO fyp.TASK_DEPENDENCY ("
+            $taskDpnd_insert = "INSERT INTO TASK_DEPENDENCY ("
                     . "DEPENDENCY_ID,"
                     . " TSK_ID)"
                     . " VALUES ("
@@ -485,7 +485,7 @@ class Task_Model
             $taskDpnd_result = mysql_query($taskDpnd_insert);
             }
 //Set insert into STAFF
-        $staff_insert = "INSERT INTO fyp.STAFF ("
+        $staff_insert = "INSERT INTO STAFF ("
                 . " STAFF_ID,"
                 . " STAFF_FIRST_NM,"
                 . " STAFF_LAST_NM,"
@@ -501,7 +501,7 @@ class Task_Model
         $staff_result = mysql_query($staff_insert);
         $staff_id = $db->getInsertId();
         //Set insert into STAFF_TASK
-        $staffTask_insert = "INSERT INTO fyp.STAFF_TASK ("
+        $staffTask_insert = "INSERT INTO STAFF_TASK ("
                 . "TSK_ID,"
                 . " STAFF_ID)"
                 . " VALUES ("
@@ -536,11 +536,7 @@ class Task_Model
             {
             $type = "string";
             //Run through task details information
-            if ($field === "proj_id")
-                {
-                $length = 10;
-                $field = "Project ID";
-                } elseif ($field === "tName")
+            if ($field === "tName")
                 {
                 $length = 30;
                 $field = "Task Name";
@@ -548,13 +544,6 @@ class Task_Model
                 {
                 $length = 200;
                 $field = "Task description";
-                }
-            //Run through task estimation dates
-            elseif ($field === "tStart" || $field === "tDeadline" ||
-                    $field === "tActStart")
-                {
-                $field = "Task dates";
-                $validated = Validator_Model::validateDate($content);
                 } elseif ($field === "stFirst" || $field === "stLast")
                 {
                 $field = "Staff name";
@@ -594,10 +583,13 @@ class Task_Model
             //function is run before the @return
             if (!isset($validated))
                 {
+                echo $field . "****";
                 $validated = Validator_Model::variableCheck($field, $content, $type, $length);
                 }
+            var_dump($validated);
             if (is_array($validated) || is_string($validated))
                 {
+                echo "return";
                 return $validated;
                 }
             }
@@ -630,7 +622,7 @@ class Task_Model
 
     /*
      * Function to validate dates provided for either the add or edit query
-     * @param $proj_id      (String)     This is the ID for the Project object 
+     * @param $proj_id     (String)     This is the ID for the Project object 
      *                                  that holds the information to be used 
      *                                  to ensure the task is within the project timeline.
      * @param $start       (date)       This is the start date for the task
@@ -638,7 +630,7 @@ class Task_Model
      * @param $deadline    (date)       This is the date the task was 
      *                                  predicted to be completed on
      * 
-     * @return $valid       (Boolean)   This is true on success, false otherwise
+     * @return $valid      (Boolean)   This is true on success, false otherwise
      */
 
     private static function validateDates($proj_id, $start, $deadline)
@@ -652,7 +644,7 @@ class Task_Model
             {
             //Convert each field to php date type
             $date = date('d-m-Y', strtotime($date));
-
+            echo $date;
             $validFormat = Validator_Model::validateDate($date);
             //If the value isn't true then return error message
             if (is_string($validFormat))

@@ -34,7 +34,7 @@ class Task_Model
 
     public
             function __construct($tsk_id)
-        {   
+        {
         $row = $this->getTask($tsk_id);
         $this->tsk_id = $row->TSK_ID;
         //Get the project corresponding to the linked id
@@ -56,7 +56,6 @@ class Task_Model
         $this->staff = StaffTask_Model::getStaffId($row->TSK_ID);
         $this->dpnd = TaskDependency_Model::getDpID($row->TSK_ID);
         }
-        
 
     public
             function tsk_id()
@@ -139,10 +138,11 @@ class Task_Model
             . "TASK_NM, WEB_ADDR", "TSK_DESCR");
         $databaseTasks = Database_Queries::selectFrom("TASK_MODEL", $fields, "TASK", "PROJ_ID", $proj_id);
         //If database tasks isn't an array and issset then create one
-        if(!is_array($databaseTasks) && isset($databaseTasks)){
+        if (!is_array($databaseTasks) && isset($databaseTasks))
+            {
             $tasks = array($databaseTasks);
-        }
-        else {
+            } else
+            {
             $tasks = $databaseTasks;
             }
         return $tasks;
@@ -159,7 +159,29 @@ class Task_Model
     public static
             function editTask($fields)
         {
-        
+        $db = new Database();
+
+        $fields = $db->filterParameters($fields);
+        var_dump($fields);
+        foreach ($fields as $key => $field)
+            {
+            if (substr($key, -2) === "id")
+                {
+                //Assign hidden varaibles (not validated) to the $key name
+                ${$key} = $field;
+                //Then remove them for array processsing
+                unset($fields[$key]);
+                }
+            }
+        /*
+         * !Key ID variables are now $est_id, $proj_id and $task_id
+         */
+        die();
+        $valid = Task_Model::validateArray($fields);
+        if (is_string($valid) || is_array($valid))
+            {
+            return $valid;
+            }
         }
 
     /*
@@ -201,12 +223,13 @@ class Task_Model
         return true;
         }
 
-        /*
-         * Function to addTask and return the newly added task for use in the Controller
-         * @param (array) $fields           These are the fields passed from the Controller
-         * 
-         * @return (object) new Task_Model  This is the newly added task to be made available to the controller
-         */
+    /*
+     * Function to addTask and return the newly added task for use in the Controller
+     * @param (array) $fields           These are the fields passed from the Controller
+     * 
+     * @return (object) new Task_Model  This is the newly added task to be made available to the controller
+     */
+
     public static function addTask($fields)
         {
         $db = new Database();
@@ -252,10 +275,10 @@ class Task_Model
         if (is_array($valid) || is_string($valid))
             {
             //Retrospective handling for empty staff field (11-04-2014)
-            
-            if(!substr($valid[0], 0, 5) === "Staff"
-                    && !substr($valid[0], -5) === "empty"){
-            return $valid;
+
+            if (!substr($valid[0], 0, 5) === "Staff" && !substr($valid[0], -5) === "empty")
+                {
+                return $valid;
                 }
             } elseif (is_array($validDependencies) ||
                 is_string($validDependencies))
@@ -490,6 +513,70 @@ class Task_Model
                 }
             }
         return false;
+        }
+
+    /*
+     * Function to validate dates provided for either the add or edit query
+     * @param $proj_id      (String)     This is the ID for the Project object 
+     *                                  that holds the information to be used 
+     *                                  to ensure the task is within the project timeline.
+     * @param $start       (date)       This is the start date for the task
+     * @param $end         (date)       This is the end date for the task
+     * @param $actual      (date)       This is the actual date the task was 
+     *                                  completed on
+     * @param $deadline    (date)       This is the date the task was 
+     *                                  predicted to be completed on
+     * 
+     * @return $valid       (Boolean)   This is true on success, false otherwise
+     */
+
+    private static function validateDates($proj_id, $start, $end, $actual,
+            $deadline)
+        {
+        //Assign dates to an array for ease of processing
+        $dates = array($start, $end, $actual, $deadline);
+        //Create new Estimation object using the project ID as an estimate identifier 
+        $project_estimation = new Estimation_Model(ProjectEstimation_Model::getEstimationId($proj_id));
+        //Validate date formats
+        foreach ($dates as $date)
+            {
+            //Convert each field to php date type
+            $date = date('d-m-Y', strtotime($date));
+
+            $validFormat = Validator_Model::validateDate($date);
+            //If the value isn't true then return error message
+            if (is_string($validFormat))
+                {
+                return $validFormat;
+                }
+                //Format for this date has been validted, now check the timing
+            $validTiming = Task_Model::isDateBetween($date, $project_estimation->est_end_dt(), $project_estimation->start_dt());
+            if (is_string($validTiming))
+                {
+                return $validTiming;
+                }
+            }
+        }
+
+    /*
+     * Helper function to check whether a date is between the two provided project dates
+     */
+
+    private static function isDateBetween($date, $endDate, $startDate)
+        {
+        //Create error message to return
+        $errorMsg = "Dates must be within the project timeline!"
+                . "<br/>Project start date is: " . $startDate
+                . "<br/>Project deadline is: " . $endDate;
+        //If date is outside of start and end date then return error message
+        if (strtotime($startDate) > $date ||
+                strtotime($endDate) < $date)
+            {
+            return $errorMsg;
+            } else
+            {
+            return true;
+            }
         }
 
     }

@@ -49,7 +49,7 @@ class Task_Controller extends Main_Controller
                 {
                 //Check if the task has already been deleted
                 $exists = Task_Model::getTask($_GET['task_id']);
-                
+
                 if (isset($exists))
                     {
                     //Get the project id for redirect to task list
@@ -82,9 +82,12 @@ class Task_Controller extends Main_Controller
         $this->registry->View_Template->show('showMessage');
         }
 
+    /*
+     * Function to redirect user to add task page
+     */
+
     public function addTask()
         {
         $this->registry->View_Template->show('addTask');
         }
-
     }

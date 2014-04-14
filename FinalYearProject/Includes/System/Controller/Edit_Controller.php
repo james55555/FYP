@@ -22,12 +22,25 @@ class Edit_Controller extends Main_Controller
             } else
             {
             $this->registry->task = new Task_Model($_GET['task_id']);
-            $this->registry->staff = new Staff_Model($this->registry->task->staff());
-            $this->registry->dependencies = new Dependency_Model($this->registry->task->dpnd());
+            $staff_id = $this->registry->task->staff();
+            if (isset($staff_id))
+                {
+                $this->registry->staff = new Staff_Model($staff_id);
+                }
+            //Only create new dependency object if dependencies have been set up
+            $dpnd_id = $this->registry->task->dpnd();
+            if (isset($dpnd_id))
+                {
+                $this->registry->dependencies = new Dependency_Model($dpnd_id);
+                }
             $view = 'editTask';
+
             $est_id = $this->registry->task->estimation();
             }
-        $this->registry->estimation = new Estimation_Model($est_id);
+        if (isset($est_id))
+            {
+            $this->registry->estimation = new Estimation_Model($est_id);
+            }
         $this->registry->View_Template->show($view);
         }
 
@@ -56,15 +69,17 @@ class Edit_Controller extends Main_Controller
         $this->isProject = false;
         //Assign posted fields to an array
         $updated = Task_Model::editTask($_POST);
+        echo "here";
         return $this->showView($updated);
         }
 
-        /*
-         * Function to generate variables for use in showMessage function and 
-         * display message based on $success.
-         * @param (boolean) $success    This is the variable used to define 
-         *                              whether editObject() was successful
-         */
+    /*
+     * Function to generate variables for use in showMessage function and 
+     * display message based on $success.
+     * @param (boolean) $success    This is the variable used to define 
+     *                              whether editObject() was successful
+     */
+
     private function showView($success)
         {
         try

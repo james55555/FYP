@@ -13,11 +13,17 @@ class TaskDependency_Model extends Dependency_Model
 
     public function __construct($row)
         {
-        if (isset($row))
+        try{
+        if (!isset($row))
             {
+            throw new Exception("Empty row");
+            }     
+            } catch (Exception $ex) {
+                echo $ex->getMessage() . "<br/>" . $ex->getTraceAsString();
+                return false;
+            }
             $this->tsk_id = $row->TSK_ID;
             $this->dp_id = $row->DEPENDENCY_ID;
-            }
         }
 
     public function tsk_id()
@@ -56,7 +62,9 @@ class TaskDependency_Model extends Dependency_Model
             }
         return $dpIds;
         }
-
+/*
+ * Function to delete a dependency based on the provided task_id
+ */
     public static function delete($tsk_id)
         {
 

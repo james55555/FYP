@@ -166,6 +166,8 @@ class Task_Model
         $est_id = $fields['est_id'];
         $task_id = $fields['task_id'];
         $staff_id = $fields['staff_id'];
+        //This will be an associative array
+        $dpnds = $fields['dpnd_id'];
         foreach ($fields as $key => $field)
             {
             if (substr($key, -2) === "id")
@@ -278,7 +280,7 @@ class Task_Model
             die("died");
             //Run update against DEPENDENCY table foreach dependency
             //Associative array ($id = DP_ID && $on = DP_ON)
-            foreach ($dpnd as $id => $on)
+            foreach ($dpnds as $id => $on)
                 {
                 $dpnd_update = "UPDATE DEPENDENCY SET "
                         . "DEPENDENCY_ON='" . $on . "'"
@@ -583,13 +585,10 @@ class Task_Model
             //function is run before the @return
             if (!isset($validated))
                 {
-                echo $field . "****";
                 $validated = Validator_Model::variableCheck($field, $content, $type, $length);
                 }
-            var_dump($validated);
             if (is_array($validated) || is_string($validated))
                 {
-                echo "return";
                 return $validated;
                 }
             }
@@ -644,7 +643,6 @@ class Task_Model
             {
             //Convert each field to php date type
             $date = date('d-m-Y', strtotime($date));
-            echo $date;
             $validFormat = Validator_Model::validateDate($date);
             //If the value isn't true then return error message
             if (is_string($validFormat))

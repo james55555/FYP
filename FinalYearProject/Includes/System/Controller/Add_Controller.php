@@ -62,7 +62,7 @@ class Add_Controller extends Main_Controller
         //ESTIMATION data
         $fields['tStart'] = $_POST['tStart'];
         $fields['tDeadline'] = $_POST['tDeadline'];
-        $fields['pln_hr'] = $_POST['pln_hr'];
+        $fields['pln_hr'] = $_POST['tPln_hr'];
         //STAFF data
         $fields['stFirst'] = $_POST['stFirst'];
         $fields['stLast'] = $_POST['stLast'];

@@ -117,8 +117,8 @@
                                 <td>
                                     <div id="actions">
                                         <!--Buttons to take users to edit or delete for each project-->
+                                        <a href="?page=edit&proj_id=<?php echo $proj_id; ?>&task_id=<?php echo $task->tsk_id(); ?>">
                                         <button type="submit" id="editT">
-                                            <a href="?page=Task&action=edit&proj_id=<?php echo $_GET['proj_id']; ?>">
                                                 <img src="Includes/CSS/img/Icons/edit.png" 
                                                      alt="edit" title="Edit Task"
                                                      width="20" height="20"/>

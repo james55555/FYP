@@ -351,21 +351,21 @@ class Task_Model
         //Close database connection for encapsulation purposes
         $db->close();
         $proj_id = $fields['proj_id'];
-//TASK data
+        //TASK data
         $tName = $fields['tName'];
         $tDescr = $fields['tDescr'];
         $web_addr = $fields['web_addr'];
         $status = $fields['status'];
-//ESTIMATION data
+        //ESTIMATION data
         $tStart = $fields['tStart'];
         $tDeadline = $fields['tDeadline'];
         $pln_hr = $fields['pln_hr'];
-//STAFF data
+        //STAFF data
         $stFirst = $fields['stFirst'];
         $stLast = $fields['stLast'];
         $stTel = $fields['stTel'];
         $stEmail = $fields['stEmail'];
-//Assign dependencies to an array
+        //Assign dependencies to an array
         $dependencies = array();
         //Sanitise $fields array and remove ID fields (these should be unchangeable)
         foreach ($fields as $key => $field)
@@ -374,11 +374,11 @@ class Task_Model
                 {
                 //Assign hidden varaibles (not validated) to the $key name
                 ${$key} = $field;
-//Then remove them for array processsing
+                //Then remove them for array processsing
                 unset($fields[$key]);
                 }
             }
-//If the posted dependencies are set then validate each one
+        //If the posted dependencies are set then validate each one
         if (!empty($fields['tDpnd']))
             {
             foreach ($fields['tDpnd'] as $dpnd)
@@ -386,17 +386,17 @@ class Task_Model
                 array_push($dependencies, $dpnd);
                 }
             }
-//Remove the tDpnd index from $fields array
+        //Remove the tDpnd index from $fields array
         unset($fields['tDpnd']);
         $validDependencies = Task_Model::ValidateDependencies($dependencies);
 
-//Check that tasks dates are between project dates and start is before end
+        //Check that tasks dates are between project dates and start is before end
         $validDates = Task_Model::validateDates($proj_id, $tStart, $tDeadline);
         unset($fields['tStart']);
         unset($fields['tDeadline']);
-//Run the fields through validation
+        //Run the fields through validation
         $valid = Task_Model::validateArray($fields);
-//If errors are returned from then return the provided error message
+        //If errors are returned from then return the provided error message
         if (is_array($valid) || is_string($valid))
             {
             return $valid;
@@ -409,12 +409,12 @@ class Task_Model
             return $validDates;
             }
 
-//Re-open database connection to run queries agains
+        //Re-open database connection to run queries agains
         $db->connect();
-//Start insert transaction
+        //Start insert transaction
         mysql_query("START TRANSACTION;");
 
-//Set insert into TASK string
+        //Set insert into TASK string
         $task_insert = "INSERT INTO TASK ("
                 . " TSK_ID,"
                 . " PROJ_ID,"
@@ -429,11 +429,11 @@ class Task_Model
                 . " '" . $tName . "',"
                 . " '" . $web_addr . "',"
                 . " '" . $tDescr . "');";
-//Run the query and get the task ID
+        //Run the query and get the task ID
         $task_result = mysql_query($task_insert);
         $task_id = $db->getInsertId();
 
-//Set insert into ESTIMATION
+        //Set insert into ESTIMATION
         $estimation_insert = "INSERT INTO ESTIMATION ("
                 . "EST_ID, "
                 . "ACT_HR, "
@@ -449,10 +449,10 @@ class Task_Model
                 . "NULL, "
                 . "'" . $tDeadline . "');";
 
-//Run query and get estimation id.
+        //Run query and get estimation id.
         $estimation_result = mysql_query($estimation_insert);
         $est_id = $db->getInsertId();
-//Set query to create link between TASK and ESTIMATION
+        //Set query to create link between TASK and ESTIMATION
         $taskEst_insert = "INSERT INTO TASK_ESTIMATION ("
                 . "tsk_id,"
                 . " est_id)"
@@ -460,31 +460,31 @@ class Task_Model
                 . " '" . $task_id . "',"
                 . " '" . $est_id . "');";
         $taskEst_result = mysql_query($taskEst_insert);
-//Foreach dependency selected, insert into DEPENDENCY tables
-// Tables: DEPENDENCY, TASK_DEPENDENCY
+        //Foreach dependency selected, insert into DEPENDENCY tables
+        // Tables: DEPENDENCY, TASK_DEPENDENCY
         foreach ($dependencies as $id)
             {
-//Set query for DEPENDENCY insert
+        //Set query for DEPENDENCY insert
             $dpnd_insert = "INSERT INTO DEPENDENCY ("
                     . "DEPENDENCY_ID,"
                     . " DEPENDENCY_ON)"
                     . " VALUES ( "
                     . "NULL, "
                     . "'" . $id . "');";
-//Insert into DEPENDENCY table
+            //Insert into DEPENDENCY table
             $dpnd_result = mysql_query($dpnd_insert);
             $dpnd_id = $db->getInsertId();
-//Set query for TASK_DEPENDENCY insert
+            //Set query for TASK_DEPENDENCY insert
             $taskDpnd_insert = "INSERT INTO TASK_DEPENDENCY ("
                     . "DEPENDENCY_ID,"
                     . " TSK_ID)"
                     . " VALUES ("
                     . " '" . $task_id . "',"
                     . " '" . $dpnd_id . "');";
-//Insert into TASK_DEPENDENCY table
+            //Insert into TASK_DEPENDENCY table
             $taskDpnd_result = mysql_query($taskDpnd_insert);
             }
-//Set insert into STAFF
+        //Set insert into STAFF
         $staff_insert = "INSERT INTO STAFF ("
                 . " STAFF_ID,"
                 . " STAFF_FIRST_NM,"
@@ -497,7 +497,7 @@ class Task_Model
                 . " '" . $stLast . "',"
                 . " '" . $stTel . "',"
                 . " '" . $stEmail . "');";
-//Run query to insert into table and get the STAFF_ID
+        //Run query to insert into table and get the STAFF_ID
         $staff_result = mysql_query($staff_insert);
         $staff_id = $db->getInsertId();
         //Set insert into STAFF_TASK
@@ -662,6 +662,11 @@ class Task_Model
 
     /*
      * Helper function to check whether a date is between the two provided project dates
+     * @param (date)    $date       This is the date to be checked
+     * @param (date)    $endDate    This is the date that $date should be before
+     * @param (date)    $startDate  This is the date that $date should be after
+     * 
+     * @return (Boolean || String)  This returns true or an error message if incorrect
      */
 
     private static function isDateBetween($date, $endDate, $startDate)

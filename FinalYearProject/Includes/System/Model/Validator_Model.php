@@ -154,27 +154,7 @@ abstract class Validator_Model
             {
             return "A date field is empty!";
             }
-            
         return $valid;
-        }
-
-    /*
-     * Function to validate provided website URL
-     * @param (String) $url         This is the provided web address
-     * @param (boolean) $optional   This is whether the field can be empty or not
-     * 
-     * @return (boolean) $success   This is returned if validated, String is returned otherwise
-     */
-    public static function validateWebAddr($url)
-        {
-        if ($url !== '')
-            {
-            if (!filter_var($url, FILTER_VALIDATE_URL))
-                {
-                return "Web address provided invalid!";
-                }
-            }
-            return true;
         }
     }
 

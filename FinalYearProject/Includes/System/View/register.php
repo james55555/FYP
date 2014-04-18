@@ -32,13 +32,16 @@
                       method="post">
                     <div id="personal" class="regInput">
                         <h2>Create your account</h2>
-                        <input type="text" name="fname" placeholder="Your first name"
+                        <input type="text" id="firstName"name="fname" 
+                               placeholder="Your first name"
                                title="No more than 30 characters"/>
                         <br/><span class="val_fName"></span>
-                        <input type="text" name="lname" placeholder="Your last name"
+                        <input type="text" id="lastName" name="lname" 
+                               placeholder="Your last name"
                                title="No more than 30 characters"/>
                         <br/><span class="val_lName"></span>
-                        <input type="text" name="email" placeholder="Your email address (optional)"
+                        <input type="text" id="email" name="email" 
+                               placeholder="Your email address (optional)"
                                title="Must be a valid email"/>
                         <br/><span class="val_email"></span>
                     </div>
@@ -46,19 +49,22 @@
 
                     <div id="credentials" class="regInput">
                         <h2>Set up your login details</h2>
-                        <input type="text" name="user_id" placeholder="New Username"
+                        <input type="text" id="username" name="user_id" 
+                               placeholder="New Username"
                                title="No more than 25 characters"/>
                         <br/><span class="val_ui"></span>
-                        <input type="password" name="password" placeholder="New Password"
+                        <input type="password" id="password" name="password" 
+                               placeholder="New Password"
                                title="No more than 25 characters"/>
                         <br/><span class="val_pass"></span>
-                        <input type="password" name="password2" placeholder="Re-enter password"/>
+                        <input type="password" id="password2" name="password2" 
+                               placeholder="Re-enter password"/>
                         <br/><span class="val_pass2"></span>
                     </div>
 
                     <br/>
                     <div id="navigation">
-                        <input type="button" value="Back" class="button"
+                        <input type="button" value="Cancel" class="button"
                                onclick="location.href ='?page=Login'"/>
                         <input name="submit" type="submit" value="Submit" class="button"/>
                     </div>

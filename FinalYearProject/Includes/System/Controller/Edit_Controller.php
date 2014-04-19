@@ -14,12 +14,13 @@ class Edit_Controller extends Main_Controller
     public function main()
         {
         //if is task or is project
-        if (isset($_GET['isProject']) && $_GET['isProject'])
+        if (isset($_GET['isProject']) && $_GET['isProject'] === "true")
             {
             $this->registry->project = new Project_Model($_GET['proj_id']);
             $view = 'editProject';
             $est_id = $this->registry->project->estimation();
-            } else
+            }//Else if vars are set to TASK
+        else
             {
             $this->registry->task = new Task_Model($_GET['task_id']);
             $staff_id = $this->registry->task->staff();
@@ -40,6 +41,13 @@ class Edit_Controller extends Main_Controller
         if (isset($est_id))
             {
             $this->registry->estimation = new Estimation_Model($est_id);
+            }
+        if (isset($_GET['proj_id']))
+            {
+            $this->registry->proj_id = $_GET['proj_id'];
+            } else
+            {
+            $this->registry->proj_id = $this->registry->task->proj_id();
             }
         $this->registry->View_Template->show($view);
         }

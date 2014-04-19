@@ -23,9 +23,8 @@
                 //Set easier to use variables throughout the view
                 $project = $this->registry->project;
                 $task = $this->registry->task;
-                $taskStaff = $this->registry->taskStaff;
                 $taskEstimation = $this->registry->taskEstimation;
-                $dependencies = $this->registry->taskDependencies;
+                
                 $noEstimate = "No estimate set!";
                 ?>
 
@@ -115,8 +114,9 @@
                         <li><div class="infoTitle">Staff associated: </div>
                             <div class="info">
                                 <?php
-                                if (isset($taskStaff))
+                                if (isset($this->registry->taskStaff))
                                     {
+                                    $taskStaff = $this->registry->taskStaff;
                                     echo $taskStaff->STAFF_FIRST_NM
                                     . " " . $taskStaff->STAFF_LAST_NM;
                                     } else
@@ -182,8 +182,9 @@
                         <li><div class="infoTitle">Dependent on this task: </div>
                             <div class="info">
                                 <?php
-                                if (isset($dependencies))
+                                if (isset($this->registry->taskDependencies))
                                     {
+                                    $dependencies = $this->registry->taskDependencies;
                                     if (is_array($dependencies))
                                         {
                                         foreach ($dependencies as $dpTask)

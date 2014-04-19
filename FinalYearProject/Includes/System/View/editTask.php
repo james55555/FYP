@@ -99,7 +99,7 @@
                     <label>Last Name: </label><input type="text" name="stLast"/><?php echo $staff->staff_last_nm(); ?>
                     <label>Phone Extension: </label><input type="tel" name="stTel"/><?php echo $staff->staff_phone(); ?>
                     <label>Email: </label><input type="text" name="stEmail"/><?php echo $staff->staff_email(); ?>
-                    <input type="hidden" value="<?php echo $_GET['proj_id']; ?>"
+                    <input type="hidden" value="<?php echo $task->proj_id(); ?>"
                            name="proj_id"/>
                     <input type="hidden" value="<?php echo $task->tsk_id(); ?>" 
                            name="task_id"/>

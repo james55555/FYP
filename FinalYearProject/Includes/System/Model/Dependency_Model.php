@@ -22,8 +22,19 @@ class Dependency_Model extends Generic_Model
                 throw new Exception("No Dependency_Model Found!");
                 }
             $this->dpnd_id = $row->DEPENDENCY_ID;
-            $this->dpnd_on = $row->DEPENDENT_ON;
-            
+            //If there is more than one dependency then add to an array
+            if (is_array($row))
+                {
+                $dependencies = array();
+                foreach ($row as $id => $dpnd)
+                    {
+                    array_push($dependencies, $dpnd);
+                    }
+                $this->dpnd_on = $dependencies;
+                } else
+                {
+                $this->dpnd_on = $row->DEPENDENT_ON;
+                }
             } catch (Exception $e)
             {
             echo $e->getMessage();
@@ -42,14 +53,15 @@ class Dependency_Model extends Generic_Model
         return $this->dpnd_on;
         }
 
-        /*
-         * Function to return dependency object
-         */
-        
+    /*
+     * Function to return dependency object
+     */
+
     public static function get($dpnd_id)
         {
         $fields = array("DEPENDENCY_ID", "DEPENDENT_ON");
         $dependency = Database_Queries::selectFrom("Dependency_Model", $fields, "DEPENDENCY", "DEPENDENCY_ID", $dpnd_id);
+
         return $dependency;
         }
 

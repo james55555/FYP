@@ -42,13 +42,6 @@ class Edit_Controller extends Main_Controller
             {
             $this->registry->estimation = new Estimation_Model($est_id);
             }
-        if (isset($_GET['proj_id']))
-            {
-            $this->registry->proj_id = $_GET['proj_id'];
-            } else
-            {
-            $this->registry->proj_id = $this->registry->task->proj_id();
-            }
         $this->registry->View_Template->show($view);
         }
 

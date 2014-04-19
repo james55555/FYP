@@ -29,11 +29,15 @@ Class Registry
     public
             function __get($key)
         {
+        try {
         if(!isset($this->variables[$key])){
-            throw new Exception("Registry variable: " . 
-                    $key . " not set");
-            }
+            throw new Exception($key . " not set");
+        }
         return $this->variables[$key];
+        }
+        catch(Exception $e){
+         echo "<p>There has been an error: " . $e->getMessage();   
+            }
         }
         
         /*

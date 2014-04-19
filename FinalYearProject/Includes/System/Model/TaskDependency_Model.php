@@ -13,17 +13,19 @@ class TaskDependency_Model extends Dependency_Model
 
     public function __construct($row)
         {
-        try{
-        if (!isset($row))
+        try
             {
-            throw new Exception("Empty row");
-            }     
-            } catch (Exception $ex) {
-                echo $ex->getMessage() . "<br/>" . $ex->getTraceAsString();
-                return false;
+            if (!isset($row))
+                {
+                throw new Exception("Empty row");
+                }
+            } catch (Exception $ex)
+            {
+            echo $ex->getMessage() . "<br/>" . $ex->getTraceAsString();
+            return false;
             }
-            $this->tsk_id = $row->TSK_ID;
-            $this->dp_id = $row->DEPENDENCY_ID;
+        $this->tsk_id = $row->TSK_ID;
+        $this->dp_id = $row->DEPENDENCY_ID;
         }
 
     public function tsk_id()
@@ -46,14 +48,24 @@ class TaskDependency_Model extends Dependency_Model
     public static function getDpID($tsk_id)
         {
         $row = Database_Queries::selectFrom("DEPENDENCY_MODEL", "DEPENDENCY_ID", "TASK_DEPENDENCY", "TSK_ID", $tsk_id);
-        if (isset($row))
+        if (!is_array($row) && isset($row))
             {
             //Create array to store rows in
             $dpIds = array();
+
             //Assign list of Id's to the new array
             foreach ($row as $id)
                 {
-                $dpIds = $id->DEPENDENCY_ID;
+                if (is_a($id, "TaskDependency_Model"))
+                    {
+                    array_push($dpIds, $id->dp_id());
+                    } elseif (is_object($id))
+                    {
+                    array_push($dpIds, $id->DEPENDENCY_ID);
+                    } elseif (is_string($id))
+                    {
+                    array_push($dpIds, $id);
+                    }
                 }
             } else
             {
@@ -62,9 +74,11 @@ class TaskDependency_Model extends Dependency_Model
             }
         return $dpIds;
         }
-/*
- * Function to delete a dependency based on the provided task_id
- */
+
+    /*
+     * Function to delete a dependency based on the provided task_id
+     */
+
     public static function delete($tsk_id)
         {
 

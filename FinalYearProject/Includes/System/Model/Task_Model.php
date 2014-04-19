@@ -160,14 +160,16 @@ class Task_Model
             function editTask($fields)
         {
         $db = new Database();
-
         $fields = $db->filterParameters($fields);
         $proj_id = $fields['proj_id'];
         $est_id = $fields['est_id'];
         $task_id = $fields['task_id'];
         $staff_id = $fields['staff_id'];
-        //This will be an associative array
-        $dpnds = $fields['dpnd_id'];
+        //Optional field
+        if (isset($fields['tDpnd[]']))
+            {
+            $dpnds = $fields['tDpnd[]'];
+            }
         foreach ($fields as $key => $field)
             {
             if (substr($key, -2) === "id")
@@ -185,7 +187,7 @@ class Task_Model
           web_addr
           status
           tStart
-          tActStart
+          tActEnd
           tDeadline
           tAct_hr
           tPln_hr
@@ -193,22 +195,33 @@ class Task_Model
           stLast
           stTel
           stEmail
-         * 
          */
-
         //Vars are initialized in foreach
+        //var_dump($fields['tStart']);
+        //var_dump($fields['tDeadline']);
         $validDates = Task_Model::validateDates($proj_id, $fields['tStart'], $fields['tDeadline']);
-
         if (is_string($validDates))
             {
             return $validDates;
             }
+
+        //Remove variable from fields array for validation processing
         unset($fields['tStart']);
         unset($fields['tDeadline']);
+
         $valid = Task_Model::validateArray($fields);
         if (is_string($valid) || is_array($valid))
             {
             return $valid;
+            }
+        //Set all empty values to NULL for database statement
+        foreach ($fields as $field)
+            {
+
+            if (!isset($field) || $field === '')
+                {
+                $fields[$field] = "NULL";
+                }
             }
         //Processing complete, now run update statement
         $db->connect();
@@ -466,7 +479,7 @@ class Task_Model
         // Tables: DEPENDENCY, TASK_DEPENDENCY
         foreach ($dependencies as $id)
             {
-        //Set query for DEPENDENCY insert
+            //Set query for DEPENDENCY insert
             $dpnd_insert = "INSERT INTO DEPENDENCY ("
                     . "DEPENDENCY_ID,"
                     . " DEPENDENCY_ON)"
@@ -532,11 +545,11 @@ class Task_Model
 
     public static function validateArray($fields)
         {
-
         $validated = null;
         foreach ($fields as $field => $content)
             {
             $type = "string";
+            $optional = false;
             //Run through task details information
             if ($field === "tName")
                 {
@@ -546,6 +559,11 @@ class Task_Model
                 {
                 $length = 200;
                 $field = "Task description";
+                } elseif ($field === "web_addr")
+                {
+                $optional = true;
+                $field = "Web Address";
+                $length = 200;
                 } elseif ($field === "stFirst" || $field === "stLast")
                 {
                 $field = "Staff name";
@@ -577,15 +595,24 @@ class Task_Model
                 $length = 4;
                 } elseif ($field === "tPln_hr" || $field === "tAct_hr")
                 {
-                $field = "Hours";
                 $length = 4;
                 $type = "numeric";
+                $optional = true;
+                if (!isset($content))
+                    {
+                    $content = 0;
+                    }
+                } elseif ($field === "tActEnd")
+                {
+                $field = "Actual End Date";
+                $optional = true;
+                $validated = Validator_Model::validateDate($content, $optional);
                 }
             //!Important - The logic requires that the Validator_Model 
             //function is run before the @return
             if (!isset($validated))
                 {
-                $validated = Validator_Model::variableCheck($field, $content, $type, $length);
+                $validated = Validator_Model::variableCheck($field, $content, $type, $length, $optional);
                 }
             if (is_array($validated) || is_string($validated))
                 {
@@ -636,24 +663,25 @@ class Task_Model
         {
         //Assign dates to an array for ease of processing
         $dates = array($start, $deadline);
-        //Create new Estimation object using the project ID as an estimate identifier 
+//Create new Estimation object using the project ID as an estimate identifier 
         $project_estimation = new Estimation_Model(ProjectEstimation_Model::getEstimationId($proj_id));
         //Validate date formats
         foreach ($dates as $date)
             {
-            //Convert each field to php date type
-            $date = date('d-m-Y', strtotime($date));
-            $validFormat = Validator_Model::validateDate($date);
-            //If the value isn't true then return error message
+            $validFormat = Validator_Model::validateDate($date, true);
+            //If the value is a string it contains an error
             if (is_string($validFormat))
                 {
                 return $validFormat;
-                }
-            //Format for this date has been validted, now check the timing
-            $validTiming = Task_Model::isDateBetween($date, $project_estimation->est_end_dt(), $project_estimation->start_dt());
-            if (is_string($validTiming))
+                //If the value is true continue to date  check
+                } elseif ($validFormat)
                 {
-                return $validTiming;
+                //Format for this date has been validted, now check the timing
+                $validTiming = Task_Model::isDateBetween($date, $project_estimation->est_end_dt(), $project_estimation->start_dt());
+                if (is_string($validTiming))
+                    {
+                    return "Supplied: " . $date . "<br/>" . $validTiming;
+                    }
                 }
             }
         }

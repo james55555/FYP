@@ -139,15 +139,20 @@ abstract class Validator_Model
             {
             $parts = explode("-", $date);
             //If the date is passed in American format then remove and reinsert year to the end
-            if(strlen($parts[0]) === 4){
+            if (strlen($parts[0]) === 4)
+                {
                 $temp = $parts[0];
                 array_splice($parts, 0, 1);
-                array_push($parts, $temp); 
+                array_push($parts, $temp);
                 }
-                //Run checkdate validation function
+
+            //Run checkdate validation function
             if (!checkdate($parts[0], $parts[1], $parts[2]))
                 {
                 return "Invalid date format!";
+                } elseif ($parts[2] > 2500)
+                {
+                return "Year can't be after 2500";
                 }
             $valid = true;
             } else
@@ -156,6 +161,7 @@ abstract class Validator_Model
             }
         return $valid;
         }
+
     }
 
 ?>

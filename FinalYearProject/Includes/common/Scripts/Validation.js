@@ -6,80 +6,104 @@
  * @returns {Boolean}
  */
 jQuery(function($) {
+    var form = document.forms[0];
 
-    var noSubmit;
+    $("#" + form.id + " input[name='submit']").click(function() {
+        var errors = [];
 
-    $("form#register input[name='submit']").click(function() {
-        
-        var noSubmit = 0;
-
-        var fn = $.trim($("form#register input[name=fname]").val());
-        var ln = $.trim($("form#register input[name=lname]").val());
-        var em = $.trim($("form#register input[name=email]").val());
-        /*Check email contains the right characters */
+        //Check email contains the right characters
         var em_chars = /([\w\-]+\@[\w\-]+\.[\w\-]+)/;
-        var ui = $.trim($("form#register input[name=user_id]").val());
-        var pw = $.trim($("form#register input[name=password]").val());
-        var pw2 = $.trim($("form#register input[name=password2]").val());
-
-        //Begin validation
-        if (fn === "") {
-            $("span.val_fName").html("Invalid first name!").addClass('error');
-            noSubmit = 1;
-        }
-        else {
-            $("span.val_fName").html("");
-        }
-        //validate whether last name has a space or is empty.
-        if (ln === "") {
-            $("span.val_lName").html("Invalid last name!").addClass('error');
-            noSubmit = 1;
-        }
-        else {
-            $("span.val_lName").html("");
-        }
-        //If email is invalid
-        if (!em_chars.test(em)) {
-            var test = em_chars.test(em);
-            $("span.val_email").html("Invalid email!").addClass('error');
-            noSubmit = 1;
-        }
-        else {
-            $("span.val_email").html("");
-        }
-        if (ui === "") {
-            $("span.val_ui").html("Invalid User ID!").addClass('error');
-            noSubmit = 1;
-        }
-        else {
-            $("span.val_ui").html("");
-        }
-        if (pw === "") {
-            $("span.val_pass").html("Invalid Password!").addClass('error');
-            noSubmit = 1;
-        }
-        else {
-            $("span.val_pass").html("");
-        }
-        if (pw2 === "") {
-            $("span.val_pass2").html("Field Required").addClass('error');
-            noSubmit = 1;
-        }
-        else {
-            if (pw !== pw2) {
-                $("span.val_pass2").html("Passwords don't match!").addClass('error');
-                noSubmit = 1;
-            } else {
-                $("span.val_pass2").html("");
+        //Get all input elements that are valid
+        var fieldStack = document.querySelectorAll('.valid');
+        //Check for empty inputs
+        for (i = 0; i < fieldStack.length; i++) {
+            //Similar to associative key => value assignment
+            //Key - Field name
+            var field = fieldStack[i];
+            //Value - Value name
+            var val = form[field.name].value.trim();
+            //Allow empty optional fields
+            if (!$(field).data('optional')) {
+                if (!val) {
+                    $("#" + field.name).html("Field can't be empty!").addClass('error');
+                    errors.push(field.name);
+                }
             }
-        }
-
-        if (noSubmit === 1) {
+            //If the field type is an email then perform validation
+            else if (field.name === "email" && !val) {
+                //Validate email type
+                if (!em_chars.test(val)) {
+                    $("input.field.name").html("Invalid email!").addClass('error');
+                    errors.push("email");
+                }
+            }
+        }//End of for loop     
+        if(errors.length !== 0)
+        {
             return false;
         }
-        noSubmit = 0;
     });
+    
 });
+/*
+ if (fn === "") {
+ $("#firstName").html("Invalid first name!").addClass('error');
+ noSubmit = 1;
+ }
+ else {
+ $("span.val_fName").html("");
+ }
+ //validate whether last name has a space or is empty.
+ if (ln === "") {
+ $("span.val_lName").html("Invalid last name!").addClass('error');
+ noSubmit = 1;
+ }
+ else {
+ $("span.val_lName").html("");
+ }
+ 
+ //If email is empty ignore validation
+ if (em !== "") {
+ //Validate email type
+ if (!em_chars.test(em)) {
+ var test = em_chars.test(em);
+ $("span.val_email").html("Invalid email!").addClass('error');
+ noSubmit = 1;
+ }
+ }
+ else {
+ $("span.val_email").html("");
+ }
+ if (ui === "") {
+ $("span.val_ui").html("Username empty!").addClass('error');
+ noSubmit = 1;
+ }
+ else {
+ $("span.val_ui").html("");
+ }
+ if (pw === "") {
+ $("span.val_pass").html("Password empty!").addClass('error');
+ noSubmit = 1;
+ }
+ else {
+ $("span.val_pass").html("");
+ }
+ if (pw2 === "") {
+ $("span.val_pass2").html("Second password empty!").addClass('error');
+ noSubmit = 1;
+ }
+ else {
+ $("span.val_pass2").html("");
+ }
+ if (pw !== pw2 && (pw !== "" || pw2 !== "")) {
+ $("span.val_pass2").html("Passwords don't match!").addClass('error');
+ noSubmit = 1;
+ } else {
+ $("span.val_pass2").html("");
+ }
+ */
+
+
 
 
 
@@ -115,67 +139,67 @@ jQuery(function($) {
  * Ensure all fields are filled in
  */
 /*
-function fieldEmpty(fn, ln, ui, pw) {
-    if (fn === null || fn === "" || ln === null || ln === ""
-            || ui === null || ui === "" || pw === null ||
-            pw === "" || pw2 === null || pw2 === "") {
-        alert("A field is missing");
-        return false;
-    }
-    else {
-        return 1;
-    }
-
-}
-/*
+ function fieldEmpty(fn, ln, ui, pw) {
+ if (fn === null || fn === "" || ln === null || ln === ""
+ || ui === null || ui === "" || pw === null ||
+ pw === "" || pw2 === null || pw2 === "") {
+ alert("A field is missing");
+ return false;
+ }
+ else {
+ return 1;
+ }
+ 
+ }
+ /*
  * Function to validate email address syntax
  * http://www.w3schools.com/js/js_form_validation.asp
  * @param {type} em
  * @returns {Boolean}
  */
 /*
-function validEmail(em) {
-
-    var atpos = em.indexOf("@");
-    var dotpos = em.lastIndexOf(".");
-    if (!em === "") {
-        if (atpos < 1 ||
-                dotpos < atpos + 2 ||
-                dotpos + 2 >= em.length)
-        {
-            alert("Not a valid e-mail address");
-            return false;
-        }
-        else if (em.length > 50) {
-            alert("Email address is too long!");
-            return false;
-        }
-    }
-    return 1;
-}
-
-/*
+ function validEmail(em) {
+ 
+ var atpos = em.indexOf("@");
+ var dotpos = em.lastIndexOf(".");
+ if (!em === "") {
+ if (atpos < 1 ||
+ dotpos < atpos + 2 ||
+ dotpos + 2 >= em.length)
+ {
+ alert("Not a valid e-mail address");
+ return false;
+ }
+ else if (em.length > 50) {
+ alert("Email address is too long!");
+ return false;
+ }
+ }
+ return 1;
+ }
+ 
+ /*
  * Function to validate field lengths
  *//*
-function validPwd(pw, pw2) {
-    /*
-     * Validate the second password is the same as the first
-     *//*
-    if (pw !== pw2) {
-        alert("Passwords don't match!");
-        return false;
-    }
-    else if (pw > 25) {
-        alert("Password too long! Must be less than 25 characters");
-        return false;
-    }
-    else {
-        return 1;
-    }
-}
-/*
- * Function to check first and last name length name length
- *//*
+  function validPwd(pw, pw2) {
+  /*
+  * Validate the second password is the same as the first
+  *//*
+   if (pw !== pw2) {
+   alert("Passwords don't match!");
+   return false;
+   }
+   else if (pw > 25) {
+   alert("Password too long! Must be less than 25 characters");
+   return false;
+   }
+   else {
+   return 1;
+   }
+   }
+   /*
+   * Function to check first and last name length name length
+   */
 function validName(fn, ln, mx) {
     if (fn.length > mx) {
         alert("First name must be less than 30 characters");
@@ -193,7 +217,7 @@ function validName(fn, ln, mx) {
 /*
  * Function to check username length
  */
-/*
+
 function usernameLength(ui, mx) {
     if (ui.length > mx) {
         alert("Username is too long. Must be less than 25 characters!");
@@ -203,5 +227,5 @@ function usernameLength(ui, mx) {
         return 1;
     }
 }
-*/
+
 

@@ -9,29 +9,32 @@ abstract class Validator_Model
     {
     /*
      * This function can be used to validate a variable
-     * @access public
      * 
      * @param String $field     : This is the variable
      * @param String $string    : This is the name of the variable
      * @param String $type      : This is the variable type
      * @param int $length       : This is the maximum length of a variable
+     * @param boolean $optional : This is whether the variable can be empty
      * 
      * @return boolean
-     * 
-     * (Waterson, 2013)
      */
 
-    public static function variableCheck($field, $string, $type, $length)
+    public static function variableCheck($field, $string, $type, $length,
+            $optional)
         {
         // assign the type
         $type = 'is_' . $type;
         $errors = array();
-
-        // now we see if there is anything in the string
-        if (empty($string) || $string === '' || strlen($string === 0))
+        //Check if the variable can be empty
+        if (isset($optional) && !$optional)
             {
-            $emptyErr = $field . " can't be empty";
-            array_push($errors, $emptyErr);
+            //Check if variable is empty
+            $empty = Validator_Model::optionalVar($string, $field);
+            //If an error has returned add to error array
+            if (is_string($empty))
+                {
+                array_push($errors, $empty);
+                }
             } elseif (!$type($string))
             {
             $typeErr = "String and type don't match!<br>"
@@ -94,7 +97,6 @@ abstract class Validator_Model
 
     public static function htmlChar($array)
         {
-
         // Check if the parameter is an array
         if (is_array($array))
             {
@@ -132,34 +134,63 @@ abstract class Validator_Model
      * 
      */
 
-    public static function validateDate($date)
+    public static function validateDate($date, $optional)
         {
         $valid = true;
-        if (isset($date) && $date !== '')
+        //If date isn't optional then check it isn't empty
+        $empty = Validator_Model::optionalVar($date, "Date ");
+        if (is_string($empty))
             {
-            $parts = explode("-", $date);
-            //If the date is passed in American format then remove and reinsert year to the end
-            if (strlen($parts[0]) === 4)
+            if ($optional)
                 {
-                $temp = $parts[0];
-                array_splice($parts, 0, 1);
-                array_push($parts, $temp);
+                return false;
+                } else
+                {
+                return $empty;
                 }
+            }
+        //Pre-process date - If it's a string convert to time
+        if (is_string($date))
+            {
+            $date = date('d-m-Y', strtotime($date));
+            }
+        //If the date is passed in American format then parse to English
+        $parts = explode("-", $date);
+        if (strlen($parts[0]) === 4)
+            {
+            $temp = $parts[0];
+            array_splice($parts, 0, 1);
+            array_push($parts, $temp);
+            }
 
-            //Run checkdate validation function
-            if (!checkdate($parts[0], $parts[1], $parts[2]))
-                {
-                return "Invalid date format!";
-                } elseif ($parts[2] > 2500)
-                {
-                return "Year can't be after 2500";
-                }
-            $valid = true;
-            } else
+        //Check date is in valid format
+        if (!checkdate($parts[0], $parts[1], $parts[2]))
             {
-            return "A date field is empty!";
+            return "Invalid date format!";
+            } elseif ($parts[2] > 2500)
+            {
+            return "Year can't be after 2500";
             }
         return $valid;
+        }
+
+    /*
+     * Helper function to check if a string is empty
+     * @param (String) $string      Value to check
+     * @param (String) $field       Name of value for error message
+     * 
+     * @return (String) $error      Return the error message for error array
+     */
+
+    private static function optionalVar($string, $field)
+        {
+        $error = false;
+        // now we see if there is anything in the string
+        if (empty($string) || $string === '' || strlen($string === 0))
+            {
+            $error = $field . " can't be empty";
+            }
+        return $error;
         }
 
     }

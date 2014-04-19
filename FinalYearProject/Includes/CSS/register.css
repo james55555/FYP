@@ -10,6 +10,7 @@
 
 .centralBox #content{
     /*Position block*/
+    width: 50%;
     display: block;
     overflow: auto;
 }
@@ -26,7 +27,7 @@
     margin-top: -.75em;
 }
 .regInput input[type=text], .regInput input[type=password]{
-    width: 75%;
+    width: 80%;
     padding: 4px;
     margin-bottom: 2px;
 }
@@ -34,14 +35,17 @@
      text-align: center;
      vertical-align: bottom;
 }
-#register input .error {
+.error {
     background: #FFB2B2;
     border: solid 2px #FF0000;
 }
-#content span .error{
+#content span {
     color: red;
-    font-weight: bold;
-    padding-left: 10px;
+    padding-left: 5px;
+}
+#content #errMessage {
+    color: red;
+    font-weight:bold;
 }
 
 

@@ -35,7 +35,8 @@
                 </form>
                 <div id="error">
                     <?php
-                    if ($this->registry->success === false)
+                    if (isset($this->registry->success) 
+                            && $this->registry->success === false)
                         {
                         ?>
                     <!--Client-side validation-->

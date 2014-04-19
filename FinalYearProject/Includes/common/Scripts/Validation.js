@@ -10,6 +10,7 @@ jQuery(function($) {
 
     $("#" + form.id + " input[name='submit']").click(function() {
         var errors = [];
+        var empty = [];
 
         //Check email contains the right characters
         var em_chars = /([\w\-]+\@[\w\-]+\.[\w\-]+)/;
@@ -25,25 +26,39 @@ jQuery(function($) {
             //Allow empty optional fields
             if (!$(field).data('optional')) {
                 if (!val) {
-                    $("#" + field.name).html("Field can't be empty!").addClass('error');
-                    errors.push(field.name);
+                    $("#" + field.name).removeClass("valid").addClass('error');
+                    $("span#sp" + field.id).html("*");
+                    empty.push(field.name);
                 }
             }
             //If the field type is an email then perform validation
-            else if (field.name === "email" && !val) {
+            else if (field.name === "email" && val !== "") {
                 //Validate email type
                 if (!em_chars.test(val)) {
-                    $("input.field.name").html("Invalid email!").addClass('error');
-                    errors.push("email");
+                    $("#" + field.name).addClass('error');
+                    $("span#sp" + field.id).html("*");
+                    errors.push(field.name);
                 }
             }
         }//End of for loop     
-        if(errors.length !== 0)
-        {
-            return false;
+        //Message to explain error
+        var msg;
+        if (empty.length !== 0) {
+            msg = "Fields Required!";
         }
+        else if (errors.length !== 0)
+        {
+            //Capitalize first letter of error field and concatenate
+            msg = errors[0].charAt(0).toUpperCase() 
+                    + errors[0].substring(1) 
+                    + " isn't valid!";
+        }
+        else {
+            return true;
+        }
+        $("#errMessage").html(msg);
+        return false;
     });
-    
 });
 /*
  if (fn === "") {
@@ -200,6 +215,7 @@ jQuery(function($) {
    /*
    * Function to check first and last name length name length
    */
+  /*
 function validName(fn, ln, mx) {
     if (fn.length > mx) {
         alert("First name must be less than 30 characters");
@@ -217,7 +233,7 @@ function validName(fn, ln, mx) {
 /*
  * Function to check username length
  */
-
+/*
 function usernameLength(ui, mx) {
     if (ui.length > mx) {
         alert("Username is too long. Must be less than 25 characters!");
@@ -228,4 +244,4 @@ function usernameLength(ui, mx) {
     }
 }
 
-
+*/

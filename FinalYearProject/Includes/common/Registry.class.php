@@ -29,7 +29,19 @@ Class Registry
     public
             function __get($key)
         {
+        if(!isset($this->variables[$key])){
+            throw new Exception("Registry variable: " . 
+                    $key . " not set");
+            }
         return $this->variables[$key];
         }
+        
+        /*
+         * Function to remove variables from Global registry
+         * @param $var variable
+         */
+        public function remove($var){
+            unset($this->$var[$key]);
+            }
 
     }

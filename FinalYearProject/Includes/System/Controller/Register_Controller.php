@@ -26,13 +26,15 @@ class Register_Controller extends Main_Controller
         $valid = $this->checkForm();
         if ($valid)
             {
+            $this->registry->error = true;
             $this->registry->heading = "Registration success!";
-            $this->registry->message = "You are now a registered user.";
+            $this->registry->message = "You are now a registered user."
+                    . "<br/><a href=\"?page=Login\">Login with new details</a>";
             } else
             {
                 //Set user session to null so that header doesn't appear
                 $this->registry->error = true;
-            $this->registry->heading = "Error adding new user...";
+            $this->registry->heading = "Error adding user!";
             //Print errors             
                 $this->registry->message = $this->newUser;
                 

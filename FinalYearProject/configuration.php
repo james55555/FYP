@@ -1,6 +1,6 @@
 <?php
 
-/* 
+/*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
@@ -32,5 +32,4 @@ define('__VIEW_PATH', __SITE_PATH . '/Includes/System/View/');
 define('__AUTOLOAD_PATH', __SITE_PATH . '/Vendor/autoload.php');
 
 include __AUTOLOAD_PATH;
-
 ?>

@@ -23,16 +23,22 @@ class Staff_Model extends Generic_Model
     public
             function __construct($staff_id)
         {
+        try {
         $row = $this->get($staff_id);
-        if (!$row)
-            {
-            $row = null;
+        if(!isset($row)){
+            throw new Exception("No Staff_Model found!");
             }
-        $this->staff_id = $row->staff_id;
-        $this->staff_first_nm = $row->staff_first_nm;
-        $this->staff_last_nm = $row->staff_last_nm;
-        $this->staff_phone = $row->staff_phone;
-        $this->staff_email = $row->staff_email;
+        $this->staff_id = $row->STAFF_ID;
+        $this->staff_first_nm = $row->STAFF_FIRST_NM;
+        $this->staff_last_nm = $row->STAFF_LAST_NM;
+        $this->staff_phone = $row->STAFF_PHONE;
+        $this->staff_email = $row->STAFF_EMAIL;
+        }
+        catch(Exception $e){
+            echo $e->getMessage();
+            echo "<br/>" . $e->getTraceAsString();
+            return null;
+            }
         }
 
     public

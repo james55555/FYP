@@ -34,7 +34,7 @@ class Task_Model
 
     public
             function __construct($tsk_id)
-        {   
+        {
         $row = $this->getTask($tsk_id);
         $this->tsk_id = $row->TSK_ID;
         //Get the project corresponding to the linked id
@@ -56,7 +56,6 @@ class Task_Model
         $this->staff = StaffTask_Model::getStaffId($row->TSK_ID);
         $this->dpnd = TaskDependency_Model::getDpID($row->TSK_ID);
         }
-        
 
     public
             function tsk_id()
@@ -138,22 +137,166 @@ class Task_Model
         $fields = array("TSK_ID, PROJ_ID, STATUS, "
             . "TASK_NM, WEB_ADDR", "TSK_DESCR");
         $databaseTasks = Database_Queries::selectFrom("TASK_MODEL", $fields, "TASK", "PROJ_ID", $proj_id);
-        //If database tasks isn't an array then create one
-        if(!is_array($databaseTasks)){
+        //If database tasks isn't an array and issset then create one
+        if (!is_array($databaseTasks) && isset($databaseTasks))
+            {
             $tasks = array($databaseTasks);
-        }
+            } else
+            {
+            $tasks = $databaseTasks;
+            }
         return $tasks;
         }
 
     /*
      * Function to edit/update a task given the provided parameters
-     * @param int tsk_id, int proj_id, int status_id, String tsk_nm, String web_addr, String tsk_descr, obj Model estimation, obj Model dependency
+     * @param (array) $fields       These are the fields passed from the Controller
+     * 
+     * @param (bool || String)      This is true if successful and error message otherwise.
+     * 
      */
 
     public static
             function editTask($fields)
         {
-        
+        $db = new Database();
+
+        $fields = $db->filterParameters($fields);
+        $proj_id = $fields['proj_id'];
+        $est_id = $fields['est_id'];
+        $task_id = $fields['task_id'];
+        $staff_id = $fields['staff_id'];
+        //This will be an associative array
+        $dpnds = $fields['dpnd_id'];
+        foreach ($fields as $key => $field)
+            {
+            if (substr($key, -2) === "id")
+                {
+                //Assign hidden varaibles (not validated) to the $key name
+                ${$key} = $field;
+//Then remove them for array processsing
+                unset($fields[$key]);
+                }
+            }
+        /*
+         * !Key ID variables are now $est_id, $proj_id and $task_id
+         * VarList: tName
+          tDescr
+          web_addr
+          status
+          tStart
+          tActStart
+          tDeadline
+          tAct_hr
+          tPln_hr
+          stFirst
+          stLast
+          stTel
+          stEmail
+         * 
+         */
+
+        //Vars are initialized in foreach
+        $validDates = Task_Model::validateDates($proj_id, $fields['tStart'], $fields['tDeadline']);
+
+        if (is_string($validDates))
+            {
+            return $validDates;
+            }
+        unset($fields['tStart']);
+        unset($fields['tDeadline']);
+        $valid = Task_Model::validateArray($fields);
+        if (is_string($valid) || is_array($valid))
+            {
+            return $valid;
+            }
+        //Processing complete, now run update statement
+        $db->connect();
+        mysql_query("START TRANSACTION;");
+//Run the row checker against all tables affected by the update
+        try
+            {
+            //Check TASK table
+            $taskExists = mysql_query("SELECT * FROM TASK "
+                    . "WHERE TSK_ID='" . $task_id . "';");
+            if (mysql_num_rows($taskExists) === 0)
+                {
+                throw new Exception("Task doesn't exist");
+                }
+            //Check ESTIMATION table
+            $estimationExists = mysql_query("SELECT * FROM ESTIMATION "
+                    . "WHERE EST_ID='" . $est_id . "';");
+            if (mysql_num_rows($estimationExists) === 0)
+                {
+                throw new Exception("Estimation doesn't exist'");
+                }
+            } catch (Exception $ex)
+            {
+            mysql_query("ROLLBACK;");
+            return $ex->getMessage() . "<br/>" . mysql_error();
+            }
+        try
+            {
+            //Run the update query against the PROJECT table
+            $task_update = "UPDATE TASK SET"
+                    . " STATUS='" . $fields['status'] . "',"
+                    . " TASK_NM='" . $fields['tName'] . "',"
+                    . " WEB_ADDR='" . $fields['web_addr'] . "',"
+                    . " TSK_DESCR='" . $fields['tDescr'] . "',"
+                    . " TSK_ID='" . $task_id . "';";
+            $task_result = mysql_query($task_update);
+            if (!$task_result && msyql_affected_rows() === 0)
+                {
+                throw new Exception("No task rows updated!"
+                . "<br/>" . mysql_error());
+                }
+            //Run update query against ESTIMATION table
+            $est_update = "UPDATE ESTIMATION SET "
+                    . "ACT_HR='" . $fields['tAct_hr'] . "',"
+                    . " PLN_HR='" . $fields['tPln_hr'] . "',"
+                    . " START_DT='" . $fields['tStart'] . "',"
+                    . " ACT_END_DT='" . $fields['tActEnd'] . "',"
+                    . " EST_END_DT='" . $fields['tDeadline'] . "',"
+                    . " WHERE EST_ID='" . $est_id . "';";
+            $est_result = mysql_query($est_update);
+            if (!$est_result && msyql_affected_rows() === 0)
+                {
+                throw new Exception("No ESTIMATION rows updated!"
+                . "<br/>" . mysql_error());
+                }
+            //Run update query against STAFF table
+            $staff_update = "UPDATE STAFF SET "
+                    . "STAFF_FIRST_NM='" . $fields['stFirst'] . "',"
+                    . " STAFF_LAST_NM='" . $fields['stLast'] . "',"
+                    . " STAFF_PHONE='" . $fields['stTel'] . "',"
+                    . " STAFF_EMAIL='" . $fields['stEmail'] . "'"
+                    . " WHERE STAFF_ID='" . $staff_id . "';";
+            $staff_result = mysql_query($staff_update);
+
+            if (!$staff_result && mysql_affected_rows() === 0)
+                {
+                throw new Exception("No STAFF rows updated");
+                }
+            die("died");
+            //Run update against DEPENDENCY table foreach dependency
+            //Associative array ($id = DP_ID && $on = DP_ON)
+            foreach ($dpnds as $id => $on)
+                {
+                $dpnd_update = "UPDATE DEPENDENCY SET "
+                        . "DEPENDENCY_ON='" . $on . "'"
+                        . "WHERE DEPENDENCY_ID='" . $id . "';";
+                if (!$dpnd_update && mysql_affected_rows() === 0)
+                    {
+                    throw new Exception("Dependency update failed!");
+                    }
+                }
+            } catch (Exception $ex)
+            {
+            mysql_query("ROLLBACK;");
+            return $ex->getMessage();
+            }
+        mysql_query("COMMIT;");
+        return true;
         }
 
     /*
@@ -195,6 +338,13 @@ class Task_Model
         return true;
         }
 
+    /*
+     * Function to addTask and return the newly added task for use in the Controller
+     * @param (array) $fields           These are the fields passed from the Controller
+     * 
+     * @return (object) new Task_Model  This is the newly added task to be made available to the controller
+     */
+
     public static function addTask($fields)
         {
         $db = new Database();
@@ -203,23 +353,34 @@ class Task_Model
         //Close database connection for encapsulation purposes
         $db->close();
         $proj_id = $fields['proj_id'];
-//TASK data
+        //TASK data
         $tName = $fields['tName'];
         $tDescr = $fields['tDescr'];
         $web_addr = $fields['web_addr'];
         $status = $fields['status'];
-//ESTIMATION data
+        //ESTIMATION data
         $tStart = $fields['tStart'];
         $tDeadline = $fields['tDeadline'];
         $pln_hr = $fields['pln_hr'];
-//STAFF data
+        //STAFF data
         $stFirst = $fields['stFirst'];
         $stLast = $fields['stLast'];
         $stTel = $fields['stTel'];
         $stEmail = $fields['stEmail'];
-//Assign dependencies to an array
+        //Assign dependencies to an array
         $dependencies = array();
-//If the posted dependencies are set then validate each one
+        //Sanitise $fields array and remove ID fields (these should be unchangeable)
+        foreach ($fields as $key => $field)
+            {
+            if (substr($key, -2) === "id")
+                {
+                //Assign hidden varaibles (not validated) to the $key name
+                ${$key} = $field;
+                //Then remove them for array processsing
+                unset($fields[$key]);
+                }
+            }
+        //If the posted dependencies are set then validate each one
         if (!empty($fields['tDpnd']))
             {
             foreach ($fields['tDpnd'] as $dpnd)
@@ -227,16 +388,17 @@ class Task_Model
                 array_push($dependencies, $dpnd);
                 }
             }
-//Remove the tDpnd index from $fields array
+        //Remove the tDpnd index from $fields array
         unset($fields['tDpnd']);
-
         $validDependencies = Task_Model::ValidateDependencies($dependencies);
-//Validate URL separately and remove from $fields
-        $validWeb = Validator_Model::validateWebAddr($fields['web_addr']);
-        unset($fields['web_addr']);
-//Run the fields through validation
+
+        //Check that tasks dates are between project dates and start is before end
+        $validDates = Task_Model::validateDates($proj_id, $tStart, $tDeadline);
+        unset($fields['tStart']);
+        unset($fields['tDeadline']);
+        //Run the fields through validation
         $valid = Task_Model::validateArray($fields);
-//If errors are returned from then return the provided error message
+        //If errors are returned from then return the provided error message
         if (is_array($valid) || is_string($valid))
             {
             return $valid;
@@ -244,26 +406,18 @@ class Task_Model
                 is_string($validDependencies))
             {
             return $validDependencies;
-            } elseif (is_string($validWeb))
+            } elseif (is_string($validDates))
             {
-            return $validWeb;
+            return $validDates;
             }
-        $project = new Project_Model($proj_id);
-        //The SELECT query run in this function closes the database connection.
-        $projEstimate = Estimation_Model::get($project->estimation());
-//Check that tasks dates are between project dates and start is before end
-        if (strtotime($projEstimate->start_dt) < strtotime($tStart) && strtotime($projEstimate->est_end_dt > strtotime($tDeadline) && strtotime($tStart) < strtotime($tDeadline)))
-            {
-            return "Ensure dates are correct</br>"
-                    . "Remember task dates must be within the time span of their project.";
-            }
-//Re-open database connection to run queries agains
+
+        //Re-open database connection to run queries agains
         $db->connect();
-//Start insert transaction
+        //Start insert transaction
         mysql_query("START TRANSACTION;");
 
-//Set insert into TASK string
-        $task_insert = "INSERT INTO fyp.task ("
+        //Set insert into TASK string
+        $task_insert = "INSERT INTO TASK ("
                 . " TSK_ID,"
                 . " PROJ_ID,"
                 . " STATUS,"
@@ -277,12 +431,12 @@ class Task_Model
                 . " '" . $tName . "',"
                 . " '" . $web_addr . "',"
                 . " '" . $tDescr . "');";
-//Run the query and get the task ID
+        //Run the query and get the task ID
         $task_result = mysql_query($task_insert);
         $task_id = $db->getInsertId();
 
-//Set insert into ESTIMATION
-        $estimation_insert = "INSERT INTO fyp.estimation ("
+        //Set insert into ESTIMATION
+        $estimation_insert = "INSERT INTO ESTIMATION ("
                 . "EST_ID, "
                 . "ACT_HR, "
                 . "PLN_HR, "
@@ -297,43 +451,43 @@ class Task_Model
                 . "NULL, "
                 . "'" . $tDeadline . "');";
 
-//Run query and get estimation id.
+        //Run query and get estimation id.
         $estimation_result = mysql_query($estimation_insert);
         $est_id = $db->getInsertId();
-//Set query to create link between TASK and ESTIMATION
-        $taskEst_insert = "INSERT INTO fyp.TASK_ESTIMATION ("
+        //Set query to create link between TASK and ESTIMATION
+        $taskEst_insert = "INSERT INTO TASK_ESTIMATION ("
                 . "tsk_id,"
                 . " est_id)"
                 . " VALUES( "
                 . " '" . $task_id . "',"
                 . " '" . $est_id . "');";
         $taskEst_result = mysql_query($taskEst_insert);
-//Foreach dependency selected, insert into DEPENDENCY tables
-// Tables: DEPENDENCY, TASK_DEPENDENCY
+        //Foreach dependency selected, insert into DEPENDENCY tables
+        // Tables: DEPENDENCY, TASK_DEPENDENCY
         foreach ($dependencies as $id)
             {
-//Set query for DEPENDENCY insert
-            $dpnd_insert = "INSERT INTO fyp.DEPENDENCY ("
+        //Set query for DEPENDENCY insert
+            $dpnd_insert = "INSERT INTO DEPENDENCY ("
                     . "DEPENDENCY_ID,"
                     . " DEPENDENCY_ON)"
                     . " VALUES ( "
                     . "NULL, "
                     . "'" . $id . "');";
-//Insert into DEPENDENCY table
+            //Insert into DEPENDENCY table
             $dpnd_result = mysql_query($dpnd_insert);
             $dpnd_id = $db->getInsertId();
-//Set query for TASK_DEPENDENCY insert
-            $taskDpnd_insert = "INSERT INTO fyp.TASK_DEPENDENCY ("
+            //Set query for TASK_DEPENDENCY insert
+            $taskDpnd_insert = "INSERT INTO TASK_DEPENDENCY ("
                     . "DEPENDENCY_ID,"
                     . " TSK_ID)"
                     . " VALUES ("
                     . " '" . $task_id . "',"
                     . " '" . $dpnd_id . "');";
-//Insert into TASK_DEPENDENCY table
+            //Insert into TASK_DEPENDENCY table
             $taskDpnd_result = mysql_query($taskDpnd_insert);
             }
-//Set insert into STAFF
-        $staff_insert = "INSERT INTO fyp.STAFF ("
+        //Set insert into STAFF
+        $staff_insert = "INSERT INTO STAFF ("
                 . " STAFF_ID,"
                 . " STAFF_FIRST_NM,"
                 . " STAFF_LAST_NM,"
@@ -345,11 +499,11 @@ class Task_Model
                 . " '" . $stLast . "',"
                 . " '" . $stTel . "',"
                 . " '" . $stEmail . "');";
-//Run query to insert into table and get the STAFF_ID
+        //Run query to insert into table and get the STAFF_ID
         $staff_result = mysql_query($staff_insert);
         $staff_id = $db->getInsertId();
         //Set insert into STAFF_TASK
-        $staffTask_insert = "INSERT INTO fyp.STAFF_TASK ("
+        $staffTask_insert = "INSERT INTO STAFF_TASK ("
                 . "TSK_ID,"
                 . " STAFF_ID)"
                 . " VALUES ("
@@ -373,7 +527,7 @@ class Task_Model
             return "Error inserting into the database<br/>";
             }
         $db->close();
-        return true;
+        return new Task_Model($task_id);
         }
 
     public static function validateArray($fields)
@@ -383,12 +537,8 @@ class Task_Model
         foreach ($fields as $field => $content)
             {
             $type = "string";
-//run through task details information
-            if ($field === "proj_id")
-                {
-                $length = 10;
-                $field = "Project ID";
-                } elseif ($field === "tName")
+            //Run through task details information
+            if ($field === "tName")
                 {
                 $length = 30;
                 $field = "Task Name";
@@ -396,12 +546,6 @@ class Task_Model
                 {
                 $length = 200;
                 $field = "Task description";
-                }
-//Run through task estimation dates
-            elseif ($field === "tStart" || $field === "tDeadline")
-                {
-                $field = "Task dates";
-                $validated = Validator_Model::validateDate($content);
                 } elseif ($field === "stFirst" || $field === "stLast")
                 {
                 $field = "Staff name";
@@ -431,14 +575,14 @@ class Task_Model
                 $type = "numeric";
                 $field = "Staff Extension";
                 $length = 4;
-                } elseif ($field === "pln_hr")
+                } elseif ($field === "tPln_hr" || $field === "tAct_hr")
                 {
-                $field = "Estimated hours";
+                $field = "Hours";
                 $length = 4;
                 $type = "numeric";
                 }
-//!Important - The logic requires that the Validator_Model 
-//              function is run before the @return
+            //!Important - The logic requires that the Validator_Model 
+            //function is run before the @return
             if (!isset($validated))
                 {
                 $validated = Validator_Model::variableCheck($field, $content, $type, $length);
@@ -473,6 +617,71 @@ class Task_Model
                 }
             }
         return false;
+        }
+
+    /*
+     * Function to validate dates provided for either the add or edit query
+     * @param $proj_id     (String)     This is the ID for the Project object 
+     *                                  that holds the information to be used 
+     *                                  to ensure the task is within the project timeline.
+     * @param $start       (date)       This is the start date for the task
+     * @param $end         (date)       This is the actual end date for the task
+     * @param $deadline    (date)       This is the date the task was 
+     *                                  predicted to be completed on
+     * 
+     * @return $valid      (Boolean)   This is true on success, false otherwise
+     */
+
+    private static function validateDates($proj_id, $start, $deadline)
+        {
+        //Assign dates to an array for ease of processing
+        $dates = array($start, $deadline);
+        //Create new Estimation object using the project ID as an estimate identifier 
+        $project_estimation = new Estimation_Model(ProjectEstimation_Model::getEstimationId($proj_id));
+        //Validate date formats
+        foreach ($dates as $date)
+            {
+            //Convert each field to php date type
+            $date = date('d-m-Y', strtotime($date));
+            $validFormat = Validator_Model::validateDate($date);
+            //If the value isn't true then return error message
+            if (is_string($validFormat))
+                {
+                return $validFormat;
+                }
+            //Format for this date has been validted, now check the timing
+            $validTiming = Task_Model::isDateBetween($date, $project_estimation->est_end_dt(), $project_estimation->start_dt());
+            if (is_string($validTiming))
+                {
+                return $validTiming;
+                }
+            }
+        }
+
+    /*
+     * Helper function to check whether a date is between the two provided project dates
+     * @param (date)    $date       This is the date to be checked
+     * @param (date)    $endDate    This is the date that $date should be before
+     * @param (date)    $startDate  This is the date that $date should be after
+     * 
+     * @return (Boolean || String)  This returns true or an error message if incorrect
+     */
+
+    private static function isDateBetween($date, $endDate, $startDate)
+        {
+        //Create error message to return
+        $errorMsg = "Dates must be within the project timeline!"
+                . "<br/>Project start date is: " . $startDate
+                . "<br/>Project deadline is: " . $endDate;
+        //If date is outside of start and end date then return error message
+        if (strtotime($startDate) > $date ||
+                strtotime($endDate) < $date)
+            {
+            return $errorMsg;
+            } else
+            {
+            return true;
+            }
         }
 
     }

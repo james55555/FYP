@@ -58,16 +58,16 @@
                     ?>
                     <td>
                         <!--Buttons to take users to edit or delete for each project-->
-                        <button type="submit" id="editP">
-                            <a href="?page=edit&isProject=true&proj_id=
-                               <?php echo $projid; ?>">
+
+                        <a href="?page=edit&isProject=true&proj_id=<?php echo $projid; ?>">
+                            <button type="submit" id="editP">
                                 <img src="Includes/CSS/img/Icons/edit.png"
                                      alt="edit" title="Edit Project"
                                      width="20" height="20"/>
-                            </a>
-                        </button>
+                            </button>
+                        </a>
                         <button id="delP" onclick="return confirmAction('delete',
-                                '<?php echo $project->proj_nm(); ?>')">
+                                            '<?php echo $project->proj_nm(); ?>')">
                             <a href="?page=Home&action=delete&proj_id=
                                <?php echo $projid; ?>">
                                 <img src="Includes/CSS/img/Icons/delete.png"

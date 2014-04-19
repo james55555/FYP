@@ -62,7 +62,7 @@ class Add_Controller extends Main_Controller
         //ESTIMATION data
         $fields['tStart'] = $_POST['tStart'];
         $fields['tDeadline'] = $_POST['tDeadline'];
-        $fields['pln_hr'] = $_POST['pln_hr'];
+        $fields['pln_hr'] = $_POST['tPln_hr'];
         //STAFF data
         $fields['stFirst'] = $_POST['stFirst'];
         $fields['stLast'] = $_POST['stLast'];
@@ -111,7 +111,8 @@ class Add_Controller extends Main_Controller
                 {
                 $this->registry->error = false;
                 $this->registry->heading = "Task Added!";
-                $this->registry->message = "Possibly add click here to navigate to new task??";
+                $this->registry->message = "Click <a href=\"?page=Task&action=details&task_id=" . $this->newTask->tsk_id() . "\">"
+                        . " here </a> to view tasks.";
                 }
             } else
             {

@@ -12,6 +12,8 @@
     <!DOCTYPE html> 
     <html xmlns="http://www.w3.org/1999/xhtml">
         <head>
+            <script type="text/javascript" src="Includes/common/Scripts/confirmAction.js"></script>
+            
             <link rel="stylesheet" type="text/css" href="Includes/CSS/reset.css"/>
             <link rel="stylesheet" type="text/css" href="Includes/CSS/main.css"/>
             <link rel="stylesheet" type="text/css" href="Includes/CSS/projectTasks.css"/>
@@ -69,7 +71,8 @@
                 <div id="tasks">
                     <?php
                     $tasks = $this->registry->project_tasks;
-                    if (sizeof($tasks) > 0)
+
+                    if (sizeof($tasks) > 0 && isset($tasks))
                         {
                         ?>
                         <table id="myTasks" class="table">
@@ -88,7 +91,14 @@
                                     $task_id = $task;
                                     } elseif (is_object($task))
                                     {
-                                    $task_id = $task->TSK_ID;
+                                        //Check if the object is a Task_Model or StdClass
+                                    if (is_a($task, "Task_Model"))
+                                        {
+                                        $task_id = $task->tsk_id();
+                                        } else
+                                        {
+                                        $task_id = $task->TSK_ID;
+                                        }
                                     }
                                 $task = new Task_Model($task_id);
 
@@ -107,15 +117,16 @@
                                 <td>
                                     <div id="actions">
                                         <!--Buttons to take users to edit or delete for each project-->
+                                        <a href="?page=edit&proj_id=<?php echo $proj_id; ?>&task_id=<?php echo $task->tsk_id(); ?>">
                                         <button type="submit" id="editT">
-                                            <a href="?page=Task&action=edit&proj_id=<?php echo $_GET['proj_id']; ?>">
                                                 <img src="Includes/CSS/img/Icons/edit.png" 
                                                      alt="edit" title="Edit Task"
                                                      width="20" height="20"/>
                                             </a>
                                         </button>
 
-                                        <button type="submit" id="delT">                                
+                                        <button type="submit" id="delT" onclick="return confirmAction('delete',
+                                            '<?php echo $task->tsk_nm(); ?>')">                              
                                             <a href="?page=Task&action=delete&task_id=<?php echo $task->tsk_id() ?>">
                                                 <img src="Includes/CSS/img/Icons/delete.png" 
                                                      alt="edit" title="Delete Task"

@@ -14,7 +14,7 @@ class Edit_Controller extends Main_Controller
     public function main()
         {
         //if is task or is project
-        if ($_GET['isProject'])
+        if (isset($_GET['isProject']) && $_GET['isProject'])
             {
             $this->registry->project = new Project_Model($_GET['proj_id']);
             $view = 'editProject';
@@ -22,32 +22,63 @@ class Edit_Controller extends Main_Controller
             } else
             {
             $this->registry->task = new Task_Model($_GET['task_id']);
+            $staff_id = $this->registry->task->staff();
+            if (isset($staff_id))
+                {
+                $this->registry->staff = new Staff_Model($staff_id);
+                }
+            //Only create new dependency object if dependencies have been set up
+            $dpnd_id = $this->registry->task->dpnd();
+            if (isset($dpnd_id))
+                {
+                $this->registry->dependencies = new Dependency_Model($dpnd_id);
+                }
             $view = 'editTask';
+
             $est_id = $this->registry->task->estimation();
             }
+        if (isset($est_id))
+            {
             $this->registry->estimation = new Estimation_Model($est_id);
-            $this->registry->View_Template->show($view);
+            }
+        $this->registry->View_Template->show($view);
         }
+
+    /*
+     * Function to parse posted project variables and run showView() function with parameters
+     * 
+     * @return (function)   Run function with obtained variables 
+     */
 
     public function editProject()
         {
         $this->isProject = true;
-        //Assign posted fields to an array
-        $fields = array();
-        //Project Fields
-        $fields['proj_id'] = $_POST['proj_id'];
-        $fields['pName'] = $_POST['pName'];
-        $fields['pDescr'] = $_POST['pDescr'];
-        //Estimation Fields
-        $fields['pStart'] = $_POST['pStart'];
-        $fields['pAct_hr'] = $_POST['act_hr'];
-        $fields['pActEnd'] = $_POST['pActEnd'];
-        $fields['pDead'] = $_POST['pDeadline'];
-        $fields['pln_hr'] = $_POST['pln_hr'];
         //boolean to return true on success, false otherwise
-        $updated = Project_Model::editProject($fields);
+        $updated = Project_Model::editProject($_POST);
         return $this->showView($updated);
         }
+
+    /*
+     * Function to parse posted variables and run showView() function with parameters
+     * 
+     * @return (function)   Run function with obtained variables 
+     */
+
+    public function editTask()
+        {
+        $this->isProject = false;
+        //Assign posted fields to an array
+        $updated = Task_Model::editTask($_POST);
+        echo "here";
+        return $this->showView($updated);
+        }
+
+    /*
+     * Function to generate variables for use in showMessage function and 
+     * display message based on $success.
+     * @param (boolean) $success    This is the variable used to define 
+     *                              whether editObject() was successful
+     */
 
     private function showView($success)
         {
@@ -77,7 +108,7 @@ class Edit_Controller extends Main_Controller
             $this->registry->heading = $e->getMessage();
             $this->registry->message = "System error: " . $success;
             }
-            $this->registry->View_Template->show('showMessage');
+        $this->registry->View_Template->show('showMessage');
         }
 
     }

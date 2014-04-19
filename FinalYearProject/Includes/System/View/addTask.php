@@ -7,7 +7,8 @@
 ?>
 <html>
     <head>
-        <script type="text/javascript" src="Includes/common/Scripts/Validation.js"></script>
+        <script type="text/javascript" src="Includes/common/Scripts/confirmAction.js"></script>
+        
         <link rel="stylesheet" type="text/css" href="Includes/CSS/reset.css"/>
         <link rel="stylesheet" type="text/css" href="Includes/CSS/main.css"/>
         <link rel="stylesheet" type="text/css" href="Includes/CSS/addTask.css"/>
@@ -61,7 +62,7 @@
                     <label title="When will the task end?">
                         Deadline: </label><input type="date" name="tDeadline"/>
                     <label title="How many hours will be assigned to the task?">
-                        Estimate</label><input type="text" name="pln_hr"/>
+                        Estimate</label><input type="text" name="tPln_hr"/>
                 </div>
                 <!--Optional for user-->
                 <div id="staff" class="section">

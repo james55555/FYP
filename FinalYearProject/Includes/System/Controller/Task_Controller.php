@@ -18,7 +18,6 @@ class Task_Controller extends Main_Controller
             function main()
         {
         $this->registry->project_tasks = Task_Model::getAllTasks($_GET['proj_id']);
-        
         $this->project = new Project_Model($_GET['proj_id']);
         $this->registry->projectEstimation = Estimation_Model::
                 get($this->project->estimation());
@@ -36,15 +35,11 @@ class Task_Controller extends Main_Controller
         $this->registry->project = new Project_Model
                 ($this->registry->task->proj_id());
         $this->registry->taskEstimation = Estimation_Model::get($this->registry->task->estimation());
+        //Optional field
         $this->registry->taskStaff = Staff_Model::get($this->registry->task->staff());
+        //Optional field
         $this->registry->taskDependencies = Dependency_Model::get($this->registry->task->dpnd());
-
         $this->registry->View_Template->show('taskDetails');
-        }
-
-    public function editTask()
-        {
-        
         }
 
     public function delete()
@@ -55,8 +50,11 @@ class Task_Controller extends Main_Controller
                 {
                 //Check if the task has already been deleted
                 $exists = Task_Model::getTask($_GET['task_id']);
+
                 if (isset($exists))
                     {
+                    //Get the project id for redirect to task list
+                    $proj_id = $exists->PROJ_ID;
                     //Run the delete function and return a boolean
                     $this->success = Task_Model::deleteTask($_GET['task_id']);
                     } else
@@ -68,7 +66,9 @@ class Task_Controller extends Main_Controller
                 {
                 $this->registry->error = false;
                 $this->registry->heading = "Success";
-                $this->registry->message = "Task successfully deleted";
+                $this->registry->message = "Task successfully deleted<br/>"
+                        . "Return to <a href=\"?page=Task&proj_id=" . $proj_id . "\">"
+                        . "Task List</a>";
                 } else
                 {
                 throw new Exception("Something went wrong!");
@@ -83,9 +83,12 @@ class Task_Controller extends Main_Controller
         $this->registry->View_Template->show('showMessage');
         }
 
+    /*
+     * Function to redirect user to add task page
+     */
+
     public function addTask()
         {
         $this->registry->View_Template->show('addTask');
         }
-
     }

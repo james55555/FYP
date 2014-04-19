@@ -8,15 +8,10 @@
  * 
  */ 
 
-#content{
+.centralBox #content{
     /*Position block*/
-    margin: 0 auto;
-    background-color: #FFFFFF;
-    margin-top: 10px;
-    text-align: center;
-    width: 25%;
-    display:block;
-    overflow:auto;
+    display: block;
+    overflow: auto;
 }
 #content h1, #content #personal, #content #credentials {
     border-bottom: 1px solid #aaa;
@@ -31,17 +26,22 @@
     margin-top: -.75em;
 }
 .regInput input[type=text], .regInput input[type=password]{
-    width: 100%;
+    width: 75%;
     padding: 4px;
-    margin: 0;
+    margin-bottom: 2px;
 }
 #navigation{
      text-align: center;
      vertical-align: bottom;
 }
-span.error {
+#register input .error {
+    background: #FFB2B2;
+    border: solid 2px #FF0000;
+}
+#content span .error{
     color: red;
     font-weight: bold;
+    padding-left: 10px;
 }
 
 

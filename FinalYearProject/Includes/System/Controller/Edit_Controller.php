@@ -70,7 +70,6 @@ class Edit_Controller extends Main_Controller
         $this->isProject = false;
         //Assign posted fields to an array
         $updated = Task_Model::editTask($_POST);
-        echo "here";
         return $this->showView($updated);
         }
 
@@ -107,7 +106,7 @@ class Edit_Controller extends Main_Controller
             {
             $this->registry->error = true;
             $this->registry->heading = $e->getMessage();
-            $this->registry->message = "System error: " . $success;
+            $this->registry->message = $success;
             }
         $this->registry->View_Template->show('showMessage');
         }

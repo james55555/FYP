@@ -28,11 +28,7 @@
 
 /*Content design*/
 #content{
-   margin: 0 auto;
-   width: 400px;
-   box-shadow: 1px 1px 10px 5px #DCDCDC;
-   overflow: auto;
-   display:block;
+   width: 50%;
 }
 #content li{
     list-style: none;

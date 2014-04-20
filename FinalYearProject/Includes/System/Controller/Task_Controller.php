@@ -34,8 +34,11 @@ class Task_Controller extends Main_Controller
         $this->registry->task = new Task_Model($_GET['task_id']);
         $this->registry->project = new Project_Model
                 ($this->registry->task->proj_id());
+        $est_id = $this->registry->task->estimation();
+        if(isset($est_id)){
         $this->registry->taskEstimation = Estimation_Model::get($this->registry->task->estimation());
-        //Optional field
+        }        
+//Optional field
         $this->registry->taskStaff = Staff_Model::get($this->registry->task->staff());
         //Optional field
         $this->registry->taskDependencies = Dependency_Model::get($this->registry->task->dpnd());

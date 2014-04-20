@@ -23,8 +23,10 @@
                 //Set easier to use variables throughout the view
                 $project = $this->registry->project;
                 $task = $this->registry->task;
-                $taskEstimation = $this->registry->taskEstimation;
-                
+                if (isset($this->registry->taskEstimation))
+                    {
+                    $taskEstimation = $this->registry->taskEstimation;
+                    }
                 $noEstimate = "No estimate set!";
                 ?>
 
@@ -63,7 +65,7 @@
                 </button>
             </div> <!--End of upper class-->
 
-            <div id="content">
+            <div id="content" class="centralBox">
                 <h1>Details for: <?php echo $task->tsk_nm(); ?></h1>
                 <ul>
                     <div class="details" id="taskDetails">
@@ -172,68 +174,71 @@
                                         {
                                         echo "Not set";
                                         }
+                                    echo "</div>"//End of info div
+                                    . "</li>"
+                                    . "</div> "; //End of estimation div 
                                     } //End of isset if statement
                                 ?>
-                            </div> <!--End of info-->
-                        </li>
-                    </div> <!--End of estimation-->
 
-                    <div class="details" id="dependencies">
-                        <li><div class="infoTitle">Dependent on this task: </div>
-                            <div class="info">
-                                <?php
-                                if (isset($this->registry->taskDependencies))
-                                    {
-                                    $dependencies = $this->registry->taskDependencies;
-                                    if (is_array($dependencies))
-                                        {
-                                        foreach ($dependencies as $dpTask)
-                                            {
-                                            echo "<a href=\"?page=Task&action=details&task_id={$dpTask->DEPENDENCY_ID}\">
+                                <div class="details" id="dependencies">
+                                    <li><div class="infoTitle">Dependent on this task: </div>
+                                        <div class="info">
+                                            <?php
+                                            echo "<br/>";
+                                            if (isset($this->registry->taskDependencies))
+                                                {
+                                                $dependencies = $this->registry->taskDependencies;
+                                                if (is_array($dependencies))
+                                                    {
+                                                    
+                                                    foreach ($dependencies as
+                                                                $dpTask)
+                                                        {
+                                                        echo "<a href=\"?page=Task&action=details&task_id={$dpTask->DEPENDENCY_ID}\">
                                             {$dpTask->DEPENDENCY_ID}</a>";
-                                            }
-                                        } elseif (is_string($dependencies))
-                                        {
-                                        echo "<a href=\"?page=Task&action=details&task_id={$dpTask->DEPENDENCY_ID}\">
+                                                        }
+                                                    } elseif (is_string($dependencies))
+                                                    {
+                                                    echo "<a href=\"?page=Task&action=details&task_id={$dpTask->DEPENDENCY_ID}\">
                                             {$dpTask->DEPENDENCY_ID}</a>";
-                                        }
-                                    } else
-                                    {
-                                    echo "Not set";
-                                    }
-                                ?>
-                            </div>
-                        </li>
-                    </div> <!--End of dependencies-->
-                </ul>
-                <div id="down">
-                    <div id="actions">
-                        <!--Buttons to take users to edit or delete for each project-->
-                        <!--Edit button-->
-                        <button type="submit" id="editT">
-                            <a href="?page=Edit&isProject=false&task_id=<?php echo $task->tsk_id(); ?>">
-                                <img src="Includes/CSS/img/Icons/edit.png" 
-                                     alt="edit" title="Edit Task"
-                                     width="30" height="30"/>
-                            </a>
-                        </button>
-                        <!--Delete button-->
-                        <button type="submit" id="delT" onclick="return confirmAction('delete',
-                                        '<?php echo $task->tsk_nm(); ?>')">
-                            <a href="?page=task&action=delete&task_id=
-                               <?php echo $task->tsk_id(); ?>">                                
-                                <a href="?page=Task&action=delete&task_id=<?php echo $task->tsk_id(); ?>">
-                                    <img src="Includes/CSS/img/Icons/delete.png" 
-                                         alt="edit" title="Delete Task"
-                                         width="30" height="30"/>
-                                </a>
-                        </button>    
-                    </div>
-                </div>
-            </div> <!--End of content-->
-        </div> <!--End of container-->
-        <?php
-        include("footer.php");
-        ?>
-    </body>
-</html>
+                                                    }
+                                                } else
+                                                {
+                                                echo "Not set";
+                                                }
+                                            ?>
+                                        </div>
+                                    </li>
+                                </div> <!--End of dependencies-->
+                                </ul>
+                                <div id="down">
+                                    <div id="actions">
+                                        <!--Buttons to take users to edit or delete for each project-->
+                                        <!--Edit button-->
+                                        <button type="submit" id="editT">
+                                            <a href="?page=Edit&isProject=false&task_id=<?php echo $task->tsk_id(); ?>">
+                                                <img src="Includes/CSS/img/Icons/edit.png" 
+                                                     alt="edit" title="Edit Task"
+                                                     width="30" height="30"/>
+                                            </a>
+                                        </button>
+                                        <!--Delete button-->
+                                        <button type="submit" id="delT" onclick="return confirmAction('delete',
+                                                        '<?php echo $task->tsk_nm(); ?>')">
+                                            <a href="?page=task&action=delete&task_id=
+                                               <?php echo $task->tsk_id(); ?>">                                
+                                                <a href="?page=Task&action=delete&task_id=<?php echo $task->tsk_id(); ?>">
+                                                    <img src="Includes/CSS/img/Icons/delete.png" 
+                                                         alt="edit" title="Delete Task"
+                                                         width="30" height="30"/>
+                                                </a>
+                                        </button>    
+                                    </div>
+                                </div>
+                            </div> <!--End of content-->
+                            <?php
+                    include("footer.php");
+                    ?>
+                    </div> <!--End of container-->
+                    </body>
+                    </html>

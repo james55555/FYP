@@ -8,9 +8,10 @@
 <html>
     <head>
         <script type="text/javascript" src="Includes/common/Scripts/Validation.js"></script>
+        
         <link rel="stylesheet" type="text/css" href="Includes/CSS/reset.css"/>
         <link rel="stylesheet" type="text/css" href="Includes/CSS/main.css"/>
-        <link rel="stylesheet" type="text/css" href="Includes/CSS/addTask.css"/>
+        <link rel="stylesheet" type="text/css" href="Includes/CSS/TaskAction.css"/>
         <title>Time Management System for Professionals - Add New Task page</title>
     </head>
     <body>

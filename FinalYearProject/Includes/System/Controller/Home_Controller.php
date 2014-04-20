@@ -13,7 +13,6 @@ class Home_Controller extends Main_Controller
         {
         //Get all projects assigned to user in session available
         $this->registry->projects = Project_Model::getAllUserProj($_SESSION['user']->user_id);
-
         //Show the home screen
         $this->registry->View_Template->show('home');
         }

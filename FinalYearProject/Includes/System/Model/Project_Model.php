@@ -72,17 +72,22 @@ class Project_Model extends Validator_Model
     public static
             function getAllUserProj($acc_id)
         {
+        try{
         $db = new Database();
         $db->connect();
-
+        
         $query = "SELECT PR.proj_id, PR.proj_nm, PR.proj_descr"
                 . " FROM PROJECT PR"
                 . " WHERE PR.proj_id IN"
                 . " (SELECT PROJ_ID FROM USER_PROJECT UP"
-                . " WHERE UP.user_id='" . $acc_id . "')";
-
-        $result = mysql_query($query) or die("error: " . mysql_error());
-
+                . " WHERE UP.user_id='" . $acc_id . "');";
+        $result = mysql_query($query);
+        if(!$result){
+            throw new Exception("Error finding projects");
+            }
+        }catch(Exception $e){
+            echo $e->getMessage();
+            }
         $projects = array();
         while ($row = mysql_fetch_object($result))
             {

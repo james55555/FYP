@@ -28,13 +28,22 @@ class Staff_Model extends Generic_Model
             $row = $this->get($staff_id);
             if (!isset($row))
                 {
-                throw new Exception("No Staff_Model found!");
+                throw new Exception("No Staff Model found!");
                 }
+            
             $this->staff_id = $row->STAFF_ID;
             $this->staff_first_nm = $row->STAFF_FIRST_NM;
             $this->staff_last_nm = $row->STAFF_LAST_NM;
             $this->staff_phone = $row->STAFF_PHONE;
             $this->staff_email = $row->STAFF_EMAIL;
+            //If the value is set as String NULL then set to null value
+            foreach ($row as $key => $val)
+                {
+                if ($val === "NULL")
+                    {
+                    $this->set($key, null);
+                    }
+                }
             } catch (Exception $e)
             {
             echo $e->getMessage();
@@ -71,6 +80,23 @@ class Staff_Model extends Generic_Model
             function staff_email()
         {
         return $this->staff_email;
+        }
+
+    public function set($variable, $newValue)
+        {
+        try
+            {
+            $variable = strtolower($variable);
+            
+            $this->$variable = $newValue;
+            if ($this->$variable !== $newValue)
+                {
+                throw new Exception("Error setting new value");
+                }
+            } catch (Exception $ex)
+            {
+            echo $ex->getMessage() . "<br/>" . $ex->getTraceAsString();
+            }
         }
 
     /*

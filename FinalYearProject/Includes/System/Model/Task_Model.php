@@ -161,22 +161,35 @@ class Task_Model
         {
         $db = new Database();
         $fields = $db->filterParameters($fields);
-        $proj_id = $fields['proj_id'];
-        $est_id = $fields['est_id'];
-        $task_id = $fields['task_id'];
-        $staff_id = $fields['staff_id'];
         //Optional field
         if (isset($fields['tDpnd[]']))
             {
             $dpnds = $fields['tDpnd[]'];
+            } else
+            {
+            $dpnds = "NULL";
             }
+        $staffFields = array();
+        $DatesForUpdate = array();
         foreach ($fields as $key => $field)
             {
             if (substr($key, -2) === "id")
                 {
                 //Assign hidden varaibles (not validated) to the $key name
                 ${$key} = $field;
-//Then remove them for array processsing
+                //Then remove them for array processsing
+                unset($fields[$key]);
+                }
+            if (substr($key, 0, 2) === "st" && ($key !== "status" && $key !== "staff_id"))
+                {
+                $staffFields[$key] = $field;
+                //array_push($staffFields, $key[$field]);
+                unset($fields[$key]);
+                }
+            if ($key === "tStart" || $key === "tDeadline" || $key === "tActEnd")
+                {
+                $DatesForUpdate[$key] = $field;
+                //Clean up from $fields array
                 unset($fields[$key]);
                 }
             }
@@ -196,31 +209,53 @@ class Task_Model
           stTel
           stEmail
          */
-        //Vars are initialized in foreach
-        //var_dump($fields['tStart']);
-        //var_dump($fields['tDeadline']);
-        $validDates = Task_Model::validateDates($proj_id, $fields['tStart'], $fields['tDeadline']);
+
+
+        //Validate all task dates    
+        $validDates = Task_Model::validateDates($proj_id, $DatesForUpdate['tStart'], $DatesForUpdate['tDeadline']);
+        $validAct = Validator_Model::validateDate($DatesForUpdate['tActEnd'], true);
         if (is_string($validDates))
             {
             return $validDates;
+            } elseif (is_string($validAct))
+            {
+            return $validAct;
             }
-
-        //Remove variable from fields array for validation processing
-        unset($fields['tStart']);
-        unset($fields['tDeadline']);
-
+        //Validate staff fields
+        $validStaff = Staff_Model::validateStaffFields($staffFields);
+        if (is_string($validStaff) || is_array($validStaff))
+            {
+            return $validStaff;
+            }
+        //Run main task validation
         $valid = Task_Model::validateArray($fields);
         if (is_string($valid) || is_array($valid))
             {
             return $valid;
             }
-        //Set all empty values to NULL for database statement
-        foreach ($fields as $field)
-            {
 
-            if (!isset($field) || $field === '')
+        //Loop through $fields and set empty values to null
+        foreach ($fields as $field => $val)
+            {
+            if (is_string(Validator_Model::optionalVar($val, $field)))
                 {
                 $fields[$field] = "NULL";
+                }
+            }
+        //Loop through $DatesForUpdate and set empty values to null
+        foreach ($DatesForUpdate as $date => $val)
+            {
+            if (is_string(Validator_Model::optionalVar($val, $date)))
+                {
+                $DatesForUpdate[$date] = "NULL";
+                }
+            }
+        //Loop through $staffFields and set empty values to null
+        foreach ($staffFields as $staff => $val)
+            {
+            if (is_string(Validator_Model::optionalVar($val, $staff)))
+                {
+                $staffFields[$staff] = "NULL";
                 }
             }
         //Processing complete, now run update statement
@@ -258,7 +293,7 @@ class Task_Model
                     . " TSK_DESCR='" . $fields['tDescr'] . "',"
                     . " TSK_ID='" . $task_id . "';";
             $task_result = mysql_query($task_update);
-            if (!$task_result && msyql_affected_rows() === 0)
+            if (!$task_result && mysql_affected_rows() === 0)
                 {
                 throw new Exception("No task rows updated!"
                 . "<br/>" . mysql_error());
@@ -267,22 +302,22 @@ class Task_Model
             $est_update = "UPDATE ESTIMATION SET "
                     . "ACT_HR='" . $fields['tAct_hr'] . "',"
                     . " PLN_HR='" . $fields['tPln_hr'] . "',"
-                    . " START_DT='" . $fields['tStart'] . "',"
-                    . " ACT_END_DT='" . $fields['tActEnd'] . "',"
-                    . " EST_END_DT='" . $fields['tDeadline'] . "',"
+                    . " START_DT='" . $DatesForUpdate['tStart'] . "',"
+                    . " ACT_END_DT='" . $DatesForUpdate['tActEnd'] . "',"
+                    . " EST_END_DT='" . $DatesForUpdate['tDeadline'] . "',"
                     . " WHERE EST_ID='" . $est_id . "';";
             $est_result = mysql_query($est_update);
-            if (!$est_result && msyql_affected_rows() === 0)
+            if (!$est_result && mysql_affected_rows() === 0)
                 {
                 throw new Exception("No ESTIMATION rows updated!"
                 . "<br/>" . mysql_error());
                 }
             //Run update query against STAFF table
             $staff_update = "UPDATE STAFF SET "
-                    . "STAFF_FIRST_NM='" . $fields['stFirst'] . "',"
-                    . " STAFF_LAST_NM='" . $fields['stLast'] . "',"
-                    . " STAFF_PHONE='" . $fields['stTel'] . "',"
-                    . " STAFF_EMAIL='" . $fields['stEmail'] . "'"
+                    . "STAFF_FIRST_NM='" . $staffFields['stFirst'] . "',"
+                    . " STAFF_LAST_NM='" . $staffFields['stLast'] . "',"
+                    . " STAFF_PHONE='" . $staffFields['stTel'] . "',"
+                    . " STAFF_EMAIL='" . $staffFields['stEmail'] . "'"
                     . " WHERE STAFF_ID='" . $staff_id . "';";
             $staff_result = mysql_query($staff_update);
 
@@ -290,17 +325,20 @@ class Task_Model
                 {
                 throw new Exception("No STAFF rows updated");
                 }
-            die("died");
-            //Run update against DEPENDENCY table foreach dependency
-            //Associative array ($id = DP_ID && $on = DP_ON)
-            foreach ($dpnds as $id => $on)
+            if ($dpnds !== "NULL")
                 {
-                $dpnd_update = "UPDATE DEPENDENCY SET "
-                        . "DEPENDENCY_ON='" . $on . "'"
-                        . "WHERE DEPENDENCY_ID='" . $id . "';";
-                if (!$dpnd_update && mysql_affected_rows() === 0)
+                foreach ($dpnds as $id => $on)
                     {
-                    throw new Exception("Dependency update failed!");
+                    //Run update against DEPENDENCY table foreach dependency
+                    //Associative array ($id = DP_ID && $on = DP_ON)
+
+                    $dpnd_update = "UPDATE DEPENDENCY SET "
+                            . "DEPENDENCY_ON='" . $on . "'"
+                            . "WHERE DEPENDENCY_ID='" . $id . "';";
+                    if (!$dpnd_update && mysql_affected_rows() === 0)
+                        {
+                        throw new Exception("Dependency update failed!");
+                        }
                     }
                 }
             } catch (Exception $ex)
@@ -564,35 +602,12 @@ class Task_Model
                 $optional = true;
                 $field = "Web Address";
                 $length = 200;
-                } elseif ($field === "stFirst" || $field === "stLast")
-                {
-                $field = "Staff name";
-                $length = 30;
-                } elseif ($field === "stEmail")
-                {
-                $field = "Staff email";
-                $length = 200;
-                $validated = Validator_Model::validateEmail($content, $field);
                 } elseif ($field === "status")
                 {
                 if (!in_array($content, array("", "Not Started", "In Progress", "Finished")))
                     {
                     return "Correct status needs to be supplied";
                     }
-                } elseif ($field === "stTel")
-                {
-                if ($content !== '')
-                    {
-                    $pattern = "[\d{4}]";
-                    $match = preg_match($pattern, $content);
-                    if (!$match)
-                        {
-                        $validated = "Invalid phone number!";
-                        }
-                    }
-                $type = "numeric";
-                $field = "Staff Extension";
-                $length = 4;
                 } elseif ($field === "tPln_hr" || $field === "tAct_hr")
                 {
                 $length = 4;

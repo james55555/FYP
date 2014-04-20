@@ -132,19 +132,22 @@ class Staff_Model extends Generic_Model
         foreach ($fields as $key => $value)
             {
             //If the last 5 chars of field are name then run
-            if (preg_match('/first/i{5}', $key) || preg_match('/last/i{4}', $key))
+            if ($key === "stFirst" || $key === "stLast")
                 {
                 $key = "Staff Name";
                 $length = 30;
-                } elseif (preg_match('/tel/i{3}', $key))
+                } elseif ($key === "stTel")
                 {
-                $pattern = "[\d{4}]";
-                $match = preg_match($pattern, $value);
-                if (!$match)
+                if (!is_String(Validator_Model::optionalVar($value, $key)))
                     {
-                    $validated = "Invalid telephone extension!";
+                    $pattern = "[\d{4}]";
+                    $match = preg_match($pattern, $value);
+                    if (!$match)
+                        {
+                        $validated = "Invalid staff telephone extension!";
+                        }
                     }
-                } elseif (preg_match('/email/i{5}', $key))
+                } elseif ($key === "stEmail")
                 {
                 $key = "Email";
                 $length = 4;

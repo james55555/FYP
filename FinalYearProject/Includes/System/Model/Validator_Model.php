@@ -20,7 +20,7 @@ abstract class Validator_Model
      */
 
     public static function variableCheck($field, $string, $type, $length,
-            $optional)
+            $optional = false)
         {
         // assign the type
         $type = 'is_' . $type;
@@ -136,7 +136,7 @@ abstract class Validator_Model
      * 
      */
 
-    public static function validateDate($date, $optional)
+    public static function validateDate($date, $optional = false)
         {
         $valid = true;
         //If date isn't optional then check it isn't empty

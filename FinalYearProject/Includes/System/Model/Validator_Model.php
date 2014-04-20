@@ -59,26 +59,28 @@ abstract class Validator_Model
     /*
      * Function to validate email specifically as this has slightly 
      * different characters than other methods.
+     * @param (String) $em      String to be validated
+     * @param (String) $field   String to be shown in error message
      */
 
     public static function validateEmail($em, $field)
         {
 
-        $email = Validator_Model::htmlChar($em);
-
         $emailError = array();
-        if (strlen($email) > 50)
+        if (strlen($em) > 50)
             {
             array_push($emailError, $field . "is too long! Must be less than 50 characters");
             }
         //Check if email contains only usable chars
-        if (strlen($email) !== 0)
+        if (strlen($em) !== 0 && isset($em) && $em !== '')
             {
-            if (!preg_match("/([\w\-]+\@[\w\-]+\.[\w\-]+)/", $email))
+            if (!preg_match("/([\w\-]+\@[\w\-]+\.[\w\-]+)/", $em))
                 {
-                die("email chars aren't correct");
                 array_push($emailError, "Ensure " . $field . " contains correct characters!");
                 }
+            }
+        else {
+            return false;
             }
         if (sizeof($emailError) === 0)
             {
@@ -182,7 +184,7 @@ abstract class Validator_Model
      * @return (String) $error      Return the error message for error array
      */
 
-    private static function optionalVar($string, $field)
+    public static function optionalVar($string, $field)
         {
         $error = false;
         // now we see if there is anything in the string

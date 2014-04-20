@@ -68,6 +68,7 @@ class Edit_Controller extends Main_Controller
     public function editTask()
         {
         $this->isProject = false;
+        $this->registry->proj_id = $_POST['proj_id'];
         //Assign posted fields to an array
         $updated = Task_Model::editTask($_POST);
         return $this->showView($updated);
@@ -91,6 +92,9 @@ class Edit_Controller extends Main_Controller
                 } else
                 {
                 $model = "Task";
+                $link = " to "
+                        . "<a href=\"?page=Task&proj_id={$this->registry->proj_id}\">"
+                        . "task list</a>";
                 }
 
             if (is_bool($success) && $success)

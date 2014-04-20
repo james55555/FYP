@@ -35,7 +35,7 @@ abstract class Validator_Model
                 {
                 array_push($errors, $empty);
                 }
-            } elseif (!$type($string))
+            } elseif (!$type($string) && !is_string(Validator_Model::optionalVar($string, $field)))
             {
             $typeErr = "String and type don't match!<br>"
                     . "Field is: " . $field . "<br>"

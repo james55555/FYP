@@ -23,18 +23,20 @@ class Staff_Model extends Generic_Model
     public
             function __construct($staff_id)
         {
-        try {
-        $row = $this->get($staff_id);
-        if(!isset($row)){
-            throw new Exception("No Staff_Model found!");
-            }
-        $this->staff_id = $row->STAFF_ID;
-        $this->staff_first_nm = $row->STAFF_FIRST_NM;
-        $this->staff_last_nm = $row->STAFF_LAST_NM;
-        $this->staff_phone = $row->STAFF_PHONE;
-        $this->staff_email = $row->STAFF_EMAIL;
-        }
-        catch(Exception $e){
+        try
+            {
+            $row = $this->get($staff_id);
+            if (!isset($row))
+                {
+                throw new Exception("No Staff_Model found!");
+                }
+            $this->staff_id = $row->STAFF_ID;
+            $this->staff_first_nm = $row->STAFF_FIRST_NM;
+            $this->staff_last_nm = $row->STAFF_LAST_NM;
+            $this->staff_phone = $row->STAFF_PHONE;
+            $this->staff_email = $row->STAFF_EMAIL;
+            } catch (Exception $e)
+            {
             echo $e->getMessage();
             echo "<br/>" . $e->getTraceAsString();
             return null;
@@ -116,11 +118,49 @@ class Staff_Model extends Generic_Model
 
     public static function delete($staff_id)
         {
-
         $table = "STAFF";
         $field = "STAFF_ID";
         $success = parent::__delete($staff_id, $table, $field);
         return $success;
+        }
+
+    public static function validateStaffFields($fields)
+        {
+        $validated = null;
+        $optional = true;
+        $type = "String";
+        foreach ($fields as $key => $value)
+            {
+            //If the last 5 chars of field are name then run
+            if (preg_match('/first/i{5}', $key) || preg_match('/last/i{4}', $key))
+                {
+                $key = "Staff Name";
+                $length = 30;
+                } elseif (preg_match('/tel/i{3}', $key))
+                {
+                $pattern = "[\d{4}]";
+                $match = preg_match($pattern, $value);
+                if (!$match)
+                    {
+                    $validated = "Invalid telephone extension!";
+                    }
+                } elseif (preg_match('/email/i{5}', $key))
+                {
+                $key = "Email";
+                $length = 4;
+                $validated = Validator_Model::validateEmail($value, "Staff email ");
+                }
+
+            if (!isset($validated))
+                {
+                $validated = Validator_Model::variableCheck($key, $value, $type, $length, $optional);
+                }
+            if (is_array($validated) || is_string($validated))
+                {
+                return $validated;
+                }
+            }
+        return null;
         }
 
     }

@@ -104,7 +104,6 @@ class Pagination
      * 
      * @return (int)       This is the sets available
      */
-
     public function getSets()
         {
         return $this->sets;

@@ -12,7 +12,7 @@
 
         <link rel="stylesheet" type="text/css" href="Includes/CSS/reset.css"/>
         <link rel="stylesheet" type="text/css" href="Includes/CSS/main.css"/>
-        <link rel="stylesheet" type="text/css" href="Includes/CSS/editProject.css"/>
+        <link rel="stylesheet" type="text/css" href="Includes/CSS/ProjectAction.css"/>
 
         <title>Time Management System for Professionals - Edit Project page</title>
     </head>
@@ -43,17 +43,15 @@
                     </div> <!--End of details-->
                     <div id="projDates">
                         <h2>Project Dates</h2>
-                        <label>
-                            Start Date: 
-                        </label>
+                        <label title="When will the project start?">
+                            Start Date: </label>
                         <input type="date" name="pStart" value="<?php echo $estimation->start_dt(); ?>">
                         <label title="The actual hours assigned to the project">
                             Actual hours: 
                         </label><input type="text" name="act_hr" value="<?php echo $estimation->act_hr(); ?>"/>
                         <label title="The date the project actually finished">
                             Actual End Date: 
-                            <input type="date" name="pActEnd" value="<?php echo $estimation->act_end_dt(); ?>"/>
-                        </label>
+                        </label><input type="date" name="pActEnd" value="<?php echo $estimation->act_end_dt(); ?>"/>
                         <label>
                             Deadline: 
                         </label><input type="date" name="pDeadline" 

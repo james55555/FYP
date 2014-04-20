@@ -12,7 +12,7 @@
         
         <link rel="stylesheet" type="text/css" href="Includes/CSS/reset.css"/>
         <link rel="stylesheet" type="text/css" href="Includes/CSS/main.css"/>
-        <link rel="stylesheet" type="text/css" href="Includes/CSS/addProject.css"/>
+        <link rel="stylesheet" type="text/css" href="Includes/CSS/ProjectAction.css"/>
 
         <title>Time Management System for Professionals - Add New Project page</title>
     </head>

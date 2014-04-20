@@ -92,13 +92,14 @@
                 <?php
                 //Localise variable
                 $staff = $this->registry->staff;
+                
                 ?>
                 <div id="staff" class="section">
                     <h2>Associated Staff Members</h2>
-                    <label>First Name: </label><input type="text" name="stFirst"/><?php echo $staff->staff_first_nm(); ?>
-                    <label>Last Name: </label><input type="text" name="stLast"/><?php echo $staff->staff_last_nm(); ?>
-                    <label>Phone Extension: </label><input type="tel" name="stTel"/><?php echo $staff->staff_phone(); ?>
-                    <label>Email: </label><input type="text" name="stEmail"/><?php echo $staff->staff_email(); ?>
+                    <label>First Name: </label><input type="text" name="stFirst" value="<?php echo $staff->staff_first_nm(); ?>"/>
+                    <label>Last Name: </label><input type="text" name="stLast" value="<?php echo $staff->staff_last_nm(); ?>"/>
+                    <label>Phone Extension: </label><input type="tel" name="stTel" value="<?php echo $staff->staff_phone(); ?>"/>
+                    <label>Email: </label><input type="text" name="stEmail" value="<?php echo $staff->staff_email(); ?>"/>
                     <input type="hidden" value="<?php echo $task->proj_id(); ?>"
                            name="proj_id"/>
                     <input type="hidden" value="<?php echo $task->tsk_id(); ?>" 
@@ -108,7 +109,7 @@
                     <input type="hidden" value="<?php echo $staff->staff_id(); ?>" 
                            name="staff_id"/>
                 </div> <!--End of staff-->
-                
+
                 <div id="actions" class="section">
                     <input type="button" value="Cancel" class="button"
                            onclick="history.go(-1);"/>
@@ -118,6 +119,7 @@
                                            'all values')"/>
                 </div><!--End of actions-->
             </form>
+            
         </div> <!--End of container-->
         <?php
         include("footer.php");

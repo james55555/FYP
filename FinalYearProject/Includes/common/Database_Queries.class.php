@@ -15,13 +15,15 @@ class Database_Queries extends Database
      * @param $table    this is the table to run the query against
      * @param $colCheck this is the collumn to check against
      * @param $paramID  this is the provided id to be checked in $colCheck
+     * @param $min      this is the min limit value - used for pagination
+     * @param $max      this is the max limit value - used for pagination
      * 
      * @return  $result this is the required row(s) or value corresponding with $paramID in $reqCol
      * @return null     null result is returned if query has failed
      */
 
     public static function selectFrom($model, $reqCol, $table, $colCheck,
-            $paramID)
+            $paramID, $operand = "=", $num = 0, $asc = true)
         {
         $db = new Database();
         //Ensure paramaters are set up correctly
@@ -34,17 +36,25 @@ class Database_Queries extends Database
         if (is_object($check[3]))
             {
             $id = $check[3]->$colCheck;
+            } elseif (is_array($check[3]))
+            {
+            $id = $check[3][0];
             } else
             {
             $id = $check[3];
             }
+            //Format query ID
+            $qId = "'$id'";
+        //If limit is 0 then return unlimited
+        $limit = $num === 0 ? '' : "LIMIT $num";
         $query = "SELECT distinct " . $check[0]
                 . " FROM " . $check[1]
                 . " WHERE " . $check[2]
-                . "='" . $id . "';";
+                . $operand . $qId
+                . " " . $limit . ";";
         //Process result and return object
         $result = Database_Queries::processResult($query, $model);
-        
+
         return $result;
         }
 
@@ -53,6 +63,7 @@ class Database_Queries extends Database
         $db = new Database();
         $db->connect();
         $result = mysql_query($query);
+        try{
         //If the query returns successful then
         if ($db->querySuccess($result))
             {
@@ -76,9 +87,15 @@ class Database_Queries extends Database
                 return null;
                 }
             }//End of query success
+        
         else
             {
-            throw new Exception("Query Error: " . mysql_error());
+            throw new Exception("Query Error: " . mysql_error() . 
+                    "<br/>Query: " . $query);
+            }
+        }
+        catch(Exception $e){
+            echo $e->getMessage();
             }
         $db->close();
         return $row;

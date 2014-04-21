@@ -17,7 +17,7 @@
     <body>
         <?php
         $task = $this->registry->task;
-        $estimation = $this->registry->estimation;
+        
         include("header.php");
         ?> 
         <div id="container" class="centralBox">
@@ -74,6 +74,7 @@
                             . "value=\"{$task->tsk_id()}\"{$checked}/>";
                             }
                         }
+                        $estimation = $this->registry->estimation;
                     ?>
                 </div><!--End of dependencies-->
                 <div id="estimation" class="section">

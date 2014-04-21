@@ -413,11 +413,7 @@ class Task_Model
         $tStart = $fields['tStart'];
         $tDeadline = $fields['tDeadline'];
         $pln_hr = $fields['pln_hr'];
-        //STAFF data
-        $stFirst = $fields['stFirst'];
-        $stLast = $fields['stLast'];
-        $stTel = $fields['stTel'];
-        $stEmail = $fields['stEmail'];
+
         //Assign dependencies to an array
         $dependencies = array();
         //Sanitise $fields array and remove ID fields (these should be unchangeable)
@@ -538,21 +534,15 @@ class Task_Model
             $taskDpnd_result = mysql_query($taskDpnd_insert);
             }
         //Set insert into STAFF
-        $staff_insert = "INSERT INTO STAFF ("
-                . " STAFF_ID,"
-                . " STAFF_FIRST_NM,"
-                . " STAFF_LAST_NM,"
-                . " STAFF_PHONE,"
-                . " STAFF_EMAIL)"
-                . " VALUES ("
-                . " NULL,"
-                . " '" . $stFirst . "',"
-                . " '" . $stLast . "',"
-                . " '" . $stTel . "',"
-                . " '" . $stEmail . "');";
-        //Run query to insert into table and get the STAFF_ID
-        $staff_result = mysql_query($staff_insert);
-        $staff_id = $db->getInsertId();
+        $staffFields = array($fields['stFirst'], $fields['stLast'], $fields['stTel'], $fields['stEmail']);
+        $staff_result = Staff_Model::addStaffMember($staffFields);
+        if (is_object($staff_result))
+            {
+            $staff_id = $staff_result->staff_id();
+            } else
+            {
+            throw new Exception($staff_result);
+            }
         //Set insert into STAFF_TASK
         $staffTask_insert = "INSERT INTO STAFF_TASK ("
                 . "TSK_ID,"

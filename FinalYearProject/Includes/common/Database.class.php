@@ -107,6 +107,45 @@ class Database
         }
 
     /*
+     * Transaction functions to centralize common statement
+     */
+
+    public function start()
+        {
+        mysql_query("START TRANSACTION;");
+        }
+
+    public function commit()
+        {
+        mysql_query("COMMIT;");
+        }
+
+    public function rollback()
+        {
+        mysql_query("ROLLBACK;");
+        }
+
+    public function endStatement($result)
+        {
+        if ($result)
+            {
+            $this->commit();
+            return true;
+            } else
+            {
+            $this->rollback();
+            return false;
+            }
+        }
+        public function createSQLVars($fields){
+            foreach($fields as $field){
+                if($field === "NULL"){
+                    $field = "'".$field. "'";
+                    }
+                }
+            }
+
+    /*
      * Function to run query and return either result or error message
      * @param (String) $query   This is a string containing the query
      * 
@@ -123,14 +162,16 @@ class Database
             }
         return $result;
         }
-        
-        /*
-         * Get current status of connection
-         * **Used for testing purposes
-         */
-        public function getConn(){
-            return $this->conn;
-            }
+
+    /*
+     * Get current status of connection
+     * **Used for testing purposes
+     */
+
+    public function getConn()
+        {
+        return $this->conn;
+        }
 
     /*
      * Function to ascertain success of mysql_result 

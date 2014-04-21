@@ -28,9 +28,9 @@ class Staff_Model extends Generic_Model
             $row = $this->get($staff_id);
             if (!isset($row))
                 {
-                throw new Exception("No Staff Model found!");
+                throw new Exception("NULL");
                 }
-            
+
             $this->staff_id = $row->STAFF_ID;
             $this->staff_first_nm = $row->STAFF_FIRST_NM;
             $this->staff_last_nm = $row->STAFF_LAST_NM;
@@ -46,9 +46,15 @@ class Staff_Model extends Generic_Model
                 }
             } catch (Exception $e)
             {
-            echo $e->getMessage();
-            echo "<br/>" . $e->getTraceAsString();
-            return null;
+            $var = $e->getMessage();
+            //Insert four values of "NULL" into $fields
+            $fields = array();
+            for ($i = 0; $i !== 4; $i++)
+                {
+                array_push($fields, $var);
+                }
+            //Add a new, empty staff object
+            $this->addStaffMember($fields);
             }
         }
 
@@ -82,12 +88,16 @@ class Staff_Model extends Generic_Model
         return $this->staff_email;
         }
 
+    /*
+     * Inherit method to set a new variable
+     */
+
     public function set($variable, $newValue)
         {
         try
             {
             $variable = strtolower($variable);
-            
+
             $this->$variable = $newValue;
             if ($this->$variable !== $newValue)
                 {
@@ -96,6 +106,17 @@ class Staff_Model extends Generic_Model
             } catch (Exception $ex)
             {
             echo $ex->getMessage() . "<br/>" . $ex->getTraceAsString();
+            }
+        }
+
+    public function setEmptyNull($row)
+        {
+        foreach ($row as $key => $val)
+            {
+            if ($val === "NULL")
+                {
+                $this->set($key, null);
+                }
             }
         }
 
@@ -190,6 +211,43 @@ class Staff_Model extends Generic_Model
                 }
             }
         return null;
+        }
+
+    public static function addStaffMember($fields)
+        {
+        $db = new Database();
+        $db->connect();
+        foreach($fields as $field){
+            if($field !== "NULL"){
+                $field = "'".$field."'";
+                }
+            }
+        mysql_query("START TRANSACTION;");
+        //Set insert into STAFF
+        $staff_insert = "INSERT INTO STAFF ("
+                . " STAFF_ID,"
+                . " STAFF_FIRST_NM,"
+                . " STAFF_LAST_NM,"
+                . " STAFF_PHONE,"
+                . " STAFF_EMAIL)"
+                . " VALUES ("
+                . " NULL,"
+                . " " . $fields[0] . ","
+                . " " . $fields[1] . ","
+                . " " . $fields[2] . ","
+                . " " . $fields[3] . ");";
+        
+        //Run query to insert into table and get the STAFF_ID
+        $staff_result = mysql_query($staff_insert);
+        if ($db->endStatement($staff_result))
+            {
+            $staff = new Staff_Model($db->getInsertId());
+            } else
+            {
+            $staff = "Error inserting into staff database";
+            }
+        $db->close();
+        return $staff;
         }
 
     }

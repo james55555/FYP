@@ -51,7 +51,7 @@ class Estimation_Model extends Generic_Model
             $var = $e->getMessage();
             //Insert four values of "NULL" into $fields
             $fields = array();
-            for ($i = 0; $i !== 4; $i++)
+            for ($i = 0; $i !== 5; $i++)
                 {
                 array_push($fields, $var);
                 }

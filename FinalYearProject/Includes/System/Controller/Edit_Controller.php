@@ -24,24 +24,14 @@ class Edit_Controller extends Main_Controller
             {
             $this->registry->task = new Task_Model($_GET['task_id']);
             $staff_id = $this->registry->task->staff();
-            if (isset($staff_id))
-                {
-                $this->registry->staff = new Staff_Model($staff_id);
-                }
+            $this->registry->staff = new Staff_Model($staff_id);
             //Only create new dependency object if dependencies have been set up
             $dpnd_id = $this->registry->task->dpnd();
-            if (isset($dpnd_id))
-                {
-                $this->registry->dependencies = new Dependency_Model($dpnd_id);
-                }
+            $this->registry->dependencies = new Dependency_Model($dpnd_id);
             $view = 'editTask';
-
             $est_id = $this->registry->task->estimation();
             }
-        if (isset($est_id))
-            {
-            $this->registry->estimation = new Estimation_Model($est_id);
-            }
+        $this->registry->estimation = new Estimation_Model($est_id);
         $this->registry->View_Template->show($view);
         }
 

@@ -357,6 +357,9 @@ class Task_Model
 
     public static function deleteTask($task_id)
         {
+        if(is_object($task_id)){
+            $task_id = $task_id->tsk_id();
+            }
         $task = new Task_Model($task_id);
 //Prepare queries
 //Delete staff data

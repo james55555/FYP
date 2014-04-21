@@ -124,12 +124,12 @@ class Project_Model extends Validator_Model
         //If the task is set but not false then it must be valid
         elseif (isset($deleteTask))
             {
+            //Loop through all project tasks and remove each one
             foreach ($deleteTask as $delete)
                 {
-                Task_Model::deleteTask($delete);
+                Task_Model::deleteTask($delete->tsk_id());
                 }
             }
-
 
         $estimation = Estimation_Model::delete($project->estimate);
         if (!$estimation && isset($estimation))
@@ -140,7 +140,6 @@ class Project_Model extends Validator_Model
 
         if (isset($estRef) && $estRef)
             {
-
             //Delete project from base table - PROJECT
             $projectDelete = Database_Queries::deleteFrom("PROJECT", "proj_id", $proj_id, null);
             //Disassociate project reference to user in USER_PROJECT

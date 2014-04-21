@@ -5,7 +5,7 @@
  *
  * @author James
  */
-class Generic_Model
+abstract class Generic_Model
     {
     /*
      * Function to delete from specified table based on var in field
@@ -30,4 +30,17 @@ class Generic_Model
         return true;
         }
 
+    /*
+     * Function to set any String values as NULL (used for insert) to PHP null
+     */
+
+    public abstract function setEmptyNull($row);
+    /*
+     * @abstract set
+     * Setter method to set any values to a new value
+     * This method cannot be used within this class due to the use of $this->
+     * @param (var) $variable 
+     */
+
+    public abstract function set($variable, $newValue);
     }

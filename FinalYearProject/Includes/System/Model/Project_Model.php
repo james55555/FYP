@@ -350,6 +350,7 @@ class Project_Model extends Validator_Model
 
         foreach ($fields as $field => $content)
             {
+            $optional = false;
             if ($field === "pName")
                 {
                 $length = 30;
@@ -358,6 +359,7 @@ class Project_Model extends Validator_Model
                 {
                 $length = 200;
                 $field = "Project Description";
+                $optional = true;
                 } elseif ($field === "pln_hr")
                 {
                 $length = 4;
@@ -371,7 +373,7 @@ class Project_Model extends Validator_Model
                 }
             if (!isset($validated))
                 {
-                $validated = Validator_Model::variableCheck($field, $content, $type, $length);
+                $validated = Validator_Model::variableCheck($field, $content, $type, $length, $optional);
                 }
             if (is_array($validated) || is_string($validated))
                 {

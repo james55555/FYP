@@ -27,8 +27,12 @@
 }
 
 /*Content design*/
-#content{
-   width: 50%;
+
+#content {
+    width:40%
+}
+#content h1{
+    border-bottom: 1px solid #aaa;
 }
 #content li{
     list-style: none;
@@ -43,6 +47,9 @@
     float:left;
     width: 60%;
     padding-left: 10px;
+}
+#content #taskDetails{
+    padding-top: .75em;
 }
 #down {
     clear:both;

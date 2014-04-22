@@ -154,20 +154,14 @@ abstract class Validator_Model
         //Pre-process date - If it's a string convert to time
         if (is_string($date))
             {
-            //If the date is passed in American format then parse to English
-            $parts = explode("-", $date);
-            if (strlen($parts[0]) === 4)
-                {
-                $temp = $parts[0];
-                array_splice($parts, 0, 1);
-                array_push($parts, $temp);
-                }
-            $date = new DateTime($parts[0], $parts[1], $parts[2]);
+            //Parse date
+            $parsedDt = date_parse($date);
             //Check date is in valid format
-            if (!checkdate($parts[0], $parts[1], $parts[2]))
+            if (!checkdate($parsedDt['month'], $parsedDt['day'], $parsedDt['year']))
                 {
                 return "Invalid date format!";
                 }
+                $date = new DateTime($date);
             }
         $maxDate = new DateTime('2200-01-01');
         $minDate = new DateTime('1900-01-01');

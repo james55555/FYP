@@ -21,7 +21,9 @@ class Add_Controller extends Main_Controller
             } else
             {
             $this->registry->projTasks = Task_Model::getAllTasks($_GET['proj_id']);
-            
+            //Make dates available to view
+            $project = new Project_Model($_GET['proj_id']);
+            $this->registry->projEst = new Estimation_Model($project->estimation());
             $this->registry->View_Template->show('addTask');
             }
         }

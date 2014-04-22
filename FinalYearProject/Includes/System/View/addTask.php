@@ -59,6 +59,9 @@
                     </div><!--End of dependencies-->
                     <div id="estimation" class="section">
                         <h2>Task Dates</h2>
+                        <p id="projDt">Dates must be between <?php echo $this->registry->projEst->start_dt()
+                        . " and " . $this->registry->projEst->est_end_dt();
+                        ?></p>
                         <label title="When will the task start?">
                             Start Date: </label><input type="date" name="tStart"/>
                         <label title="When will the task end?">
@@ -82,7 +85,7 @@
                         <input type="submit" value="Submit" class="button" id="newUser"/>
                         <input type="reset" value="Reset" class="button" 
                                onclick="return confirmAction('reset',
-                                           'all values')"/>
+                                               'all values')"/>
                     </div><!--End of actions-->
                 </form>
             </div> <!--End of content-->

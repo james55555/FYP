@@ -36,16 +36,7 @@ Class Registry
         return $this->variables[$key];
         }
         catch(Exception $e){
-         echo "<p>There has been an error: " . $e->getMessage();   
+         echo "<p>There has been an error: " . $e->getMessage() . "</p>";   
             }
         }
-        
-        /*
-         * Function to remove variables from Global registry
-         * @param $var variable
-         */
-        public function remove($var){
-            unset($this->$var[$key]);
-            }
-
     }

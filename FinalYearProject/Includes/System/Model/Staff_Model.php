@@ -217,11 +217,7 @@ class Staff_Model extends Generic_Model
         {
         $db = new Database();
         $db->connect();
-        foreach($fields as $field){
-            if($field !== "NULL"){
-                $field = "'".$field."'";
-                }
-            }
+
         mysql_query("START TRANSACTION;");
         //Set insert into STAFF
         $staff_insert = "INSERT INTO STAFF ("
@@ -232,16 +228,17 @@ class Staff_Model extends Generic_Model
                 . " STAFF_EMAIL)"
                 . " VALUES ("
                 . " NULL,"
-                . " " . $fields[0] . ","
-                . " " . $fields[1] . ","
-                . " " . $fields[2] . ","
-                . " " . $fields[3] . ");";
+                . " '" . $fields[0] . "',"
+                . " '" . $fields[1] . "',"
+                . " '" . $fields[2] . "',"
+                . " '" . $fields[3] . "');";
         
         //Run query to insert into table and get the STAFF_ID
         $staff_result = mysql_query($staff_insert);
+        $staff_id = $db->getInsertId();
         if ($db->endStatement($staff_result))
             {
-            $staff = new Staff_Model($db->getInsertId());
+            $staff = new Staff_Model($staff_id);
             } else
             {
             $staff = "Error inserting into staff database";

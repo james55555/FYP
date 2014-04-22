@@ -137,13 +137,15 @@ class Database
             return false;
             }
         }
-        public function createSQLVars($fields){
-            foreach($fields as $field){
-                if($field === "NULL"){
-                    $field = "'".$field. "'";
-                    }
-                }
+
+    public function createSQLVars($fields)
+        {
+        foreach ($fields as $field)
+            {
+            $field = "'" . $field . "'";
             }
+            return $fields;
+        }
 
     /*
      * Function to run query and return either result or error message

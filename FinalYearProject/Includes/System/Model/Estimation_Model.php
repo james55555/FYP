@@ -193,7 +193,10 @@ class Estimation_Model extends Generic_Model
         {
         $db = new Database();
         $db->connect();
-        mysql_query("START TRANSACTION;");
+        //format all null variables with ''
+        $fields = $db->createSQLVars($fields);
+        
+        $db->start();
         //Set insert into ESTIMATION
         $estimation_insert = "INSERT INTO ESTIMATION ("
                 . "EST_ID, "
@@ -203,20 +206,21 @@ class Estimation_Model extends Generic_Model
                 . "ACT_END_DT, "
                 . "EST_END_DT) "
                 . "VALUES( "
-                . "NULL, "
-                . "'" . $fields[0] . "'', "
-                . "'" . $fields[1] . "', "
-                . "'" . $fields[2] . "', "
-                . "'" . $fields[3] . "', "
-                . "'" . $fields[4] . "');";
+                . "NULL,"
+                . " '" . $fields[0] . "',"
+                . " '" . $fields[1] . "',"
+                . " '" . $fields[2] . "',"
+                . " '" . $fields[3] . "',"
+                . " '" . $fields[4] . "');";
         //Run query and get estimation id.
         $estimation_result = mysql_query($estimation_insert);
+        $est_id = $db->getInsertId();
         if ($db->endStatement($estimation_result))
             {
-            $estimation = new Estimation_Model($db->getInsertId());
+            $estimation = new Estimation_Model($est_id);
             } else
             {
-            $estimation = "Error inserting into estimation";
+            $estimation = "Error inserting into estimation<br/>";
             }
         $db->close();
         return $estimation;

@@ -404,6 +404,7 @@ class Task_Model
         {
         $db = new Database();
         $fields = $db->filterParameters($fields);
+
         //Optional field
         if (isset($fields['tDpnd[]']))
             {
@@ -443,7 +444,6 @@ class Task_Model
             {
             return $validDates;
             }
-        die();
         //Validate staff fields
         $validStaff = Staff_Model::validateStaffFields($staffFields);
         if (is_string($validStaff) || is_array($validStaff))
@@ -481,72 +481,92 @@ class Task_Model
                 $staffFields[$staff] = "NULL";
                 }
             }
-        //Processing complete, now run update statement
-        //Re-open database connection to run queries agains
-        $db->connect();
-        //Start insert transaction
-        $db->start();
-
-        //Set insert into TASK string
-        $task_insert = "INSERT INTO TASK ("
-                . " TSK_ID,"
-                . " PROJ_ID,"
-                . " STATUS,"
-                . " TASK_NM,"
-                . " WEB_ADDR,"
-                . " TSK_DESCR"
-                . ") VALUES ("
-                . "NULL,"
-                . " '" . $proj_id . "',"
-                . " '" . $status . "',"
-                . " '" . $tName . "',"
-                . " '" . $web_addr . "',"
-                . " '" . $tDescr . "');";
-        //Run the query and get the task ID
-        $task_result = mysql_query($task_insert);
-        $task_id = $db->getInsertId();
-
-        //Set insert into ESTIMATION
-        $estimation_insert = "INSERT INTO ESTIMATION ("
-                . "EST_ID, "
-                . "ACT_HR, "
-                . "PLN_HR, "
-                . "START_DT, "
-                . "ACT_END_DT, "
-                . "EST_END_DT) "
-                . "VALUES( "
-                . "NULL, "
-                . "NULL, "
-                . "'" . $pln_hr . "', "
-                . "'" . $tStart . "', "
-                . "NULL, "
-                . "'" . $tDeadline . "');";
-
-        //Run query and get estimation id.
-        $estimation_result = mysql_query($estimation_insert);
-        $est_id = $db->getInsertId();
-        //Set query to create link between TASK and ESTIMATION
-        $taskEst_insert = "INSERT INTO TASK_ESTIMATION ("
-                . "tsk_id,"
-                . " est_id)"
-                . " VALUES( "
-                . " '" . $task_id . "',"
-                . " '" . $est_id . "');";
-        $taskEst_result = mysql_query($taskEst_insert);
-        //Foreach dependency selected, insert into DEPENDENCY tables
-        // Tables: DEPENDENCY, TASK_DEPENDENCY
-        foreach ($dependencies as $id)
+        try
             {
-            //Set query for DEPENDENCY insert
-            $dpnd_insert = "INSERT INTO DEPENDENCY ("
-                    . "DEPENDENCY_ID,"
-                    . " DEPENDENCY_ON)"
-                    . " VALUES ( "
-                    . "NULL, "
-                    . "'" . $id . "');";
-            //Insert into DEPENDENCY table
-            $dpnd_result = mysql_query($dpnd_insert);
-            $dpnd_id = $db->getInsertId();
+            //Processing complete, now run update statement
+            //Re-open database connection to run queries agains
+            $db->connect();
+            //Start insert transaction
+            $db->start();
+
+            //Set insert into TASK string
+            $task_insert = "INSERT INTO TASK ("
+                    . " TSK_ID,"
+                    . " PROJ_ID,"
+                    . " STATUS,"
+                    . " TASK_NM,"
+                    . " WEB_ADDR,"
+                    . " TSK_DESCR"
+                    . ") VALUES ("
+                    . "NULL,"
+                    . " '" . $proj_id . "',"
+                    . " '" . $fields['status'] . "',"
+                    . " '" . $fields['tName'] . "',"
+                    . " '" . $fields['web_addr'] . "',"
+                    . " '" . $fields['tDescr'] . "');";
+            //Run the query and get the task ID
+            $task_result = mysql_query($task_insert);
+            $task_id = $db->getInsertId();
+              if (!$db->endStatement($task_result))
+              {
+              throw new Exception("Error inserting into task");
+              }
+            $db->close(); //Close database as following construct and destruct db
+            //Run estimation insert query
+            $estimationFields = array("NULL",
+                "NULL",
+                $fields['tPln_hr'],
+                $DatesForUpdate['tStart']->format('Y-m-d'),
+                "NULL",
+                $DatesForUpdate['tDeadline']->format('Y-m-d'));
+            $est_result = Estimation_Model::add($estimationFields);
+            if (is_object($est_result))
+                {
+                $est_id = $est_result->est_id();
+                } else
+                {
+                throw new Exception($est_result . mysql_error());
+                }
+            //Run staff insert query
+            $stfields = array($fields['stFirst'], $fields['stLast'], $fields['stTel'], $fields['stEmail']);
+            $staff_result = Staff_Model::addStaffMember($stfields);
+            if (is_object($staff_result))
+                {
+                $staff_id = $staff_result->staff_id();
+                } else
+                {
+                throw new Exception($staff_result);
+                }
+
+            //Run dependency insert
+            if ($dpnds === "NULL")
+                {
+                $dpndFields = array("NULL", "NULL");
+                } elseif (is_array($dpnds))
+                {
+                $dpndFields = array("NULL", $dpnds);
+                }
+            $dpnd_result = Dependency_Model::add($dpndFields);
+            if (is_object($dpnd_result))
+                {
+                $dpnd_id = $dpnd_result->staff_id();
+                } else
+                {
+                throw new Exception($dpnd_result);
+                }
+            $db->connect(); //Reconnect to the db
+            //Set query to create link between TASK and ESTIMATION
+            $taskEst_insert = "INSERT INTO TASK_ESTIMATION ("
+                    . "tsk_id,"
+                    . " est_id)"
+                    . " VALUES( "
+                    . " '" . $task_id . "',"
+                    . " '" . $est_id . "');";
+            $taskEst_result = mysql_query($taskEst_insert);
+            if (!$db->endStatement($taskEst_result))
+                {
+                throw new Exception("Error inserting into task estimation");
+                }
             //Set query for TASK_DEPENDENCY insert
             $taskDpnd_insert = "INSERT INTO TASK_DEPENDENCY ("
                     . "DEPENDENCY_ID,"
@@ -556,43 +576,29 @@ class Task_Model
                     . " '" . $dpnd_id . "');";
             //Insert into TASK_DEPENDENCY table
             $taskDpnd_result = mysql_query($taskDpnd_insert);
+            if (!$db->endStatement($taskDpnd_result))
+                {
+                throw new Exception("Error inserting into task dependency");
+                }
+            //Set insert into STAFF
+            //Set insert into STAFF_TASK
+            $staffTask_insert = "INSERT INTO STAFF_TASK ("
+                    . "TSK_ID,"
+                    . " STAFF_ID)"
+                    . " VALUES ("
+                    . " '" . $task_id . "',"
+                    . " '" . $staff_id . "');";
+            //Run the query to insert into table
+            $staffTask_result = mysql_query($staffTask_insert);
+            if (!$db->endStatement($staffTask_result))
+                {
+                throw new Exception("Error inserting into staff task");
+                }
+            return new Task_Model($task_id);
+            } catch (Exception $e)
+            {
+            die($e->getMessage());
             }
-        //Set insert into STAFF
-        $staffFields = array($fields['stFirst'], $fields['stLast'], $fields['stTel'], $fields['stEmail']);
-        $staff_result = Staff_Model::addStaffMember($staffFields);
-        if (is_object($staff_result))
-            {
-            $staff_id = $staff_result->staff_id();
-            } else
-            {
-            throw new Exception($staff_result);
-            }
-        //Set insert into STAFF_TASK
-        $staffTask_insert = "INSERT INTO STAFF_TASK ("
-                . "TSK_ID,"
-                . " STAFF_ID)"
-                . " VALUES ("
-                . " '" . $task_id . "',"
-                . " '" . $staff_id . "');";
-        //Run the query to insert into table
-        $staffTask_result = mysql_query($staffTask_insert);
-        if (!isset($dpnd_result) || !isset($taskDpnd_result))
-            {
-            $dpnd_result = true;
-            $taskDpnd_result = true;
-            }
-        //If all queries have returned true then COMMIT the TRANSACTION
-        if ($task_result && $estimation_result && $taskEst_result && $dpnd_result && $taskDpnd_result && $staff_result && $staffTask_result)
-            {
-            mysql_query("COMMIT;");
-            } else
-            {
-            mysql_query("ROLLBACK;");
-            $db->close();
-            return "Error inserting into the database<br/>";
-            }
-        $db->close();
-        return new Task_Model($task_id);
         }
 
     public static function validateArray($fields)
@@ -741,11 +747,33 @@ class Task_Model
                 unset($var);
                 }
             }
-            unset($vars);
+        unset($vars);
+        if (is_object($dates["start"]))
+            {
+            $projStart = $dates["start"]->format('d-m-Y');
+            } elseif (!isset($dates["start"]))
+            {
+            $projStart = "Not set";
+            } else
+            {
+            $projStart = $dates["start"];
+            }
+        if (is_object($dates["end"]))
+            {
+            $projEnd = $dates["end"]->format('d-m-Y');
+            } elseif (!isset($dates["end"]))
+            {
+            $projEnd = "Not set";
+            } else
+            {
+            $projEnd = $dates["end"];
+            }
+
         //Create error message to return
         $errorMsg = "Dates must be within the project timeline!"
-                . "<br/>Project start date is: " . $dates["start"]->format('d-m-Y')
-                . "<br/>Project deadline is: " . $dates["end"]->format('d-m-Y');
+                . "<br/>Project start date is: " . $projStart
+                . "<br/>Project deadline is: " . $projEnd;
+
         //If date is outside of start and end date then return error message
         if ($dates["start"] > $dates["date"] ||
                 $dates["end"] < $dates["date"])

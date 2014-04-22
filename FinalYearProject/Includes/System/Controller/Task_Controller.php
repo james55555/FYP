@@ -17,10 +17,19 @@ class Task_Controller extends Main_Controller
     public
             function main()
         {
-        $this->registry->project_tasks = Task_Model::getAllTasks($_GET['proj_id']);
+        $tasks = Task_Model::getAllTasks($_GET['proj_id']);
+        //If there are more than 1 task, they will be keyed numerically as objects
+        if (isset($tasks[0]) && is_object($tasks[0]))
+            {
+            $this->registry->project_tasks = $tasks;
+            //If there is only one task, add it to an array so it can be parsed in the view
+            } else
+            {
+            $this->registry->project_tasks = array($tasks);
+            }
+
         $this->project = new Project_Model($_GET['proj_id']);
-        $this->registry->projectEstimation = Estimation_Model::
-                get($this->project->estimation());
+        $this->registry->projectEstimation = new Estimation_Model($this->project->estimation());
         //Show the projectTasks view
         $this->registry->View_Template->show('projectTasks');
         }
@@ -29,15 +38,17 @@ class Task_Controller extends Main_Controller
      * Function to set individual task variables and 
      * show the task details page
      */
+
     public function details()
         {
         $this->registry->task = new Task_Model($_GET['task_id']);
         $this->registry->project = new Project_Model
                 ($this->registry->task->proj_id());
         $est_id = $this->registry->task->estimation();
-        if(isset($est_id)){
-        $this->registry->taskEstimation = Estimation_Model::get($this->registry->task->estimation());
-        }        
+        if (isset($est_id))
+            {
+            $this->registry->taskEstimation = Estimation_Model::get($this->registry->task->estimation());
+            }
 //Optional field
         $this->registry->taskStaff = Staff_Model::get($this->registry->task->staff());
         //Optional field
@@ -94,4 +105,5 @@ class Task_Controller extends Main_Controller
         {
         $this->registry->View_Template->show('addTask');
         }
+
     }

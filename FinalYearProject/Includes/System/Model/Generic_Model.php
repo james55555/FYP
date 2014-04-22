@@ -17,7 +17,6 @@ abstract class Generic_Model
 
     public static function __delete($var, $table, $field)
         {
-        die(var_dump($var));
         //Trim beginning and end of $var for ' character
         $var = trim($var, "'");
         //Run the query

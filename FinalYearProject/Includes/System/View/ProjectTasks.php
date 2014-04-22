@@ -28,8 +28,8 @@
                     <h1 id="title">Tasks for project: <?php echo $proj_id ?></h1><br/>
                     <?php
                     $noEstimate = "No estimate set.";
-                    $estExists = (array)$this->registry->projectEstimation;
-                    if (isset($estExists))
+
+                    if (is_object($this->registry->projectEstimation))
                         {
                         $projEstimate = $this->registry->projectEstimation;
                         $stCheck = $projEstimate->start_dt;

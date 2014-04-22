@@ -11,6 +11,8 @@
 <html>
     <!--DOCTYPE HTML-->
     <head>
+        <script type="text/javascript" src="Includes/common/Scripts/confirmAction.js"></script>
+        
         <link rel="stylesheet" type="text/css" href="Includes/CSS/reset.css"/>
         <link rel="stylesheet" type="text/css" href="Includes/CSS/main.css"/>
         <link rel="stylesheet" type="text/css" href="Includes/CSS/taskDetails.css"/>
@@ -190,7 +192,7 @@
                                                 $dependencies = $this->registry->taskDependencies;
                                                 if (is_array($dependencies))
                                                     {
-                                                    
+
                                                     foreach ($dependencies as
                                                                 $dpTask)
                                                         {
@@ -215,30 +217,28 @@
                                     <div id="actions">
                                         <!--Buttons to take users to edit or delete for each project-->
                                         <!--Edit button-->
-                                        <button type="submit" id="editT">
-                                            <a href="?page=Edit&isProject=false&task_id=<?php echo $task->tsk_id(); ?>">
+                                        <a href="?page=Edit&isProject=false&task_id=<?php echo $task->tsk_id(); ?>">
+                                            <button type="submit" id="editT">
                                                 <img src="Includes/CSS/img/Icons/edit.png" 
                                                      alt="edit" title="Edit Task"
                                                      width="30" height="30"/>
-                                            </a>
-                                        </button>
+                                            </button>
+                                        </a>
                                         <!--Delete button-->
-                                        <button type="submit" id="delT" onclick="return confirmAction('delete',
-                                                        '<?php echo $task->tsk_nm(); ?>')">
-                                            <a href="?page=task&action=delete&task_id=
-                                               <?php echo $task->tsk_id(); ?>">                                
-                                                <a href="?page=Task&action=delete&task_id=<?php echo $task->tsk_id(); ?>">
-                                                    <img src="Includes/CSS/img/Icons/delete.png" 
-                                                         alt="edit" title="Delete Task"
-                                                         width="30" height="30"/>
-                                                </a>
-                                        </button>    
+                                        <a href="?page=Task&action=delete&task_id=<?php echo $task->tsk_id(); ?>">
+                                            <button type="submit" id="delT" onclick="return confirmAction('delete',
+                                                            '<?php echo $task->tsk_nm(); ?>')">                             
+                                                <img src="Includes/CSS/img/Icons/delete.png" 
+                                                     alt="edit" title="Delete Task"
+                                                     width="30" height="30"/>
+                                            </button>
+                                        </a>
                                     </div>
                                 </div>
-                            </div> <!--End of content-->
-                            <?php
+                            </div> <!--End of content-->      
+                    </div> <!--End of container-->
+                    <?php
                     include("footer.php");
                     ?>
-                    </div> <!--End of container-->
                     </body>
                     </html>

@@ -31,13 +31,22 @@ class Estimation_Model extends Generic_Model
                 {
                 throw new Exception("NULL");
                 }
+            foreach ($row as $key => $val)
+                {
+                if ($key === "start_dt" ||
+                        $key === "act_end_dt" ||
+                        $key === "est_end_dt")
+                    {
+                    $row->$key = new DateTime($val);
+                    }
+                }
             //If the no error has been thrown then continue creating object
             $this->est_id = $row->est_id;
             $this->act_hr = $row->act_hr;
             $this->pln_hr = $row->pln_hr;
-            $this->start_dt = $row->start_dt;
-            $this->act_end_dt = $row->act_end_dt;
-            $this->est_end_dt = $row->est_end_dt;
+            $this->start_dt = $row->start_dt->format('d-m-Y');
+            $this->act_end_dt = $row->act_end_dt->format('d-m-Y');
+            $this->est_end_dt = $row->est_end_dt->format('d-m-Y');
             //If the value is set as String NULL then set to null value
             foreach ($row as $key => $val)
                 {
@@ -195,7 +204,7 @@ class Estimation_Model extends Generic_Model
         $db->connect();
         //format all null variables with ''
         $fields = $db->createSQLVars($fields);
-        
+
         $db->start();
         //Set insert into ESTIMATION
         $estimation_insert = "INSERT INTO ESTIMATION ("

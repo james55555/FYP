@@ -124,9 +124,9 @@ class Dependency_Model extends Generic_Model
         //format all null variables with ''
         $db->createSQLVars($fields);
         //start transaction
-        $taskDpnd_insert = "INSERT INTO TASK_DEPENDENCY ("
+        $taskDpnd_insert = "INSERT INTO DEPENDENCY ("
                 . "DEPENDENCY_ID,"
-                . " TSK_ID)"
+                . " DEPENDENT_ON)"
                 . " VALUES ("
                 . " '" . $fields[0] . "',"
                 . " '" . $fields[1] . "');";
@@ -135,20 +135,13 @@ class Dependency_Model extends Generic_Model
             foreach ($fields[1] as $dpnd)
                 {
                 $db->start();
-                $taskDpnd_insert = "INSERT INTO TASK_DEPENDENCY ("
+                $taskDpnd_insert = "INSERT INTO DEPENDENCY ("
                         . "DEPENDENCY_ID,"
-                        . " TSK_ID)"
+                        . " DEPENDENT_ON)"
                         . " VALUES ("
                         . " '" . $fields[0] . "',"
-                        . " '" . $dpnd . "');";
-                $taskDpnd_result = mysql_quuery($taskDpnd_insert);
-                if (!$db->endStatement($taskDpnd_result))
-                    {
-                    return "Error inserting into dependency database!";
-                    }
+                        . " '" . $dpnd . "');" ." " . $taskDpnd_insert;
                 }
-            $db->close();
-            return new Dependency_Model($db->getInsertId());
             }
         //Run the query
         $taskDpnd_result = mysql_query($taskDpnd_insert);
@@ -158,7 +151,7 @@ class Dependency_Model extends Generic_Model
             $dependencies = new Dependency_Model($dpnd_id);
             } else
             {
-            $dependencies = "Error inserting into dependency database!";
+            $dependencies = "Error inserting into dependency database!" . mysql_error();
             }
         $db->close();
         return $dependencies;

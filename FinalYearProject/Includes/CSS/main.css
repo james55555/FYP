@@ -57,7 +57,11 @@ input[type=date] {
     font-family: Calibri, sans-serif;
     overflow: hidden;
     padding: 1px;
-    
+}
+textarea {
+    width: 50%;
+    max-width: 49%;
+    max-height: 75px; 
 }
 /*Set #container defaults*/
 #container

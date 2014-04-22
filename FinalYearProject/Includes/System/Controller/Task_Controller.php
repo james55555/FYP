@@ -23,9 +23,12 @@ class Task_Controller extends Main_Controller
             {
             $this->registry->project_tasks = $tasks;
             //If there is only one task, add it to an array so it can be parsed in the view
-            } else
+            } elseif (is_array($tasks))
             {
             $this->registry->project_tasks = array($tasks);
+            } else
+            {
+            $this->registry->project_tasks = null;
             }
 
         $this->project = new Project_Model($_GET['proj_id']);

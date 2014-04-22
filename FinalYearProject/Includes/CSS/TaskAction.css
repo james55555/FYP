@@ -2,7 +2,7 @@
     Created on : 07-Apr-2014, 10:32:20
     Author     : James
 */
-#container{
+#content{
     /*Position block*/
     margin: 0 auto;
     background-color: #FFFFFF;
@@ -12,33 +12,33 @@
     display: block;
     overflow: auto;
 }
-#container h1 {
+#content h1 {
     border-bottom: solid 1px #aaa;
 }
-#container .section h2{
+#content .section h2{
     padding-top: .75em;
     margin-bottom: .75em;
     padding: 4px;
     border-bottom: solid 1px #aaa;
 }
-#container label {
+#content label {
     float:left;
     width: 50%
 }
-#container input[type=text],
-#container input[type=date] {
+#content input[type=text],
+#content input[type=date] {
     float:left;
     width: 50%;
     padding: 2px;
 }
 
-#container textarea {
+#content textarea {
     font-family: inherit;
     font-size: inherit;
     max-width: 49%;
     max-height: 75px; 
 }
-#container .section #actions {
+#content .section #actions {
     text-align: center;
     margin-top: 20px;
 }

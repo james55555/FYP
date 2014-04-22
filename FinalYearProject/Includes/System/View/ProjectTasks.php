@@ -27,10 +27,11 @@
                     <?php $proj_id = $_GET['proj_id']; ?>
                     <h1 id="title">Tasks for project: <?php echo $proj_id ?></h1><br/>
                     <?php
-                    $projEstimate = $this->registry->projectEstimation;
                     $noEstimate = "No estimate set.";
-                    if (isset($projEstimate))
+                    $estExists = (array)$this->registry->projectEstimation;
+                    if (isset($estExists))
                         {
+                        $projEstimate = $this->registry->projectEstimation;
                         $stCheck = $projEstimate->start_dt;
                         $edCheck = $projEstimate->est_end_dt;
                         } else

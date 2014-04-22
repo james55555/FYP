@@ -15,11 +15,13 @@ class Add_Controller extends Main_Controller
     public function main()
         {
         //Direct to page depending on whether the object is project or task
-        if ($_GET['isProj'])
+        if (isset($_GET['isProj']) && $_GET['isProj'] === "true")
             {
             $this->registry->View_Template->show('addProject');
             } else
             {
+            $this->registry->projTasks = Task_Model::getAllTasks($_GET['proj_id']);
+            
             $this->registry->View_Template->show('addTask');
             }
         }
@@ -37,7 +39,6 @@ class Add_Controller extends Main_Controller
         $fields['pln_hr'] = $_POST['pln_hr'];
 
         $this->newProject = Project_Model::addProject($fields);
-
         return $this->showView();
         }
 
@@ -45,31 +46,8 @@ class Add_Controller extends Main_Controller
         {
         $this->isProject = false;
         //assign to an array
-        $fields = array();
-        //TASK data
-        $fields['proj_id'] = $_POST['proj_id'];
-        $fields['tName'] = $_POST['tName'];
-        $fields['tDescr'] = $_POST['tDescr'];
-        $fields['web_addr'] = $_POST['web_addr'];
-        if (!isset($_POST['tDpnd']))
-            {
-            $fields['tDpnd'] = null;
-            } else
-            {
-            $fields['tDpnd'] = $_POST['tDpnd'];
-            }
-        $fields['status'] = $_POST['status'];
-        //ESTIMATION data
-        $fields['tStart'] = $_POST['tStart'];
-        $fields['tDeadline'] = $_POST['tDeadline'];
-        $fields['pln_hr'] = $_POST['tPln_hr'];
-        //STAFF data
-        $fields['stFirst'] = $_POST['stFirst'];
-        $fields['stLast'] = $_POST['stLast'];
-        $fields['stTel'] = $_POST['stTel'];
-        $fields['stEmail'] = $_POST['stEmail'];
 
-        $this->newTask = Task_Model::addTask($fields);
+        $this->newTask = Task_Model::addTask($_POST);
 
         return $this->showView();
         }
@@ -100,7 +78,7 @@ class Add_Controller extends Main_Controller
                         . "to view your projects";
                 }
             } elseif (!$this->isProject)
-            {  
+            {
             if (is_array($this->newTask) ||
                     is_string($this->newTask))
                 {

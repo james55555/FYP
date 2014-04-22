@@ -357,7 +357,8 @@ class Task_Model
 
     public static function deleteTask($task_id)
         {
-        if(is_object($task_id)){
+        if (is_object($task_id))
+            {
             $task_id = $task_id->tsk_id();
             }
         $task = new Task_Model($task_id);
@@ -402,24 +403,17 @@ class Task_Model
     public static function addTask($fields)
         {
         $db = new Database();
-        $db->connect();
         $fields = $db->filterParameters($fields);
-        //Close database connection for encapsulation purposes
-        $db->close();
-        $proj_id = $fields['proj_id'];
-        //TASK data
-        $tName = $fields['tName'];
-        $tDescr = $fields['tDescr'];
-        $web_addr = $fields['web_addr'];
-        $status = $fields['status'];
-        //ESTIMATION data
-        $tStart = $fields['tStart'];
-        $tDeadline = $fields['tDeadline'];
-        $pln_hr = $fields['pln_hr'];
-
-        //Assign dependencies to an array
-        $dependencies = array();
-        //Sanitise $fields array and remove ID fields (these should be unchangeable)
+        //Optional field
+        if (isset($fields['tDpnd[]']))
+            {
+            $dpnds = $fields['tDpnd[]'];
+            } else
+            {
+            $dpnds = "NULL";
+            }
+        $staffFields = array();
+        $DatesForUpdate = array();
         foreach ($fields as $key => $field)
             {
             if (substr($key, -2) === "id")
@@ -429,42 +423,69 @@ class Task_Model
                 //Then remove them for array processsing
                 unset($fields[$key]);
                 }
-            }
-        //If the posted dependencies are set then validate each one
-        if (!empty($fields['tDpnd']))
-            {
-            foreach ($fields['tDpnd'] as $dpnd)
+            if (substr($key, 0, 2) === "st" && ($key !== "status" && $key !== "staff_id"))
                 {
-                array_push($dependencies, $dpnd);
+                $staffFields[$key] = $field;
+                //array_push($staffFields, $key[$field]);
+                unset($fields[$key]);
+                }
+            if ($key === "tStart" || $key === "tDeadline" || $key === "tActEnd")
+                {
+                $DatesForUpdate[$key] = $field;
+                $DatesForUpdate[$key] = new DateTime($DatesForUpdate[$key]);
+                //Clean up from $fields array
+                unset($fields[$key]);
                 }
             }
-        //Remove the tDpnd index from $fields array
-        unset($fields['tDpnd']);
-        $validDependencies = Task_Model::ValidateDependencies($dependencies);
-
-        //Check that tasks dates are between project dates and start is before end
-        $validDates = Task_Model::validateDates($proj_id, $tStart, $tDeadline);
-        unset($fields['tStart']);
-        unset($fields['tDeadline']);
-        //Run the fields through validation
-        $valid = Task_Model::validateArray($fields);
-        //If errors are returned from then return the provided error message
-        if (is_array($valid) || is_string($valid))
-            {
-            return $valid;
-            } elseif (is_array($validDependencies) ||
-                is_string($validDependencies))
-            {
-            return $validDependencies;
-            } elseif (is_string($validDates))
+        //Validate all task dates    
+        $validDates = Task_Model::validateDates($proj_id, $DatesForUpdate['tStart'], $DatesForUpdate['tDeadline']);
+        if (is_string($validDates))
             {
             return $validDates;
             }
+        die();
+        //Validate staff fields
+        $validStaff = Staff_Model::validateStaffFields($staffFields);
+        if (is_string($validStaff) || is_array($validStaff))
+            {
+            return $validStaff;
+            }
+        //Run main task validation
+        $valid = Task_Model::validateArray($fields);
+        if (is_string($valid) || is_array($valid))
+            {
+            return $valid;
+            }
 
+        //Loop through $fields and set empty values to null
+        foreach ($fields as $field => $val)
+            {
+            if (is_string(Validator_Model::optionalVar($val, $field)))
+                {
+                $fields[$field] = "NULL";
+                }
+            }
+        //Loop through $DatesForUpdate and set empty values to null
+        foreach ($DatesForUpdate as $date => $val)
+            {
+            if (is_string(Validator_Model::optionalVar($val, $date)))
+                {
+                $DatesForUpdate[$date] = "NULL";
+                }
+            }
+        //Loop through $staffFields and set empty values to null
+        foreach ($staffFields as $staff => $val)
+            {
+            if (is_string(Validator_Model::optionalVar($val, $staff)))
+                {
+                $staffFields[$staff] = "NULL";
+                }
+            }
+        //Processing complete, now run update statement
         //Re-open database connection to run queries agains
         $db->connect();
         //Start insert transaction
-        mysql_query("START TRANSACTION;");
+        $db->start();
 
         //Set insert into TASK string
         $task_insert = "INSERT INTO TASK ("
@@ -590,6 +611,7 @@ class Task_Model
                 {
                 $length = 200;
                 $field = "Task description";
+                $optional = true;
                 } elseif ($field === "web_addr")
                 {
                 $optional = true;
@@ -688,7 +710,7 @@ class Task_Model
                 $validTiming = Task_Model::isDateBetween($date, $project_estimation->est_end_dt(), $project_estimation->start_dt());
                 if (is_string($validTiming))
                     {
-                    return "Supplied: " . $date . "<br/>" . $validTiming;
+                    return "Supplied: " . $date->format('d-m-Y') . "<br/>" . $validTiming;
                     }
                 }
             }
@@ -705,13 +727,28 @@ class Task_Model
 
     private static function isDateBetween($date, $endDate, $startDate)
         {
+        $vars = array("date" => $date, "end" => $endDate, "start" => $startDate);
+        $dates = array();
+        foreach ($vars as $key => $var)
+            {
+            if (is_string($var))
+                {
+                $dates[$key] = new DateTime($var);
+                unset($var);
+                } else
+                {
+                $dates[$key] = $var;
+                unset($var);
+                }
+            }
+            unset($vars);
         //Create error message to return
         $errorMsg = "Dates must be within the project timeline!"
-                . "<br/>Project start date is: " . $startDate
-                . "<br/>Project deadline is: " . $endDate;
+                . "<br/>Project start date is: " . $dates["start"]->format('d-m-Y')
+                . "<br/>Project deadline is: " . $dates["end"]->format('d-m-Y');
         //If date is outside of start and end date then return error message
-        if (strtotime($startDate) > $date ||
-                strtotime($endDate) < $date)
+        if ($dates["start"] > $dates["date"] ||
+                $dates["end"] < $dates["date"])
             {
             return $errorMsg;
             } else

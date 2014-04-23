@@ -12,7 +12,7 @@
     <!--DOCTYPE HTML-->
     <head>
         <script type="text/javascript" src="Includes/common/Scripts/confirmAction.js"></script>
-        
+
         <link rel="stylesheet" type="text/css" href="Includes/CSS/reset.css"/>
         <link rel="stylesheet" type="text/css" href="Includes/CSS/main.css"/>
         <link rel="stylesheet" type="text/css" href="Includes/CSS/taskDetails.css"/>
@@ -25,10 +25,7 @@
                 //Set easier to use variables throughout the view
                 $project = $this->registry->project;
                 $task = $this->registry->task;
-                if (isset($this->registry->taskEstimation))
-                    {
-                    $taskEstimation = $this->registry->taskEstimation;
-                    }
+                $taskEstimation = $this->registry->taskEstimation;
                 $noEstimate = "No estimate set!";
                 ?>
 
@@ -37,7 +34,7 @@
                         <?php
                         if (isset($taskEstimation))
                             {
-                            echo $taskEstimation->start_dt;
+                            echo $taskEstimation->start_dt();
                             } else
                             {
                             echo $noEstimate;
@@ -50,7 +47,7 @@
                         <?php
                         if (isset($taskEstimation))
                             {
-                            echo $taskEstimation->est_end_dt;
+                            echo $taskEstimation->est_end_dt();
                             } else
                             {
                             echo $noEstimate;
@@ -118,11 +115,11 @@
                         <li><div class="infoTitle">Staff associated: </div>
                             <div class="info">
                                 <?php
-                                if (isset($this->registry->taskStaff))
+                                $staff = $this->registry->taskStaff;
+                                if (isset($staff))
                                     {
-                                    $taskStaff = $this->registry->taskStaff;
-                                    echo $taskStaff->STAFF_FIRST_NM
-                                    . " " . $taskStaff->STAFF_LAST_NM;
+                                    echo $staff->staff_first_nm()
+                                    . " " . $staff->staff_last_nm();
                                     } else
                                     {
                                     echo "No staff member associated with task";
@@ -140,7 +137,7 @@
                             <li><div class="infoTitle">Planned Hours: </div>
                                 <div class="info">
                                     <?php
-                                    $planned_hours = $taskEstimation->pln_hr;
+                                    $planned_hours = $taskEstimation->pln_hr();
                                     if (isset($planned_hours))
                                         {
                                         echo $planned_hours;
@@ -154,7 +151,7 @@
                             <li><div class="infoTitle">Actual Hours: </div>
                                 <div class="info">
                                     <?php
-                                    $actual_hours = $taskEstimation->act_hr;
+                                    $actual_hours = $taskEstimation->act_hr();
                                     if (isset($actual_hours))
                                         {
                                         echo $actual_hours;
@@ -168,7 +165,7 @@
                             <li><div class="infoTitle">Actual End Date: </div>
                                 <div class="info">
                                     <?php
-                                    $actual_end_date = $taskEstimation->act_end_dt;
+                                    $actual_end_date = $taskEstimation->act_end_dt();
                                     if (isset($actual_end_date))
                                         {
                                         echo $actual_end_date;
@@ -187,22 +184,24 @@
                                         <div class="info">
                                             <?php
                                             echo "<br/>";
-                                            if (isset($this->registry->taskDependencies))
+                                            $dependencies = $this->registry->taskDependencies;
+                                            if (isset($dependencies))
                                                 {
-                                                $dependencies = $this->registry->taskDependencies;
-                                                if (is_array($dependencies))
+                                                if (is_array($dependencies->dpnd_on()))
                                                     {
-
-                                                    foreach ($dependencies as
+                                                    foreach ($dependencies->dpnd_on() as
                                                                 $dpTask)
                                                         {
-                                                        echo "<a href=\"?page=Task&action=details&task_id={$dpTask->DEPENDENCY_ID}\">
-                                            {$dpTask->DEPENDENCY_ID}</a>";
+                                                        echo "<a href=\"?page=Task&action=details&task_id={$dpTask->dpnd_on()}\">
+                                            {$dpTask->dpnd_on()}</a><br/>";
                                                         }
                                                     } elseif (is_string($dependencies))
                                                     {
-                                                    echo "<a href=\"?page=Task&action=details&task_id={$dpTask->DEPENDENCY_ID}\">
-                                            {$dpTask->DEPENDENCY_ID}</a>";
+                                                    echo "<a href=\"?page=Task&action=details&task_id={$dependencies->dpnd_on()}\">
+                                            {$dependencies->dpnd_on()}</a>";
+                                                    } else
+                                                    {
+                                                    echo "None";
                                                     }
                                                 } else
                                                 {
@@ -236,9 +235,9 @@
                                     </div>
                                 </div>
                             </div> <!--End of content-->      
+                            <?php
+                            include("footer.php");
+                            ?>
                     </div> <!--End of container-->
-                    <?php
-                    include("footer.php");
-                    ?>
                     </body>
                     </html>

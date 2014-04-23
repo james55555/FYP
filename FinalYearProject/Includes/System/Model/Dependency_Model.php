@@ -109,9 +109,25 @@ class Dependency_Model extends Generic_Model
         {
         $table = "DEPENDENCY";
         $field = "DEPENDENCY_ID";
-
-        $success = parent::__delete($dpnd_id, $table, $field);
-
+        try
+            {
+            if (is_array($dpnd_id))
+                {
+                foreach ($dpnd_id as $var)
+                    {
+                    $success = parent::__delete($var, $table, $field);
+                    if ($success === false)
+                        {
+                        throw new Exception($var);
+                        }
+                    }
+                }
+            $success = parent::__delete($dpnd_id, $table, $field);
+            } catch (Exception $e)
+            {
+            echo "Dependency delete failed at " . $e->getMessage();
+            $success = false;
+            }
         return $success;
         }
 

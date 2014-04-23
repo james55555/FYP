@@ -72,7 +72,6 @@ a:hover, button {
 {
     min-height: 100%;
     width: 100%;
-    height: 100%;
     margin: 0 auto;
     display: block;
 }
@@ -104,6 +103,11 @@ a:hover, button {
     -webkit-border-radius:3px;
     text-shadow: 1px 1px #0047CC;
     font-size:16px;
+}
+a.button{
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    -ms-box-sizing: border-box;
 }
 /*Colouring for block elements throughout the website*/
 .blockColour{

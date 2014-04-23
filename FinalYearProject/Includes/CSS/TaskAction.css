@@ -4,13 +4,15 @@
 */
 #content{
     /*Position block*/
-    margin: 0 auto;
     background-color: #FFFFFF;
-    margin-top: 2.5%;
+    margin-top: 2%;
+    margin-bottom: 2%;
+    
     text-align: center;
     width: 40%;
     display: block;
     overflow: auto;
+    
 }
 #content h1 {
     border-bottom: solid 1px #aaa;

@@ -38,7 +38,14 @@ class Database_Queries extends Database
             }
         if (is_object($check[3]))
             {
-            $id = $check[3]->$colCheck;
+            if (property_exists($check[3], $colCheck))
+                {
+                $colCheck = strtolower($colCheck);
+                $id = $check[3]->$colCheck;
+                } else
+                {
+                $id = $check[3]->strtolower($colCheck);
+                }
             } elseif (is_array($check[3]))
             {
             $id = $check[3][0];
@@ -46,7 +53,7 @@ class Database_Queries extends Database
             {
             $id = $check[3];
             }
-            $check[1] = strtolower($check[1]);
+        $check[1] = strtolower($check[1]);
         //Format vars for insert
         $qId = "'$id'";
         //If limit is 0 then return unlimited

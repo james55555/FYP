@@ -31,7 +31,10 @@ class Database_Queries extends Database
         $check = $db->filterParameters($filter);
         if (is_array($check[0]))
             {
-            $check[0] = implode(", ", $check[0]);
+            $check[0] = strtolower(implode(", ", $check[0]));
+            } else
+            {
+            $check[0] = strtolower($check[0]);
             }
         if (is_object($check[3]))
             {
@@ -43,8 +46,9 @@ class Database_Queries extends Database
             {
             $id = $check[3];
             }
-            //Format query ID
-            $qId = "'$id'";
+            $check[1] = strtolower($check[1]);
+        //Format vars for insert
+        $qId = "'$id'";
         //If limit is 0 then return unlimited
         $limit = $num === 0 ? '' : "LIMIT $num";
         $query = "SELECT distinct " . $check[0]
@@ -63,38 +67,38 @@ class Database_Queries extends Database
         $db = new Database();
         $db->connect();
         $result = mysql_query($query);
-        try{
-        //If the query returns successful then
-        if ($db->querySuccess($result))
+        try
             {
-            //if the query returns one row
-            if (mysql_num_rows($result) === 1)
+            //If the query returns successful then
+            if ($db->querySuccess($result))
                 {
-                $row = mysql_fetch_object($result);
-                }//End of mysql num rows === 1
-            elseif (mysql_num_rows($result) > 1)
-                {
-                $objects = array();
-                while ($row = mysql_fetch_object($result))
+                //if the query returns one row
+                if (mysql_num_rows($result) === 1)
                     {
-                    array_push($objects, new $model($row));
+                    $row = mysql_fetch_object($result);
+                    }//End of mysql num rows === 1
+                elseif (mysql_num_rows($result) > 1)
+                    {
+                    $objects = array();
+                    while ($row = mysql_fetch_object($result))
+                        {
+                        array_push($objects, new $model($row));
+                        }
+                    $db->close();
+                    return $objects;
+                    }//End of mysql num rows > 1
+                else
+                    {
+                    return null;
                     }
-                $db->close();
-                return $objects;
-                }//End of mysql num rows > 1
+                }//End of query success
             else
                 {
-                return null;
+                throw new Exception("Query Error: " . mysql_error() .
+                "<br/>Query: " . $query);
                 }
-            }//End of query success
-        
-        else
+            } catch (Exception $e)
             {
-            throw new Exception("Query Error: " . mysql_error() . 
-                    "<br/>Query: " . $query);
-            }
-        }
-        catch(Exception $e){
             echo $e->getMessage();
             }
         $db->close();

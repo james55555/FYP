@@ -60,18 +60,16 @@ Class Router
     public
             function loader()
         {
-        if ($this->controller !== 'Error')
-            {
 //assign controller from getController to this->controller
             $this->controller = $this->getController();
 
-
             //Check if the fileName is available
-            if (is_readable($this->fileName) == false)
+            if (!!!is_readable($this->fileName))
                 {
                 //added echo and else if
-                echo "Controller invalid: " . var_dump($this->controller);
-                $this->controller = 'Error';
+                echo "Filename not readable: <br/>" 
+                . var_dump($this->fileName);
+                //$this->controller = 'Error';
                 }
             elseif (is_readable($this->fileName))
                 {
@@ -94,7 +92,6 @@ Class Router
                 }
             //run action
             $controller->$action();
-            }
         }
 
     /*
@@ -120,6 +117,8 @@ Class Router
         else
             {
             $this->controller = 'Error';
+            $this->fileName = trim(__CONTROLLER_PATH . $this->controller . '_Controller.php');
+            include_once $this->fileName;
             }
         return $this->controller;
         }

@@ -89,9 +89,9 @@
                     </div><!--End of actions-->
                 </form>
             </div> <!--End of content-->
-        </div><!--End of container-->
-        <?php
+            <?php
         include("footer.php");
         ?>
+        </div><!--End of container-->
     </body>
 </html>

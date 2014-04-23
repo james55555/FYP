@@ -36,7 +36,13 @@ class Task_Model
             function __construct($tsk_id)
         {
         $row = $this->getTask($tsk_id);
-        $this->tsk_id = $row->TSK_ID;
+        //Unlike other models this returns null as a task doesn't have to exist for a project
+        if (!isset($row))
+            {
+            return null;
+            }
+        $this->tsk_id = $row->tsk_id;
+        //$this->tsk_id = $row->TSK_ID;
         //Get the project corresponding to the linked id
         if (isset($_GET['proj_id']))
             {
@@ -44,17 +50,25 @@ class Task_Model
             $this->proj_id = $_assocProj->proj_id;
             } else
             {
-            $this->proj_id = $row->PROJ_ID;
+            //$this->proj_id = $row->PROJ_ID;
+            $this->proj_id = $row->proj_id;
             }
 
-        $this->status = $row->STATUS;
-        $this->task_nm = $row->TASK_NM;
-        $this->web_addr = $row->WEB_ADDR;
-        $this->tsk_dscr = $row->TSK_DESCR;
+        //$this->status = $row->STATUS;
+        $this->status = $row->status;
+        //$this->task_nm = $row->TASK_NM;
+        $this->task_nm = $row->task_nm;
+        //$this->web_addr = $row->WEB_ADDR;
+        $this->web_addr = $row->web_addr;
+        //$this->tsk_dscr = $row->TSK_DESCR;
+        $this->tsk_dscr = $row->tsk_descr;
         //Set up associated objects with task
-        $this->estimation = TaskEstimation_Model::getEstimationId($row->TSK_ID);
-        $this->staff = StaffTask_Model::getStaffId($row->TSK_ID);
-        $this->dpnd = TaskDependency_Model::getDpID($row->TSK_ID);
+        //$this->estimation = TaskEstimation_Model::getEstimationId($row->TSK_ID);
+        $this->estimation = TaskEstimation_Model::getEstimationId($row->tsk_id);
+        //$this->staff = StaffTask_Model::getStaffId($row->TSK_ID);
+        $this->staff = StaffTask_Model::getStaffId($row->tsk_id);
+        //$this->dpnd = TaskDependency_Model::getDpID($row->TSK_ID);
+        $this->dpnd = TaskDependency_Model::getDpID($row->tsk_id);
         }
 
     public
@@ -120,7 +134,7 @@ class Task_Model
         {
         $fields = array("TSK_ID, PROJ_ID, STATUS, "
             . "TASK_NM, WEB_ADDR", "TSK_DESCR");
-        $task = Database_Queries::selectFrom("TASK_MODEL", $fields, "TASK", "TSK_ID", $tsk_id);
+        $task = Database_Queries::selectFrom("TASK_MODEL", $fields, "TASK", "tsk_id", $tsk_id);
         return $task;
         }
 
@@ -138,9 +152,14 @@ class Task_Model
             . "TASK_NM, WEB_ADDR", "TSK_DESCR");
         $databaseTasks = Database_Queries::selectFrom("TASK_MODEL", $fields, "TASK", "PROJ_ID", $proj_id);
         //If database tasks isn't an array and issset then create one
-        if (!is_array($databaseTasks) && isset($databaseTasks))
+        $count = count($databaseTasks);
+        if (isset($databaseTasks) && is_object($databaseTasks) && $count > 1)
             {
-            $tasks = array($databaseTasks);
+            $tasks = (array) $databaseTasks;
+            } elseif ($count === 1)
+            {
+                //add item to an array (with 1 item) and cast to array
+            $tasks = array((array)$databaseTasks);
             } else
             {
             $tasks = $databaseTasks;
@@ -507,10 +526,10 @@ class Task_Model
             //Run the query and get the task ID
             $task_result = mysql_query($task_insert);
             $task_id = $db->getInsertId();
-              if (!$db->endStatement($task_result))
-              {
-              throw new Exception("Error inserting into task");
-              }
+            if (!$db->endStatement($task_result))
+                {
+                throw new Exception("Error inserting into task");
+                }
             $db->close(); //Close database as following construct and destruct db
             //Run estimation insert query
             $estimationFields = array("NULL",
@@ -528,7 +547,8 @@ class Task_Model
                 throw new Exception($est_result . mysql_error());
                 }
             //Run staff insert query
-            $stfields = array($fields['stFirst'], $fields['stLast'], $fields['stTel'], $fields['stEmail']);
+            $stfields = array($staffFields['stFirst'], $staffFields['stLast'],
+                $staffFields['stTel'], $staffFields['stEmail']);
             $staff_result = Staff_Model::addStaffMember($stfields);
             if (is_object($staff_result))
                 {
@@ -549,7 +569,7 @@ class Task_Model
             $dpnd_result = Dependency_Model::add($dpndFields);
             if (is_object($dpnd_result))
                 {
-                $dpnd_id = $dpnd_result->staff_id();
+                $dpnd_id = $dpnd_result->dpnd_id();
                 } else
                 {
                 throw new Exception($dpnd_result);
@@ -597,7 +617,17 @@ class Task_Model
             return new Task_Model($task_id);
             } catch (Exception $e)
             {
-            die($e->getMessage());
+            echo "Error: " . $e->getMessage();
+            $dbConn = $db->getConn();
+            if (isset($dbConn))
+                {
+                echo "<br/>Rolled Back";
+                $db->rollback();
+                $db->close();
+                } else
+                {
+                "Changes committed";
+                }
             }
         }
 

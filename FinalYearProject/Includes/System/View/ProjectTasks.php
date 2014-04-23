@@ -28,16 +28,23 @@
                     <h1 id="title">Tasks for project: <?php echo $proj_id ?></h1><br/>
                     <?php
                     $noEstimate = "No estimate set.";
-
-                    if (is_object($this->registry->projectEstimation))
+                    try
                         {
+                        if (isset($this->registry->projectEstimation) && !$this->registry->projectEstimation instanceof Estimation_Model)
+                            {
+                            throw new Exception("projEstimation not set!");
+                            }
                         $projEstimate = $this->registry->projectEstimation;
-                        $stCheck = $projEstimate->start_dt;
-                        $edCheck = $projEstimate->est_end_dt;
-                        } else
+                        $stCheck = $projEstimate->start_dt();
+                        $edCheck = $projEstimate->est_end_dt();
+                        if (isset($this->registry->projectEstimation))
+                            {
+                            $stCheck = $noEstimate;
+                            $edCheck = $noEstimate;
+                            }
+                        } catch (Exception $e)
                         {
-                        $stCheck = $noEstimate;
-                        $edCheck = $noEstimate;
+                        echo $e->getMessage();
                         }
                     ?>
                     <div class="Proj_Details" id="start">
@@ -71,7 +78,11 @@
                 <br/>
                 <div id="tasks">
                     <?php
-                    if (isset($this->registry->project_tasks) && sizeof($this->registry->project_tasks) > 0)
+                    //var_dump($this->registry->project_tasks);
+                    //var_dump(isset($this->registry->project_tasks));
+                    //var_dump(count($this->registry->project_tasks));
+                    $tasks = $this->registry ? $this->registry->project_tasks : null;
+                    if (isset($tasks))
                         {
                         $tasks = $this->registry->project_tasks;
                         ?>
@@ -99,6 +110,9 @@
                                         {
                                         $task_id = $task->TSK_ID;
                                         }
+                                    } elseif (is_array($task))
+                                    {
+                                    $task_id = $task['tsk_id'];
                                     }
                                 $task = new Task_Model($task_id);
 
@@ -122,17 +136,16 @@
                                                 <img src="Includes/CSS/img/Icons/edit.png" 
                                                      alt="edit" title="Edit Task"
                                                      width="20" height="20"/>
+                                            </button>
                                         </a>
-                                        </button>
-
-                                        <button type="submit" id="delT" onclick="return confirmAction('delete',
-                                                                '<?php echo $task->tsk_nm(); ?>')">                              
-                                            <a href="?page=Task&action=delete&task_id=<?php echo $task->tsk_id() ?>">
+                                        <a href="?page=Task&action=delete&task_id=<?php echo $task->tsk_id() ?>">
+                                            <button type="submit" id="delT" onclick="return confirmAction('delete',
+                                                            '<?php echo $task->tsk_nm(); ?>')">                              
                                                 <img src="Includes/CSS/img/Icons/delete.png" 
                                                      alt="edit" title="Delete Task"
                                                      width="20" height="20"/>
-                                            </a>
-                                        </button>    
+                                            </button>    
+                                        </a>
                                     </div>
                                 </td>
                                 </tr>

@@ -19,18 +19,8 @@ class Task_Controller extends Main_Controller
         {
         $tasks = Task_Model::getAllTasks($_GET['proj_id']);
         //If there are more than 1 task, they will be keyed numerically as objects
-        if (isset($tasks[0]) && is_object($tasks[0]))
-            {
-            $this->registry->project_tasks = $tasks;
-            //If there is only one task, add it to an array so it can be parsed in the view
-            } elseif (is_array($tasks))
-            {
-            $this->registry->project_tasks = array($tasks);
-            } else
-            {
-            $this->registry->project_tasks = null;
-            }
-
+        $this->registry->project_tasks = $tasks;
+        $tasks &&!is_array($tasks) ? array($tasks) : $tasks;
         $this->project = new Project_Model($_GET['proj_id']);
         $this->registry->projectEstimation = new Estimation_Model($this->project->estimation());
         //Show the projectTasks view
@@ -48,10 +38,8 @@ class Task_Controller extends Main_Controller
         $this->registry->project = new Project_Model
                 ($this->registry->task->proj_id());
         $est_id = $this->registry->task->estimation();
-        if (isset($est_id))
-            {
-            $this->registry->taskEstimation = Estimation_Model::get($this->registry->task->estimation());
-            }
+
+        $this->registry->taskEstimation = Estimation_Model::get($est_id);
 //Optional field
         $this->registry->taskStaff = Staff_Model::get($this->registry->task->staff());
         //Optional field

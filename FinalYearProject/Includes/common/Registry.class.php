@@ -3,6 +3,7 @@
 /*
  * Registry class to store site-wide, global variables
  */
+
 Class Registry
     {
 
@@ -15,6 +16,7 @@ Class Registry
      * @param String    key
      * @param any       value
      */
+
     public
             function __set($key, $value)
         {
@@ -26,17 +28,15 @@ Class Registry
      * @param String key
      * @return obj vars
      */
+
     public
             function __get($key)
         {
-        try {
-        if(!isset($this->variables[$key])){
-            throw new Exception($key . " not set");
-        }
+        if (!array_key_exists($key, $this->variables))
+            {
+            return null;
+            }
         return $this->variables[$key];
         }
-        catch(Exception $e){
-         echo "<p>There has been an error: " . $e->getMessage() . "</p>";   
-            }
-        }
+
     }

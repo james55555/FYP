@@ -6,7 +6,7 @@
  * @author James
  */
 
-class ProjectTasks_Model extends Generic_Model
+class ProjectTasks_Model
     {
 
     private $proj_id;
@@ -31,9 +31,31 @@ class ProjectTasks_Model extends Generic_Model
     public static function getTask($proj_id)
         {
         $columns = array("PROJ_ID", "TSK_ID");
-        $task = Database_Queries::selectFrom("Task_Model", $columns, "TASK", 
-                "PROJ_ID", $proj_id);
+        $task = Database_Queries::selectFrom("Task_Model", $columns, "TASK", "PROJ_ID", $proj_id);
         return $task;
+        }
+
+    /*
+     * Function to return a project id given the task id
+     */
+
+    public static function getProj_id($task_id)
+        {
+        $db = new Database();
+        $db->connect();
+        $db->start();
+        $query = "SELECT proj_id FROM project "
+                . "WHERE proj_id IN "
+                . "(SELECT proj_id FROM task "
+                . "WHERE tsk_id ='" . $task_id . "');";
+        $result = mysql_query($query);
+        $success = $db->endStatement($result);
+        $db->close();
+        if (!$success)
+            {
+            return null;
+            }
+        return mysql_fetch_object($result);
         }
 
     public static function deleteTask($tsk_id)
@@ -41,7 +63,7 @@ class ProjectTasks_Model extends Generic_Model
         $table = "TASK";
         $field = "TSK_ID";
 
-        $success = parent::__delete($tsk_id, $table, $field);
+        $success = Generic_Model::__delete($tsk_id, $table, $field);
 
         return $success;
         }

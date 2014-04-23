@@ -30,20 +30,21 @@ class Staff_Model extends Generic_Model
                 {
                 throw new Exception("NULL");
                 }
-
-            $this->staff_id = $row->STAFF_ID;
+            foreach ($row as $key => $val)
+                {
+                $key = strtolower($key);
+                if ($val === "NULL")
+                    {
+                    $val = null;
+                    }
+                    $this->$key = $val;
+                }
+/*            $this->staff_id = $row->STAFF_ID;
             $this->staff_first_nm = $row->STAFF_FIRST_NM;
             $this->staff_last_nm = $row->STAFF_LAST_NM;
             $this->staff_phone = $row->STAFF_PHONE;
             $this->staff_email = $row->STAFF_EMAIL;
-            //If the value is set as String NULL then set to null value
-            foreach ($row as $key => $val)
-                {
-                if ($val === "NULL")
-                    {
-                    $this->set($key, null);
-                    }
-                }
+*/
             } catch (Exception $e)
             {
             $var = $e->getMessage();
@@ -132,7 +133,15 @@ class Staff_Model extends Generic_Model
         $fields = array("STAFF_ID", "STAFF_FIRST_NM", "STAFF_LAST_NM",
             "STAFF_PHONE", "STAFF_EMAIL");
         $staff = Database_Queries::selectFrom("Staff_Model", $fields, "STAFF", "STAFF_ID", $staff_id);
-        return $staff;
+        //Cast stdObject to array
+        if (isset($staff) && is_object($staff))
+            {
+            $staffArr = (array) $staff;
+            } else
+            {
+            $staffArr = $staff;
+            }
+        return $staffArr;
         }
 
     public static function getStaffForProject($proj_id)
@@ -232,7 +241,7 @@ class Staff_Model extends Generic_Model
                 . " '" . $fields[1] . "',"
                 . " '" . $fields[2] . "',"
                 . " '" . $fields[3] . "');";
-        
+
         //Run query to insert into table and get the STAFF_ID
         $staff_result = mysql_query($staff_insert);
         $staff_id = $db->getInsertId();

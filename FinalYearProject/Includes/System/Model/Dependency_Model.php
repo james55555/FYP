@@ -21,23 +21,21 @@ class Dependency_Model extends Generic_Model
                 {
                 throw new Exception("NULL");
                 }
-            $this->dpnd_id = $row->DEPENDENCY_ID;
-            //If there is more than one dependency then add to an array
-            if (is_array($row))
+            foreach ($row as $key => $val)
                 {
-                $dependencies = array();
-                foreach ($row as $id => $dpnd)
+                $key = strtolower($key);
+                if ($val === "NULL")
                     {
-                    if ($dpnd === "NULL")
-                        {
-                        $this->set($id, null);
-                        }
-                    array_push($dependencies, $dpnd);
+                    $val = null;
                     }
-                $this->dpnd_on = $dependencies;
-                } else
-                {
-                $this->dpnd_on = $row->DEPENDENT_ON;
+                if (is_array($val))
+                    {
+                    foreach ($val as $dpnd)
+                        {
+                        array_push($row, $key[$dpnd]);
+                        }
+                    }
+                $this->$key = $val;
                 }
             } catch (Exception $e)
             {
@@ -103,8 +101,8 @@ class Dependency_Model extends Generic_Model
         {
         $fields = array("DEPENDENCY_ID", "DEPENDENT_ON");
         $dependency = Database_Queries::selectFrom("Dependency_Model", $fields, "DEPENDENCY", "DEPENDENCY_ID", $dpnd_id);
-
-        return $dependency;
+        $dpnd = Generic_Model::castStdObj($dependency);
+        return $dpnd;
         }
 
     public static function delete($dpnd_id)
@@ -140,7 +138,7 @@ class Dependency_Model extends Generic_Model
                         . " DEPENDENT_ON)"
                         . " VALUES ("
                         . " '" . $fields[0] . "',"
-                        . " '" . $dpnd . "');" ." " . $taskDpnd_insert;
+                        . " '" . $dpnd . "');" . " " . $taskDpnd_insert;
                 }
             }
         //Run the query

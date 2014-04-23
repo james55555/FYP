@@ -43,4 +43,22 @@ abstract class Generic_Model
      */
 
     public abstract function set($variable, $newValue);
+/*
+ * Function to cast stdClass object as an array (used mainly in getObj functions)
+ * @param (object) $obj     This is the object to be converted
+ * 
+ * @return (array) $array   This is the converted object
+ */
+    public static function castStdObj($obj)
+        {
+        if (isset($obj) && is_object($obj))
+            {
+            $array = (array) $obj;
+            } else
+            {
+            $array = $obj;
+            }
+        return $array;
+        }
+
     }

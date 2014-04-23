@@ -14,21 +14,22 @@ class Login_Controller extends Main_Controller
     public
             function main()
         {
-        $this->registry->success = null;
-       //if the username/password are set then the form has been submitted.
-            //only attempt to log in if user id and pwd are set.
-            if (isset($_POST['username']) && isset($_POST['password']))
+        $this->registry->success = true;
+        //if the username/password are set then the form has been submitted.
+        //only attempt to log in if user id and pwd are set.
+        if (isset($_POST['username']) && isset($_POST['password']))
+            {
+            
+            //If authentication was successful
+            $this->registry->success = $this->login($_POST['username'], $_POST['password']);
+            if ($this->registry->success)
                 {
-                //If authentication was successful
-                $this->registry->success = $this->login($_POST['username'], $_POST['password']);
-                if ($this->registry->success)
-                    {
-                    header('Location: ?page=home');
-                    }
+                header('Location: ?page=home');
                 }
-                $this->registry->View_Template->show('login');
             }
-        
+        $this->registry->View_Template->show('login');
+        }
+
     /*
      * Method to create a new session for given username
      */
@@ -42,8 +43,7 @@ class Login_Controller extends Main_Controller
         //Ensure password is correct
         if (isset($acc))
             {
-            if (PassHash::check_password($acc->password,
-                    $password))                    
+            if (PassHash::check_password($acc->password, $password))
                 {
                 //Log in successful, set up new session and set boolean to false
                 $_SESSION['user'] = $acc;
@@ -54,4 +54,5 @@ class Login_Controller extends Main_Controller
         }
 
     }
+
 ?>

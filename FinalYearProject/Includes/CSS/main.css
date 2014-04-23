@@ -70,7 +70,9 @@ textarea {
     height: 100%;
     margin: 0 auto;
 }
-
+.hide {
+    display: none;
+}
 /*  Code for design sourced from Sachin (2013)
  *      .button
  *      .blockColour

@@ -41,34 +41,42 @@ class Task_Model
             {
             return null;
             }
-        $this->tsk_id = $row->tsk_id;
+        foreach ($row as $key => $val)
+            {
+            $key = strtolower($key);
+            if ($val === "NULL")
+                {
+                $val = null;
+                }
+            $this->$key = $val;
+            }
+        //$this->tsk_id = $row->tsk_id;
         //$this->tsk_id = $row->TSK_ID;
         //Get the project corresponding to the linked id
         if (isset($_GET['proj_id']))
             {
             $_assocProj = Project_Model::getProject($_GET['proj_id']);
-            $this->proj_id = $_assocProj->proj_id;
+            $this->proj_id = $_assocProj['proj_id'];
             } else
             {
             //$this->proj_id = $row->PROJ_ID;
-            $this->proj_id = $row->proj_id;
+            $this->proj_id = $row['proj_id'];
             }
-
-        //$this->status = $row->STATUS;
-        $this->status = $row->status;
-        //$this->task_nm = $row->TASK_NM;
-        $this->task_nm = $row->task_nm;
-        //$this->web_addr = $row->WEB_ADDR;
-        $this->web_addr = $row->web_addr;
-        //$this->tsk_dscr = $row->TSK_DESCR;
-        $this->tsk_dscr = $row->tsk_descr;
-        //Set up associated objects with task
-        //$this->estimation = TaskEstimation_Model::getEstimationId($row->TSK_ID);
-        $this->estimation = TaskEstimation_Model::getEstimationId($row->tsk_id);
-        //$this->staff = StaffTask_Model::getStaffId($row->TSK_ID);
-        $this->staff = StaffTask_Model::getStaffId($row->tsk_id);
-        //$this->dpnd = TaskDependency_Model::getDpID($row->TSK_ID);
-        $this->dpnd = TaskDependency_Model::getDpID($row->tsk_id);
+        /*
+          //$this->status = $row->STATUS;
+          $this->status = $row->status;
+          //$this->task_nm = $row->TASK_NM;
+          $this->task_nm = $row->task_nm;
+          //$this->web_addr = $row->WEB_ADDR;
+          $this->web_addr = $row->web_addr;
+          //$this->tsk_dscr = $row->TSK_DESCR;
+          $this->tsk_dscr = $row->tsk_descr;
+          //Set up associated objects with task
+         */
+        //Get objects associated with the task
+        $this->estimation = TaskEstimation_Model::getEstimationId($row['tsk_id']);
+        $this->staff = StaffTask_Model::getStaffId($row['tsk_id']);
+        $this->dpnd = TaskDependency_Model::getDpID($row['tsk_id']);
         }
 
     public
@@ -135,7 +143,8 @@ class Task_Model
         $fields = array("TSK_ID, PROJ_ID, STATUS, "
             . "TASK_NM, WEB_ADDR", "TSK_DESCR");
         $task = Database_Queries::selectFrom("TASK_MODEL", $fields, "TASK", "tsk_id", $tsk_id);
-        return $task;
+        $newTask = Generic_Model::castStdObj($task);
+        return $newTask;
         }
 
     /*
@@ -158,8 +167,8 @@ class Task_Model
             $tasks = (array) $databaseTasks;
             } elseif ($count === 1)
             {
-                //add item to an array (with 1 item) and cast to array
-            $tasks = array((array)$databaseTasks);
+            //add item to an array (with 1 item) and cast to array
+            $tasks = array((array) $databaseTasks);
             } else
             {
             $tasks = $databaseTasks;
@@ -592,8 +601,8 @@ class Task_Model
                     . "DEPENDENCY_ID,"
                     . " TSK_ID)"
                     . " VALUES ("
-                    . " '" . $task_id . "',"
-                    . " '" . $dpnd_id . "');";
+                    . " '" . $dpnd_id . "',"
+                    . " '" . $task_id . "');";
             //Insert into TASK_DEPENDENCY table
             $taskDpnd_result = mysql_query($taskDpnd_insert);
             if (!$db->endStatement($taskDpnd_result))

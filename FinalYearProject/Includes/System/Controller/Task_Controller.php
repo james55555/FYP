@@ -20,7 +20,7 @@ class Task_Controller extends Main_Controller
         $tasks = Task_Model::getAllTasks($_GET['proj_id']);
         //If there are more than 1 task, they will be keyed numerically as objects
         $this->registry->project_tasks = $tasks;
-        $tasks &&!is_array($tasks) ? array($tasks) : $tasks;
+        $tasks && !is_array($tasks) ? array($tasks) : $tasks;
         $this->project = new Project_Model($_GET['proj_id']);
         $this->registry->projectEstimation = new Estimation_Model($this->project->estimation());
         //Show the projectTasks view
@@ -39,11 +39,11 @@ class Task_Controller extends Main_Controller
                 ($this->registry->task->proj_id());
         $est_id = $this->registry->task->estimation();
 
-        $this->registry->taskEstimation = Estimation_Model::get($est_id);
-//Optional field
-        $this->registry->taskStaff = Staff_Model::get($this->registry->task->staff());
+        $this->registry->taskEstimation = new Estimation_Model($est_id);
         //Optional field
-        $this->registry->taskDependencies = Dependency_Model::get($this->registry->task->dpnd());
+        $this->registry->taskStaff = new Staff_Model($this->registry->task->staff());
+        //Optional field
+        $this->registry->taskDependencies = new Dependency_Model($this->registry->task->dpnd());
         $this->registry->View_Template->show('taskDetails');
         }
 
@@ -58,8 +58,8 @@ class Task_Controller extends Main_Controller
 
                 if (isset($exists))
                     {
-                    //Get the project id for redirect to task list
-                    $proj_id = $exists->PROJ_ID;
+                    //Get proj_id dependent on object type
+                    $proj_id = is_array($exists) ? $exists['proj_id'] : $exists->PROJ_ID;
                     //Run the delete function and return a boolean
                     $this->success = Task_Model::deleteTask($_GET['task_id']);
                     } else

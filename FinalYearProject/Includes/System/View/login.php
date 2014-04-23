@@ -11,6 +11,11 @@
 <!DOCTYPE html>
 <html>
     <head>
+        <!--Include jQuery library-->
+        <script type="text/javascript"
+        src="Includes/common/Scripts/jQuery_lib/jquery_v1.11.1.js"></script>
+        <script type="text/css" href="Includes/common/Scripts/emptyLogin.js"></script>
+        
         <link rel="stylesheet" type="text/css" href="Includes/CSS/reset.css"/>
         <link rel="stylesheet" type="text/css" href="Includes/CSS/main.css"/>
         <link rel="stylesheet" type="text/css" href="Includes/CSS/login.css"/>
@@ -27,21 +32,22 @@
             </div>
             <div id="login_div" class="centralBox">
                 <p>To access your profile enter your login details or create an account</p>
+                <span class="error" id="emptyError">
+                </span>
                 <!--Form to retrieve user login details-->
-                <form method="post" action="?page=Login" name="login">
-                    <label>Username: <br><input type="text" name="username" maxlength="25"/></label><br>
-                    <label>Password: <br><input type="password" name="password" maxlength="25"/></label><br>
+                <form method="post" action="?page=Login" name="login" id="login">
+                    <label>Username: <input type="text" name="username" maxlength="25"/></label>
+                    <label>Password: <input type="password" name="password" maxlength="25"/></label>
                     <input type="submit" value="Login" class="button" id="submit"/>
                 </form>
                 <div id="error">
                     <?php
-                    if (isset($this->registry->success) 
-                            && $this->registry->success === false)
+                    if (!!!$this->registry->success)
                         {
                         ?>
-                    <!--Client-side validation-->
-                    <script type="text/javascript">
-                        alert("Invalid credentials");
+                        <!--Client-side validation-->
+                        <script type="text/javascript">
+                            alert("Invalid credentials");
                         </script>
                         <?php
                         }

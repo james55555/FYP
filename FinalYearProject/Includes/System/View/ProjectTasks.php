@@ -140,7 +140,7 @@
                                         </a>
                                         <a href="?page=Task&action=delete&task_id=<?php echo $task->tsk_id() ?>">
                                             <button type="submit" id="delT" onclick="return confirmAction('delete',
-                                                            '<?php echo $task->tsk_nm(); ?>')">                              
+                                                                    '<?php echo $task->tsk_nm(); ?>')">                              
                                                 <img src="Includes/CSS/img/Icons/delete.png" 
                                                      alt="edit" title="Delete Task"
                                                      width="20" height="20"/>
@@ -160,10 +160,11 @@
                             ?>
                     </table><br/>
 
-                </div>
-            </div>
-            <?php
-            include("footer.php");
-            ?>
+                </div><!--End of content-->
+                <?php
+                include("footer.php");
+                ?>
+            </div><!--End of container-->
+
         </body>
     </html>

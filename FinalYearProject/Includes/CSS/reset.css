@@ -31,8 +31,8 @@ time, mark, audio, video {
 }
 body, html{
     /*Body and html set to these values so user sees everything without any scrolling*/
-    height: 96%;
-    width: 99%
+    height: 100%;
+    width: 100%
 }
 article,aside,details,figcaption,figure,
 footer,header,hgroup,menu,nav,section { 

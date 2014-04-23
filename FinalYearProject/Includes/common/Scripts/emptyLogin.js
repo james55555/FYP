@@ -20,7 +20,7 @@ jQuery(function($){
        }
      
      } catch(ex) {
-       $('#emptyError').html('<p>' + ex + ' must be filled in!</p>');
+       $('span #emptyError').html('<p>' + ex + ' must be filled in!</p>');
        return false;
      }
      return true;

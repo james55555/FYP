@@ -8,8 +8,11 @@
 <html>
     <!DOCTYPE html>
     <head>
+        <!--Include jQuery library-->
+        <script type="text/javascript" src="Includes/common/Scripts/jQuery_lib/jquery_v1.11.1.js"></script>
         <script type="text/javascript" src="Includes/common/Scripts/confirmAction.js"></script>
-
+        <script type="text/javascript" src="Includes/common/Scripts/resetFields.js"></script>
+        
         <link rel="stylesheet" type="text/css" href="Includes/CSS/reset.css"/>
         <link rel="stylesheet" type="text/css" href="Includes/CSS/main.css"/>
         <link rel="stylesheet" type="text/css" href="Includes/CSS/ProjectAction.css"/>
@@ -27,49 +30,47 @@
                 <h1>Edit Project</h1>
 
                 <form id="editProject" action="?page=Edit&action=editProject" 
-                      method="post"> <!--onsubmit="return projectValidation()"-->
+                      method="post">
                     <div id="details">
                         <h2>Details</h2>
                         <!--Print out current project name-->
                         <label>Name: </label>
                         <input type="text" name="pName" value="<?php echo $project->proj_nm(); ?>"/> 
 
-                        <br/>
                         <!--Print out current project description-->
                         <label>Description:  </label><textarea 
                             maxlength="200"
-                            name="pDescr"><?php echo $project->proj_descr(); ?>
-                        </textarea>
+                            name="pDescr"
+                            placeholder="Limit of 200 characters"><?php echo $project->proj_descr(); ?></textarea>
                     </div> <!--End of details-->
                     <div id="projDates">
                         <h2>Project Dates</h2>
                         <label title="When will the project start?">
                             Start Date: </label>
-                        <input type="date" name="pStart" value="<?php echo $estimation->start_dt(); ?>">
+                        <input type="date" name="pStart" value="<?php echo $estimation->start_dt_AM(); ?>">
                         <label title="The actual hours assigned to the project">
                             Actual hours: 
-                        </label><input type="text" name="act_hr" value="<?php echo $estimation->act_hr(); ?>"/>
+                        </label><input type="text" name="act_hr" placeholder="Must be a whole number" value="<?php echo $estimation->act_hr(); ?>"/>
                         <label title="The date the project actually finished">
                             Actual End Date: 
-                        </label><input type="date" name="pActEnd" value="<?php echo $estimation->act_end_dt(); ?>"/>
+                        </label><input type="date" name="pActEnd" value="<?php echo $estimation->act_end_dt_AM(); ?>"/>
                         <label>
                             Deadline: 
                         </label><input type="date" name="pDeadline" 
-                                       value="<?php echo $estimation->est_end_dt(); ?>"/>
+                                       value="<?php echo $estimation->est_end_dt_AM(); ?>"/>
                         <label>
-                            Estimate: </label><input type="text" name="pln_hr" value="<?php echo $estimation->pln_hr(); ?>"/>                    </div> <!--End of projDates-->
+                            Estimate: 
+                        </label><input type="text" name="pln_hr" placeholder="Must be a whole number" value="<?php echo $estimation->pln_hr(); ?>"/>                    </div> <!--End of projDates-->
                     <input type="hidden" value="<?php echo $_GET['proj_id']; ?>" name="proj_id"/>
-                    <input type="button" value="Back" class="button"
+                    <input type="button" value="Cancel" class="button"
                            onclick="history.go(-1);"/>
                     <input type="submit" value="Submit" class="button" id="submit"/>
-                    <input type="reset" value="Reset" class="button" 
-                           onclick="return confirmAction('reset',
-                                           'all values')"/>
+                    <button class="button" id="reset">Reset</button>
                 </form>    
             </div><!--End of content-->
-                    <?php
-        include("footer.php");
-        ?>
+            <?php
+            include("footer.php");
+            ?>
         </div><!--End of container-->
     </body>
 </html>

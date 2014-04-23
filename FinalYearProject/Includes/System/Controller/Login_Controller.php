@@ -19,7 +19,6 @@ class Login_Controller extends Main_Controller
         //only attempt to log in if user id and pwd are set.
         if (isset($_POST['username']) && isset($_POST['password']))
             {
-            
             //If authentication was successful
             $this->registry->success = $this->login($_POST['username'], $_POST['password']);
             if ($this->registry->success)

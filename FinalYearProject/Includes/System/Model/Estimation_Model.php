@@ -20,6 +20,10 @@ class Estimation_Model extends Generic_Model
             $est_end_dt;
     private
             $est_id;
+    //Dates in American formatting (for use in HTML)
+    private $start_dt_AM;
+    private $act_end_dt_AM;
+    private $est_end_dt_AM;
 
     public
             function __construct($est_id)
@@ -33,6 +37,7 @@ class Estimation_Model extends Generic_Model
                 }
             foreach ($row as $key => $val)
                 {
+                $key = strtolower($key);
                 if ($key === "start_dt" ||
                         $key === "act_end_dt" ||
                         $key === "est_end_dt")
@@ -40,13 +45,18 @@ class Estimation_Model extends Generic_Model
                     $row->$key = new DateTime($val);
                     }
                 }
+
             //If the no error has been thrown then continue creating object
             $this->est_id = $row->est_id;
             $this->act_hr = $row->act_hr;
             $this->pln_hr = $row->pln_hr;
             $this->start_dt = $row->start_dt->format('d-m-Y');
+            $this->start_dt_AM = $row->start_dt->format('Y-m-d');
             $this->act_end_dt = $row->act_end_dt->format('d-m-Y');
+            //Format American dates
+            $this->act_end_dt_AM = $row->act_end_dt->format('Y-m-d');
             $this->est_end_dt = $row->est_end_dt->format('d-m-Y');
+            $this->est_end_dt_AM = $row->est_end_dt->format('Y-m-d');
             //If the value is set as String NULL then set to null value
             foreach ($row as $key => $val)
                 {
@@ -89,14 +99,29 @@ class Estimation_Model extends Generic_Model
         return $this->start_dt;
         }
 
+    public function start_dt_AM()
+        {
+        return $this->start_dt_AM;
+        }
+
     public function act_end_dt()
         {
         return $this->act_end_dt;
         }
 
+    public function act_end_dt_AM()
+        {
+        return $this->act_end_dt_AM;
+        }
+
     public function est_end_dt()
         {
         return $this->est_end_dt;
+        }
+
+    public function est_end_dt_AM()
+        {
+        return $this->est_end_dt_AM;
         }
 
     /*

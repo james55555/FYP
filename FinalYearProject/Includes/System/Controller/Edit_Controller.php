@@ -19,6 +19,7 @@ class Edit_Controller extends Main_Controller
             $this->registry->project = new Project_Model($_GET['proj_id']);
             $view = 'editProject';
             $est_id = $this->registry->project->estimation();
+            
             }//Else if vars are set to TASK
         else
             {

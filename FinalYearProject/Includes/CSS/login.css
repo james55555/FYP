@@ -59,4 +59,8 @@ http://www.mycodezone.com/simple-screen-centered-login-box/
     -webkit-border-radius:3px;
     text-shadow: 1px 1px #0047CC;
     font-size:16px;
-}	
+}
+.error {
+    color: red;
+    text-align: center;
+}

@@ -8,9 +8,10 @@
 {
     width:100%;
     border-top: 1px solid black;
-    position: absolute;
+    position: fixed;
     bottom: 0; right: 0;
     clear:both;
+    background-color: white;
 }
 
 /*Style Footer class and components*/

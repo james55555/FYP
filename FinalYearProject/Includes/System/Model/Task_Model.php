@@ -56,7 +56,7 @@ class Task_Model
         if (isset($_GET['proj_id']))
             {
             $_assocProj = Project_Model::getProject($_GET['proj_id']);
-            $this->proj_id = $_assocProj['proj_id'];
+            $this->proj_id = $_assocProj->proj_id;
             } else
             {
             //$this->proj_id = $row->PROJ_ID;
@@ -472,6 +472,8 @@ class Task_Model
             {
             return $validDates;
             }
+            var_dump($validDates);
+            die();
         //Validate staff fields
         $validStaff = Staff_Model::validateStaffFields($staffFields);
         if (is_string($validStaff) || is_array($validStaff))

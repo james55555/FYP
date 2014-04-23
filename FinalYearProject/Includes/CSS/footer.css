@@ -6,11 +6,11 @@
 /*Style the footer container*/
 #wrapperFooter 
 {
-    clear:both;
-    position: relative;
-    
     width:100%;
     border-top: 1px solid black;
+    position: absolute;
+    bottom: 0; right: 0;
+    clear:both;
 }
 
 /*Style Footer class and components*/

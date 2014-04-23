@@ -23,6 +23,9 @@ class Edit_Controller extends Main_Controller
         else
             {
             $this->registry->task = new Task_Model($_GET['task_id']);
+            $proj_id = ProjectTasks_Model::getProj_id($_GET['task_id']);
+            $project = new Project_Model($proj_id);
+            $this->registry->projEst = new Estimation_Model($project->estimation());
             $staff_id = $this->registry->task->staff();
             $this->registry->staff = new Staff_Model($staff_id);
             //Only create new dependency object if dependencies have been set up

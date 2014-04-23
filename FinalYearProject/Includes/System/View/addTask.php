@@ -7,7 +7,10 @@
 ?>
 <html>
     <head>
+        <!--Include jQuery library-->
+        <script type="text/javascript" src="Includes/common/Scripts/jQuery_lib/jquery_v1.11.1.js"></script>
         <script type="text/javascript" src="Includes/common/Scripts/confirmAction.js"></script>
+        <script type="text/javascript" src="Includes/common/Scripts/resetFields.js"></script>
 
         <link rel="stylesheet" type="text/css" href="Includes/CSS/reset.css"/>
         <link rel="stylesheet" type="text/css" href="Includes/CSS/main.css"/>
@@ -84,9 +87,7 @@
                         <input type="button" value="Cancel" class="button"
                                onclick="history.go(-1);"/>
                         <input type="submit" value="Submit" class="button" id="newUser"/>
-                        <input type="reset" value="Reset" class="button" 
-                               onclick="return confirmAction('reset',
-                                               'all values')"/>
+                        <a id="reset" class="button">Reset</a>
                     </div><!--End of actions-->
                 </form>
             </div> <!--End of content-->

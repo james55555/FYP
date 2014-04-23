@@ -8,8 +8,11 @@
 <html>
     <!DOCTYPE html>
     <head>
+        <!--Include jQuery library-->
+        <script type="text/javascript" src="Includes/common/Scripts/jQuery_lib/jquery_v1.11.1.js"></script>
         <script type="text/javascript" src="Includes/common/Scripts/confirmAction.js"></script>
-        
+        <script type="text/javascript" src="Includes/common/Scripts/resetFields.js"></script>
+
         <link rel="stylesheet" type="text/css" href="Includes/CSS/reset.css"/>
         <link rel="stylesheet" type="text/css" href="Includes/CSS/main.css"/>
         <link rel="stylesheet" type="text/css" href="Includes/CSS/ProjectAction.css"/>
@@ -44,11 +47,9 @@
                             Estimate: </label><input type="text" name="pln_hr"/>
                     </div> <!--End of projDates-->
                     <input type="button" value="Back" class="button"
-                               onclick="history.go(-1);"/>
+                           onclick="history.go(-1);"/>
                     <input type="submit" value="Submit" class="button" id="newProj"/>
-                    <input type="reset" value="Reset" class="button" 
-                           onclick="return confirmAction('reset',
-                           'all values')"/>
+                    <a id="reset" class="button">Reset</a>
                 </form>    
             </div><!--End of content-->
         </div><!--End of container-->

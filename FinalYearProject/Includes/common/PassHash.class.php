@@ -1,8 +1,8 @@
 <?php
 /**
- * Description of PassHash
- * http://code.tutsplus.com/tutorials/understanding-hash-functions-and-keeping-passwords-safe--net-17577
- * @author James
+ * The PassHash class is used to securely hash passwords for 
+ * storage in the database
+ * @author (Guzal, 2012)
  */
 class PassHash
     {
@@ -13,22 +13,36 @@ class PassHash
     private static $cost = '$10';
  
  
-    // mainly for internal use
+    /*
+     * Function to create a unique salt value using random number generator
+     * 
+     * @return (String) salt    This is the salt returned as a substr
+     */
     public static function unique_salt() {
         return substr(sha1(mt_rand()),0,22);
     }
  
-    // this will be used to generate a hash
+    /*
+     * Function to generate hash value using blowfish, cost and salt
+     * @param (String) $password    This is the value to hash
+     * 
+     * @return (String) hash        This is the encrypted value
+     */
     public static function hash($password) {
  
         return crypt($password,
                     self::$algo .
                     self::$cost .
                     '$' . self::unique_salt());
- 
     }
  
-    // this will be used to compare a password against a hash
+    /*
+     * Function to compare a provided password against its hashed value
+     * @param (String) $hash        This is the password that exists in the database
+     * @param (String) $password    This is the password to check
+     * 
+     * @return (boolean)            This returns true if passwords match
+     */
     public static function check_password($hash, $password) {
  
         $full_salt = substr($hash, 0, 29);

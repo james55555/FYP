@@ -27,7 +27,7 @@
             <div id="content" class="centralBox">
                 <h1>Add Task</h1>
                 <form id="addTask" action="?page=Add&action=addTask" 
-                      method="post" onsubmit="return taskValidation()">
+                      method="post">
                     <div id="details" class="section">
                         <h2>Details</h2>
                         <label>Name: </label><input type="text" name="tName"/>
@@ -48,24 +48,25 @@
                         <?php
                         //only show task dependencies if their are tasks associated
                         //with the project in question
-                        if (isset($this->registry->projTasks))
+                        if (isset($projTasks))
                             {
                             echo "<h2>Choose Task Dependencies: </h2>";
                             //Set up checkbox for all tasks in the same project
-                            foreach ($this->registry->projTasks as $task)
+                            foreach ($projTasks as $task)
                                 {
-                                echo "<label>{$task->task_nm()}</label>"
+                                echo "<label id=\"dpndNm\">{$task->tsk_nm()}</label>"
                                 . "<input type=\"checkbox\" name=\"tDpnd[]\" "
                                 . "value=\"{$task->tsk_id()}\"/>";
                                 }
                             }
                         ?>
+                        <span style="clear:both;"></span>
                     </div><!--End of dependencies-->
                     <div id="estimation" class="section">
                         <h2>Task Dates</h2>
                         <p id="projDt">Dates must be between <?php
-                            echo $this->registry->projEst->start_dt()
-                            . " and " . $this->registry->projEst->est_end_dt();
+                            echo $projEst->start_dt()
+                            . " and " . $projEst->est_end_dt();
                             ?></p>
                         <label title="When will the task start?">
                             Start Date: </label><input type="date" name="tStart"/>

@@ -12,7 +12,7 @@ class Home_Controller extends Main_Controller
             function main()
         {
         //Get all projects assigned to user in session available
-        $this->registry->projects = Project_Model::getAllUserProj($_SESSION['user']->user_id);
+        $this->registry->View_Template->projects = Project_Model::getAllUserProj($_SESSION['user']->user_id);
         //Show the home screen
         $this->registry->View_Template->show('home');
         }
@@ -33,8 +33,8 @@ class Home_Controller extends Main_Controller
             }
         if ($this->success)
             {
-            $this->registry->heading = "Success";
-            $this->registry->message = "Project successfully deleted<br/>"
+            $this->registry->View_Template->heading = "Success";
+            $this->registry->View_Template->message = "Project successfully deleted<br/>"
                     ."Click <a href=\"?page=\Home\"> here </a>" .
                         " to view your projects";
             } else
@@ -43,16 +43,12 @@ class Home_Controller extends Main_Controller
             }
         }
         catch(Exception $e){
-            $this->registry->error = true;
-            $this->registry->heading = "Error Deleting..";
-            $this->registry->message = $e->getMessage();
+            $this->registry->View_Template->error = true;
+            $this->registry->View_Template->heading = "Error Deleting..";
+            $this->registry->View_Template->message = $e->getMessage();
             }
         $this->registry->View_Template->show('showMessage');
         }
-        public function addProj(){
-            $this->registry->View_Template->show('addProject');
-            }
-        
     }
 
 ?>

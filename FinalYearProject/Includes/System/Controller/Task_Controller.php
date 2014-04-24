@@ -19,11 +19,12 @@ class Task_Controller extends Main_Controller
         {
         $tasks = Task_Model::getAllTasks($_GET['proj_id']);
         //If there are more than 1 task, they will be keyed numerically as objects
-        $this->registry->project_tasks = $tasks;
+        $this->registry->View_Template->project_tasks = $tasks;
         $tasks && !is_array($tasks) ? array($tasks) : $tasks;
         $this->project = new Project_Model($_GET['proj_id']);
-        $this->registry->projectEstimation = new Estimation_Model($this->project->estimation());
-        //Show the projectTasks view
+
+        $this->registry->View_Template->projectEstimation = new Estimation_Model($this->project->estimation());
+//Show the projectTasks view
         $this->registry->View_Template->show('projectTasks');
         }
 
@@ -34,16 +35,17 @@ class Task_Controller extends Main_Controller
 
     public function details()
         {
-        $this->registry->task = new Task_Model($_GET['task_id']);
-        $this->registry->project = new Project_Model
-                ($this->registry->task->proj_id());
-        $est_id = $this->registry->task->estimation();
+        $task = new Task_Model($_GET['task_id']);
+        $this->registry->View_Template->project = new Project_Model
+                ($task->proj_id());
+        $est_id = $task->estimation();
 
-        $this->registry->taskEstimation = new Estimation_Model($est_id);
+        $this->registry->View_Template->taskEstimation = new Estimation_Model($est_id);
         //Optional field
-        $this->registry->taskStaff = new Staff_Model($this->registry->task->staff());
+        $this->registry->View_Template->taskStaff = new Staff_Model($task->staff());
         //Optional field
-        $this->registry->taskDependencies = new Dependency_Model($this->registry->task->dpnd());
+        $this->registry->View_Template->taskDependencies = new Dependency_Model($task->dpnd());
+        $this->registry->View_Template->task = $task;
         $this->registry->View_Template->show('taskDetails');
         }
 
@@ -69,9 +71,9 @@ class Task_Controller extends Main_Controller
                 }
             if ($this->success)
                 {
-                $this->registry->error = false;
-                $this->registry->heading = "Success";
-                $this->registry->message = "Task successfully deleted<br/>"
+                $this->registry->View_Template->error = false;
+                $this->registry->View_Template->heading = "Success";
+                $this->registry->View_Template->message = "Task successfully deleted<br/>"
                         . "Return to <a href=\"?page=Task&proj_id=" . $proj_id . "\">"
                         . "Task List</a>";
                 } else
@@ -81,9 +83,9 @@ class Task_Controller extends Main_Controller
             }//End of try
         catch (Exception $e)
             {
-            $this->registry->error = true;
-            $this->registry->heading = "Error Deleting..";
-            $this->registry->message = $e->getMessage();
+            $this->registry->View_Template->error = true;
+            $this->registry->View_Template->heading = "Error Deleting..";
+            $this->registry->View_Template->message = $e->getMessage();
             }
         $this->registry->View_Template->show('showMessage');
         }

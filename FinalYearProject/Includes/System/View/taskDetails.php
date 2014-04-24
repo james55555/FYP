@@ -22,10 +22,6 @@
         <div id="container">
             <div class="upper">
                 <?php
-                //Set easier to use variables throughout the view
-                $project = $this->registry->project;
-                $task = $this->registry->task;
-                $taskEstimation = $this->registry->taskEstimation;
                 $noEstimate = "No estimate set!";
                 ?>
 
@@ -184,7 +180,6 @@
                                         <div class="info">
                                             <?php
                                             echo "<br/>";
-                                            $dependencies = $this->registry->taskDependencies;
                                             if (isset($dependencies))
                                                 {
                                                 if (is_array($dependencies->dpnd_on()))

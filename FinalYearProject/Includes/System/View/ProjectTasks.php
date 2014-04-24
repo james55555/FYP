@@ -27,24 +27,8 @@
                     <h1 id="title">Tasks for project: <?php echo $proj_id ?></h1><br/>
                     <?php
                     $noEstimate = "No estimate set.";
-                    try
-                        {
-                        if (isset($this->registry->projectEstimation) && !$this->registry->projectEstimation instanceof Estimation_Model)
-                            {
-                            throw new Exception("projEstimation not set!");
-                            }
-                        $projEstimate = $this->registry->projectEstimation;
-                        $stCheck = $projEstimate->start_dt();
-                        $edCheck = $projEstimate->est_end_dt();
-                        if (isset($this->registry->projectEstimation))
-                            {
-                            $stCheck = $noEstimate;
-                            $edCheck = $noEstimate;
-                            }
-                        } catch (Exception $e)
-                        {
-                        echo $e->getMessage();
-                        }
+                        $stCheck = $projectEstimation->start_dt();
+                        $edCheck = $projectEstimation->est_end_dt();
                     ?>
                     <div class="Proj_Details" id="start">
                         <p>Project Start Date: <?php
@@ -77,13 +61,9 @@
                 <br/>
                 <div id="tasks">
                     <?php
-                    //var_dump($this->registry->project_tasks);
-                    //var_dump(isset($this->registry->project_tasks));
-                    //var_dump(count($this->registry->project_tasks));
-                    $tasks = $this->registry ? $this->registry->project_tasks : null;
-                    if (isset($tasks))
+                    if (isset($project_tasks))
                         {
-                        $tasks = $this->registry->project_tasks;
+                        $tasks = $project_tasks;
                         ?>
                         <table id="myTasks" class="table">
                             <tr>

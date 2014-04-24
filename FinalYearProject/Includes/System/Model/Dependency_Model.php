@@ -26,7 +26,7 @@ class Dependency_Model extends Generic_Model
                 $key = strtolower($key);
                 if ($val === "NULL")
                     {
-                    $val = null;
+                    $$val = null;
                     }
                 if (is_array($val))
                     {
@@ -35,7 +35,6 @@ class Dependency_Model extends Generic_Model
                         array_push($row, $key[$dpnd]);
                         }
                     }
-                $this->$key = $val;
                 }
             } catch (Exception $e)
             {

@@ -12,7 +12,7 @@ class Logout_Controller extends Main_Controller
             function main()
         {
         session_destroy();
-        header('Location: index.php');
+        header('Location: ?page=Login');
         }
 
     }

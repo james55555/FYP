@@ -22,8 +22,6 @@
     <body>
         <?php
         include("header.php");
-        $project = $this->registry->project;
-        $estimation = $this->registry->estimation;
         ?>
         <div id="container">
             <div id="content" class="centralBox"> 

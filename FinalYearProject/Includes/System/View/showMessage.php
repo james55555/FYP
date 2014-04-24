@@ -17,21 +17,21 @@
             }
         ?>            
         <div id="container">
-            <h1><?php echo $this->registry->heading; ?></h1>
+            <h1><?php echo $heading; ?></h1>
             <div id="showMsg">
                 <?php
             ?>
                 <?php
-                if (is_array($this->registry->message))
+                if (is_array($message))
                     {
-                    $this->registry->message = implode("<br/>", $this->registry->message);
+                    $message = implode("<br/>", $message);
                     }
-                if ($this->registry->error)
+                if ($error)
                     {
                     ?>
                     <p class="error">   
                         <?php
-                        echo $this->registry->message;
+                        echo $message;
                         ?>
                     </p>
                     <br/>
@@ -41,10 +41,10 @@
                     <?php
                     } else
                     {
-                    echo "<p>" . $this->registry->message . "</p>";
+                    echo "<p>" . $message . "</p>";
                     }
                 //Reset registry error
-                $this->registry->error = false;
+                $error = false;
                 ?>
             </div> <!--End of showMsg div-->
         </div> <!--End of container div-->

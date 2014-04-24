@@ -22,8 +22,6 @@
     <body>
         <div id="container">
             <?php
-            $task = $this->registry->task;
-
             include("header.php");
             ?> 
             <div id="content" class="centralBox">
@@ -58,36 +56,56 @@
                     </div> <!--End of details div-->
                     <div id="dependencies" class="section">
                         <?php
-                        //only show task dependencies if their are tasks associated
+                        //only show task dependencies if there are tasks associated
                         //with the project in question
-                        if (isset($this->registry->dependencies))
+                        if (isset($projTasks))
                             {
                             echo "<h2>Choose Task Dependencies: </h2>";
                             //Set up checkbox for all tasks in the same project
-                            foreach ($this->registry->dependencies as $dpnd)
+                            foreach ($projTasks as $task)
                                 {
-                                //This identifies this is an existing dependency or not
-                                if ($dpnd === $task->dpnd())
+                                $dpnt = $dependencies->dpnd_on();
+                                try
                                     {
-                                    $checked = " checked";
-                                    } else
+                                    $chckBoxStr = "<label id=\"dpndNm\">{$task->tsk_nm()}</label>"
+                                            . "<input type=\"checkbox\" name=\"tDpnd[]\" "
+                                            . "value=\"{$task->tsk_id()}\"";
+                                    if (is_array($dpnt))
+                                        {
+                                        throw new Exception($chckBoxStr);
+                                        }
+                                    if ($dpnt === $task->tsk_id())
+                                        {
+                                        $selected = " checked/>";
+                                        } else
+                                        {
+                                        $selected = "/>";
+                                        }
+                                    echo $chckBoxStr . $selected;
+                                    } catch (Exception $e)
                                     {
-                                    $checked = "";
+                                    foreach ($dpnt as $id)
+                                        {
+                                        if ($id === $task->tsk_id())
+                                            {
+                                            $selected = "checked/>";
+                                            } else
+                                            {
+                                            $selected = "/>";
+                                            }
+                                            echo $chckBoxStr . $selected;
+                                        }
                                     }
-                                //This doesn't work. Logic needs to be reworked regarding dependencies.
-                                echo "<label>{$task->task_nm()}</label>"
-                                . "<input type=\"checkbox\" name=\"tDpnd[]\" "
-                                . "value=\"{$task->tsk_id()}\"{$checked}/>";
                                 }
                             }
-                        $estimation = $this->registry->estimation;
                         ?>
+                        <span style="clear:both;"></span>
                     </div><!--End of dependencies-->
                     <div id="estimation" class="section">
                         <h2>Task Dates</h2>
                         <p id="projDt">Dates must be between <?php
-                            echo $this->registry->projEst->start_dt()
-                            . " and " . $this->registry->projEst->est_end_dt();
+                            echo $projEst->start_dt()
+                            . " and " . $projEst->est_end_dt();
                             ?></p>
                         <label title="When will the task start?">
                             Start Date: </label><input type="date" name="tStart" value="<?php echo $estimation->start_dt_AM(); ?>"/>
@@ -103,7 +121,6 @@
                     <!--Optional for user-->
                     <?php
                     //Localise variable
-                    $staff = $this->registry->staff;
                     ?>
                     <div id="staff" class="section">
                         <h2>Associated Staff Members</h2>

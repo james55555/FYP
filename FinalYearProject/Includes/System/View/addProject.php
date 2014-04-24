@@ -28,7 +28,7 @@
                 <h1>Add Project</h1>
 
                 <form id="addProject" action="?page=add&action=addProject&isProj=true" 
-                      method="post"> <!--onsubmit="return projectValidation()"-->
+                      method="post"> 
                     <div id="details">
                         <h2>Details</h2>
                         <label>Name: </label><input type="text" name="pName"/><br/>

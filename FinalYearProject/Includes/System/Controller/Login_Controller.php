@@ -16,7 +16,6 @@ class Login_Controller extends Main_Controller
     public
             function main()
         {
-        $this->registry->success = null;
         try
             {
             //If username or passwword ar empty provide error

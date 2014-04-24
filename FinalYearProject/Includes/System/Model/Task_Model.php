@@ -62,17 +62,6 @@ class Task_Model
             //$this->proj_id = $row->PROJ_ID;
             $this->proj_id = $row['proj_id'];
             }
-        /*
-          //$this->status = $row->STATUS;
-          $this->status = $row->status;
-          //$this->task_nm = $row->TASK_NM;
-          $this->task_nm = $row->task_nm;
-          //$this->web_addr = $row->WEB_ADDR;
-          $this->web_addr = $row->web_addr;
-          //$this->tsk_dscr = $row->TSK_DESCR;
-          $this->tsk_dscr = $row->tsk_descr;
-          //Set up associated objects with task
-         */
         //Get objects associated with the task
         $this->estimation = TaskEstimation_Model::getEstimationId($row['tsk_id']);
         $this->staff = StaffTask_Model::getStaffId($row['tsk_id']);
@@ -763,6 +752,8 @@ class Task_Model
                 $validTiming = Task_Model::isDateBetween($date, $project_estimation->est_end_dt(), $project_estimation->start_dt());
                 if (is_string($validTiming))
                     {
+                    //If date is passed as string then convert to date and print in Eng format
+                    is_string($date) ? $date = new DateTime($date) : $date;
                     return "Supplied: " . $date->format('d-m-Y') . "<br/>" . $validTiming;
                     }
                 }

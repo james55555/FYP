@@ -1,4 +1,5 @@
 <?php
+
 /*
  * Controller to validate form data and add user to database
  * @author James Graham
@@ -26,18 +27,17 @@ class Register_Controller extends Main_Controller
         $valid = $this->checkForm();
         if ($valid)
             {
-            $this->registry->error = true;
-            $this->registry->heading = "Registration success!";
-            $this->registry->message = "You are now a registered user."
+            $this->registry->View_Template->error = true;
+            $this->registry->View_Template->heading = "Registration success!";
+            $this->registry->View_Template->message = "You are now a registered user."
                     . "<br/><a href=\"?page=Login\">Login with new details</a>";
             } else
             {
-                //Set user session to null so that header doesn't appear
-                $this->registry->error = true;
-            $this->registry->heading = "Error adding user!";
+            //Set user session to null so that header doesn't appear
+            $this->registry->View_Template->error = true;
+            $this->registry->View_Template->heading = "Error adding user!";
             //Print errors             
-                $this->registry->message = $this->newUser;
-                
+            $this->registry->View_Template->message = $this->newUser;
             }
 
         $this->registry->View_Template->show('showMessage');
@@ -60,16 +60,16 @@ class Register_Controller extends Main_Controller
         $registrationFields['email'] = $_POST['email'];
         $registrationFields['user_id'] = $_POST['user_id'];
         $registrationFields['password'] = PassHash::hash($_POST['password']);
-        
-            $this->newUser = Account_Model::addUser($registrationFields);
-            if (is_bool($this->newUser))
-                {
-                $valid = true;
-                }
-                elseif(is_array($this->newUser) || is_string($this->newUser)){
-                    $valid = false;
-                    }
-                        
+
+        $this->newUser = Account_Model::addUser($registrationFields);
+        if (is_bool($this->newUser))
+            {
+            $valid = true;
+            } elseif (is_array($this->newUser) || is_string($this->newUser))
+            {
+            $valid = false;
+            }
+
         return $valid;
         }
 

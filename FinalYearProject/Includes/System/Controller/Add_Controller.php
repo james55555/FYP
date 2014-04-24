@@ -20,10 +20,10 @@ class Add_Controller extends Main_Controller
             $this->registry->View_Template->show('addProject');
             } else
             {
-            $this->registry->projTasks = Task_Model::getAllTasks($_GET['proj_id']);
+            $this->registry->View_Template->projTasks = Task_Model::getAllTasks($_GET['proj_id']);
             //Make dates available to view
             $project = new Project_Model($_GET['proj_id']);
-            $this->registry->projEst = new Estimation_Model($project->estimation());
+            $this->registry->View_Template->projEst = new Estimation_Model($project->estimation());
             $this->registry->View_Template->show('addTask');
             }
         }
@@ -68,14 +68,14 @@ class Add_Controller extends Main_Controller
             if (is_array($this->newProject) ||
                     is_string($this->newProject))
                 {
-                $this->registry->error = true;
-                $this->registry->heading = "Error adding project";
-                $this->registry->message = $this->newProject;
+                $this->registry->View_Template->error = true;
+                $this->registry->View_Template->heading = "Error adding project";
+                $this->registry->View_Template->message = $this->newProject;
                 } else
                 {
-                $this->registry->error = false;
-                $this->registry->heading = "Project Added!";
-                $this->registry->message = "Click <a href=\"?page=Home\"> here </a> "
+                $this->registry->View_Template->error = false;
+                $this->registry->View_Template->heading = "Project Added!";
+                $this->registry->View_Template->message = "Click <a href=\"?page=Home\"> here </a> "
                         . "to view your projects";
                 }
             } elseif (!$this->isProject)
@@ -83,14 +83,14 @@ class Add_Controller extends Main_Controller
             if (is_array($this->newTask) ||
                     is_string($this->newTask))
                 {
-                $this->registry->error = true;
-                $this->registry->heading = "Error adding task!";
-                $this->registry->message = $this->newTask;
+                $this->registry->View_Template->error = true;
+                $this->registry->View_Template->heading = "Error adding task!";
+                $this->registry->View_Template->message = $this->newTask;
                 } else
                 {
-                $this->registry->error = false;
-                $this->registry->heading = "Task Added!";
-                $this->registry->message = "Click <a href=\"?page=Task&action=details&task_id=" . $this->newTask->tsk_id() . "\">"
+                $this->registry->View_Template->error = false;
+                $this->registry->View_Template->heading = "Task Added!";
+                $this->registry->View_Template->message = "Click <a href=\"?page=Task&action=details&task_id=" . $this->newTask->tsk_id() . "\">"
                         . " here </a> to view tasks.";
                 }
             } else

@@ -48,31 +48,17 @@ class TaskDependency_Model extends Dependency_Model
     public static function getDpID($tsk_id)
         {
         $row = Database_Queries::selectFrom("DEPENDENCY_MODEL", "DEPENDENCY_ID", "TASK_DEPENDENCY", "TSK_ID", $tsk_id);
-        if (!is_array($row) && isset($row))
+        if (is_object($row))
             {
-            //Create array to store rows in
-            $dpIds = array();
-
-            //Assign list of Id's to the new array
-            foreach ($row as $id)
-                {
-                if (is_a($id, "TaskDependency_Model"))
-                    {
-                    array_push($dpIds, $id->dp_id());
-                    } elseif (is_object($id))
-                    {
-                    array_push($dpIds, $id->DEPENDENCY_ID);
-                    } elseif (is_string($id))
-                    {
-                    array_push($dpIds, $id);
-                    }
-                }
+            $dpId = $row->dependency_id;
+            } elseif (is_array($row))
+            {
+            $dpId = $row['dependency_id'];
             } else
             {
-            //If nothing is found return null
-            $dpIds = null;
+            $dpId = null;
             }
-        return $dpIds;
+        return $dpId;
         }
 
     /*

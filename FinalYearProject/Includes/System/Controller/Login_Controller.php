@@ -7,49 +7,67 @@
 
 class Login_Controller extends Main_Controller
     {
-
-    protected $user;
-    protected $pwd;
+    /*
+     * This function is run when the user presses 'Login'
+     * 
+     * @return $this->login === Success ? ?page=home : ?page=Login
+     */
 
     public
             function main()
         {
-        $this->registry->success = true;
-        //if the username/password are set then the form has been submitted.
-        //only attempt to log in if user id and pwd are set.
-        if (isset($_POST['username']) && isset($_POST['password']))
+        $this->registry->success = null;
+        try
             {
-            //If authentication was successful
-            $this->registry->success = $this->login($_POST['username'], $_POST['password']);
-            if ($this->registry->success)
+            //If username or passwword ar empty provide error
+            if (isset($_POST['username']) && isset($_POST['password']))
                 {
+                //Check the provided credentials are correct
+                if (!$this->login($_POST['username'], $_POST['password']))
+                    {
+                    throw new Exception("<p>Invalid Credentials</p>");
+                    }
+                //If authentication was successful
                 header('Location: ?page=home');
                 }
+            } catch (Exception $ex)
+            {
+            //If caught, make error_string available to view
+            $this->registry->View_Template->error_string = $ex->getMessage();
             }
+
+        //Does the errror string have to be in the registry? yes
         $this->registry->View_Template->show('login');
         }
 
     /*
-     * Method to create a new session for given username
+     * Function to run login and set $_SESSION variables
+     * All parameters are passed from the login screen
+     * @param (String) $user        This is the username provided
+     * @param (String) $password    This is the password provided
+     * 
+     * @return (bool)               True if credentials are correct, false otherwise.
      */
 
     private
             function login($user, $password)
         {
-        $this->success = false;
-        // Get the account from the database
+//Default - set session to null
+        $_SESSION['user'] = null;
+// Get the account from the database
         $acc = Account_Model::getUser($user);
-        //Ensure password is correct
+//Ensure password is correct
         if (isset($acc))
             {
+//Unhash t
             if (PassHash::check_password($acc->password, $password))
                 {
-                //Log in successful, set up new session and set boolean to false
+//Log in successful, set up new session and set boolean to false
                 $_SESSION['user'] = $acc;
-                $this->success = true;
+                return true;
                 }
             }
-        return $this->success;
+        return false;
         }
 
     }

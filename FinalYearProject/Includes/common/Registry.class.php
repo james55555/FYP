@@ -32,7 +32,7 @@ Class Registry
     public
             function __get($key)
         {
-        if (!array_key_exists($key, $this->variables))
+        if (!!!array_key_exists($key, $this->variables))
             {
             return null;
             }

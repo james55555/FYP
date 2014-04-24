@@ -3,25 +3,8 @@
     Author     : James
 */
 
-#content{
-    /*Position block*/
-    margin: 0 auto;
-    background-color: #FFFFFF;
-    margin-top: 2.5%;
-    text-align: center;
-    width: 40%;
-    display: block;
-    overflow: auto;
-}
 #content #details, #content #projDates {
     padding: 4px;
-}
-
-#content h1, #content #details h2, #content #projdates h2 {
-    border-bottom: solid 1px #aaa;
-}
-#content #details h2, #content #projdates h2 {
-    padding-top: .5em;
 }
 #content label {
     float:left;
@@ -32,12 +15,6 @@
     float:left;
     width: 50%;
     padding: 2px;
-}
-#content #actions{
-    margin-top: .75em;
-    padding-top: .75em;
-    display: inline-block;
-    border: solid black;
 }
 
 

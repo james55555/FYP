@@ -7,5 +7,16 @@
     text-align:center;
     font-style: italic;
 }
+#dependencies{
+    display:inline-block;    
+    width: 100%;
+}
+#content input[type=checkbox]{
+    float: right;
+    margin-right: 25%;
+}
+#content #dpndNm{
+    padding-right: 30px;
+}
 
 

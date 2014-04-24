@@ -1,7 +1,5 @@
 /*
 *   CSS Form to style the login page.
-http://www.mycodezone.com/simple-screen-centered-login-box/
-*
 */
 
 /*Introduction section*/
@@ -12,13 +10,12 @@ http://www.mycodezone.com/simple-screen-centered-login-box/
     height: 25%;
     padding: 20px;
     display: block;
-    
 }
 
 #login_div p{
     margin-top: -10px;
 }
-/*Code for design sourced from Sachin (2013)
+/*  Code for design sourced from Sachin (2013)
  *  #login_div label
  *  #login_div input[text, password, submit]
 */
@@ -60,7 +57,13 @@ http://www.mycodezone.com/simple-screen-centered-login-box/
     text-shadow: 1px 1px #0047CC;
     font-size:16px;
 }
+#actions #submit {
+    float:left;
+}
 .error {
     color: red;
     text-align: center;
+}
+#loginIssue{
+    display: inline-block;
 }

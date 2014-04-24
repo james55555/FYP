@@ -9,7 +9,7 @@
  */
 ?>
 <html>
-    <!--DOCTYPE HTML-->
+    <!DOCTYPE html>
     <head>
         <script type="text/javascript" src="Includes/common/Scripts/confirmAction.js"></script>
 

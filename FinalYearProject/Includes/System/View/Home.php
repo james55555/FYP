@@ -11,6 +11,7 @@
 ?>
 
 <html>
+    <!DOCTYPE html>
     <head>
         <script type="text/javascript" src="Includes/common/Scripts/confirmAction.js"></script>
         <link rel="stylesheet" type="text/css" href="Includes/CSS/reset.css"/>

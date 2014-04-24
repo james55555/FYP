@@ -38,7 +38,7 @@
             <div id="login_div" class="centralBox">
                 <p>To access your profile enter your login details or create an account</p>
                 <span class="error" id="emptyError">
-                <?php
+                    <?php
                     if (isset($error_string) && !empty($error_string))
                         {
                         echo $error_string;
@@ -48,15 +48,12 @@
                 <form method="post" action="?page=Login" name="login" id="login">
                     <label>Username: <input type="text" name="username" maxlength="25"/></label>
                     <label>Password: <input type="password" name="password" maxlength="25"/></label>
-                    
+
                     <div id="actions">
                         <input type="submit" value="Login" class="button" id="submit"/>
-                        <button type="button" class="button" id="reset">Reset</button>
-                    
-                        <span style="clear: both;"></span>
                     </div>
                 </form>
-                <div id="loginIssue" style="display: inline-block;">
+                <div id="loginIssue">
                     <!--Send user to registration form-->
                     <a href="?page=Register" id="NU">Don't have an account?</a>
                     <!--Send user to password reset page-->

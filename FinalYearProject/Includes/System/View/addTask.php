@@ -6,6 +6,7 @@
 #@author: James
 ?>
 <html>
+    <!DOCTYPE html>
     <head>
         <!--Include jQuery library-->
         <script type="text/javascript" src="Includes/common/Scripts/jQuery_lib/jquery_v1.11.1.js"></script>
@@ -84,10 +85,11 @@
                     <input type="hidden" value="<?php echo $_GET['proj_id']; ?>"
                            name="proj_id"/>
                     <div id="actions" class="section">
-                        <input type="button" value="Cancel" class="button"
+                        <input type="button" value="Cancel" class="button" id="cancel"
                                onclick="history.go(-1);"/>
-                        <input type="submit" value="Submit" class="button" id="newUser"/>
-                        <a id="reset" class="button">Reset</a>
+                        <input type="submit" value="Submit" class="button" id="submit"/>
+                        <button type="button" class="button" id="reset">Reset</button>
+                        <span style="clear:both"></span>
                     </div><!--End of actions-->
                 </form>
             </div> <!--End of content-->

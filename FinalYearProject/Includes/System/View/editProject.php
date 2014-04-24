@@ -45,24 +45,24 @@
                     </div> <!--End of details-->
                     <div id="projDates">
                         <h2>Project Dates</h2>
-                        
+
                         <label title="When will the project start?">
                             Start Date: </label>
                         <input type="date" name="pStart" value="<?php echo $estimation->start_dt_AM(); ?>">
-                        
+
                         <label title="The actual hours assigned to the project">
                             Actual hours: 
                         </label><input type="text" name="act_hr" placeholder="Must be a whole number" value="<?php echo $estimation->act_hr(); ?>"/>
-                        
+
                         <label title="The date the project actxually finished">
                             Actual End Date: 
                         </label><input type="date" name="pActEnd" value="<?php echo $estimation->act_end_dt_AM(); ?>"/>
-                        
+
                         <label>
                             Deadline: 
                         </label><input type="date" name="pDeadline" 
                                        value="<?php echo $estimation->est_end_dt_AM(); ?>"/>
-                    
+
                         <label>
                             Estimate: 
                         </label><input type="text" name="pln_hr" placeholder="Must be a whole number" value="<?php echo $estimation->pln_hr(); ?>"/>                    
@@ -72,7 +72,8 @@
                         <input type="button" value="Cancel" class="button" id="cancel"
                                onclick="history.go(-1);"/>
                         <input type="submit" value="Submit" class="button" id="submit"/>
-                        <a id="reset" class="button">Reset</a>
+                        <button type="button" class="button" id="reset">Reset</button>
+                        <span style="clear:both"></span>
                     </div>
                 </form>    
             </div><!--End of content-->

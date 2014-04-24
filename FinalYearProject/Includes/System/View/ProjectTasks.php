@@ -10,7 +10,6 @@
 ?>
 <html>
     <!DOCTYPE html> 
-    <html xmlns="http://www.w3.org/1999/xhtml">
         <head>
             <script type="text/javascript" src="Includes/common/Scripts/confirmAction.js"></script>
 

@@ -1,10 +1,11 @@
 /* 
- * Query to check if 
+ * Query to check if lgoin credentials are empty
  */
+jQuery(function($){ 
 
-jQuery(function($){
-   var form = document.forms[0];
-   $("#submit").click(function(){
+    var form = document.forms[0];
+   
+   $(form).on('submit', function(){
      
      // get user name
      var un = $("input[name='username']").val();
@@ -13,14 +14,14 @@ jQuery(function($){
      try {
        
        if (un === "" || un === null){
-           throw "Username";
+           throw "Username";           
        }
        if (pw === "" || pw === null){
            throw "Password";
        }
      
      } catch(ex) {
-       $('span #emptyError').html('<p>' + ex + ' must be filled in!</p>');
+       $('#emptyError').html('<p>' + ex + ' must be filled in!</p>');
        return false;
      }
      return true;

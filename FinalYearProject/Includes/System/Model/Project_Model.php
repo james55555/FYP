@@ -72,20 +72,23 @@ class Project_Model extends Validator_Model
     public static
             function getAllUserProj($acc_id)
         {
-        try{
-        $db = new Database();
-        $db->connect();
-        
-        $query = "SELECT PR.proj_id, PR.proj_nm, PR.proj_descr"
-                . " FROM PROJECT PR"
-                . " WHERE PR.proj_id IN"
-                . " (SELECT PROJ_ID FROM USER_PROJECT UP"
-                . " WHERE UP.user_id='" . $acc_id . "');";
-        $result = mysql_query($query);
-        if(!$result){
-            throw new Exception("Error finding projects");
-            }
-        }catch(Exception $e){
+        try
+            {
+            $db = new Database();
+            $db->connect();
+
+            $query = "SELECT PR.proj_id, PR.proj_nm, PR.proj_descr"
+                    . " FROM PROJECT PR"
+                    . " WHERE PR.proj_id IN"
+                    . " (SELECT PROJ_ID FROM USER_PROJECT UP"
+                    . " WHERE UP.user_id='" . $acc_id . "');";
+            $result = mysql_query($query);
+            if (!$result)
+                {
+                throw new Exception("Error finding projects");
+                }
+            } catch (Exception $e)
+            {
             echo $e->getMessage();
             }
         $projects = array();
@@ -96,12 +99,14 @@ class Project_Model extends Validator_Model
         $db->close();
         return $projects;
         }
-/*
- * Function to delete Project
- * @param (String) $proj_id     This will correspond with the proj_id field in the database
- * 
- * @return (bool)               Return true if successful, false otherwise
- */
+
+    /*
+     * Function to delete Project
+     * @param (String) $proj_id     This will correspond with the proj_id field in the database
+     * 
+     * @return (bool)               Return true if successful, false otherwise
+     */
+
     public static function deleteProject($proj_id)
         {
         $db = new Database();
@@ -127,7 +132,24 @@ class Project_Model extends Validator_Model
             //Loop through all project tasks and remove each one
             foreach ($deleteTask as $delete)
                 {
-                Task_Model::deleteTask($delete->tsk_id());
+                if (is_array($delete))
+                    {
+                    $success = Task_Model::deleteTask($delete['tsk_id']);
+                    if (!$success)
+                        {
+                        return false;
+                        }
+                    } elseif (is_object($delete))
+                    {
+                    $success = Task_Model::deleteTask($delete->tsk_id());
+                    if (!$success)
+                        {
+                        return false;
+                        }
+                    } else
+                    {
+                    return false;
+                    }
                 }
             }
 
@@ -246,10 +268,10 @@ class Project_Model extends Validator_Model
         return true;
         }
 
- /*
-  * Function to edit a project based on the fields provided by the controller (taken from form in view)
-  * @param (array) $fields      Array of fields passed from view
-  */
+    /*
+     * Function to edit a project based on the fields provided by the controller (taken from form in view)
+     * @param (array) $fields      Array of fields passed from view
+     */
 
     public static function editProject($fields)
         {
@@ -336,13 +358,15 @@ class Project_Model extends Validator_Model
         mysql_query("COMMIT;");
         return true;
         }
-        /*
-         * Function to sanitize an array of fields to be used with the database.
-         * @param (array) $fields       Array of fields to sanitize
-         * 
-         * @return (String || null)     Return String if error found, null otherwise.
-         */
-           private static function validateArray($fields)
+
+    /*
+     * Function to sanitize an array of fields to be used with the database.
+     * @param (array) $fields       Array of fields to sanitize
+     * 
+     * @return (String || null)     Return String if error found, null otherwise.
+     */
+
+    private static function validateArray($fields)
         {
         //Set var validation variables
         $type = "String";

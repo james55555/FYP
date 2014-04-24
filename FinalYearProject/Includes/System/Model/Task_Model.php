@@ -288,7 +288,7 @@ class Task_Model
             }
         //Processing complete, now run update statement
         $db->connect();
-        mysql_query("START TRANSACTION;");
+        $db->start();
 //Run the row checker against all tables affected by the update
         try
             {
@@ -304,13 +304,22 @@ class Task_Model
                     . "WHERE EST_ID='" . $est_id . "';");
             if (mysql_num_rows($estimationExists) === 0)
                 {
-                throw new Exception("Estimation doesn't exist'");
+                $estFields = array($fields['tAct_hr'],
+                    $fields['tPln_hr'],
+                    $DatesForUpdate['tStart'],
+                    $DatesForUpdate['tActEnd'],
+                    $DatesForUpdate['tDeadline']);
+                $est = Estimation_Model::add($estFields);
+                //Get new object ID
+                $est_id = $est->est_id();
                 }
             } catch (Exception $ex)
             {
-            mysql_query("ROLLBACK;");
+            $db->rollback();
             return $ex->getMessage() . "<br/>" . mysql_error();
             }
+        $db->close();
+        $db->connect();
         try
             {
             //Run the update query against the PROJECT table
@@ -318,10 +327,10 @@ class Task_Model
                     . " STATUS='" . $fields['status'] . "',"
                     . " TASK_NM='" . $fields['tName'] . "',"
                     . " WEB_ADDR='" . $fields['web_addr'] . "',"
-                    . " TSK_DESCR='" . $fields['tDescr'] . "',"
-                    . " TSK_ID='" . $task_id . "';";
+                    . " TSK_DESCR='" . $fields['tDescr'] . "'"
+                    . " WHERE TSK_ID='" . $task_id . "';";
             $task_result = mysql_query($task_update);
-            if (!$task_result && mysql_affected_rows() === 0)
+            if (!$task_result || mysql_affected_rows() === -1)
                 {
                 throw new Exception("No task rows updated!"
                 . "<br/>" . mysql_error());
@@ -359,7 +368,6 @@ class Task_Model
                     {
                     //Run update against DEPENDENCY table foreach dependency
                     //Associative array ($id = DP_ID && $on = DP_ON)
-
                     $dpnd_update = "UPDATE DEPENDENCY SET "
                             . "DEPENDENCY_ON='" . $on . "'"
                             . "WHERE DEPENDENCY_ID='" . $id . "';";
@@ -472,8 +480,6 @@ class Task_Model
             {
             return $validDates;
             }
-            var_dump($validDates);
-            die();
         //Validate staff fields
         $validStaff = Staff_Model::validateStaffFields($staffFields);
         if (is_string($validStaff) || is_array($validStaff))

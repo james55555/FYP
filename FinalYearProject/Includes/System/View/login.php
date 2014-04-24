@@ -54,7 +54,7 @@
                     ?>
                 </div>
                 <div id="loginIssue">
-                    <!--Send user to registration form = ?page=Register-->
+                    <!--Send user to registration form-->
                     <a href="?page=Register" id="NU">Don't have an account?</a>
                     <!--Send user to password reset page-->
                     <!--<a href="?page=newPass" id="NP">Forgot Password?</a>-->

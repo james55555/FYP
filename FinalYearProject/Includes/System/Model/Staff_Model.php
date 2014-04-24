@@ -206,7 +206,7 @@ class Staff_Model extends Generic_Model
                 } elseif ($key === "stEmail")
                 {
                 $key = "Email";
-                $length = 4;
+                $length = 200;
                 $validated = Validator_Model::validateEmail($value, "Staff email ");
                 }
 

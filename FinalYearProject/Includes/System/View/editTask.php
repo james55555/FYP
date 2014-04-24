@@ -89,11 +89,11 @@
                             . " and " . $this->registry->projEst->est_end_dt();
                             ?></p>
                         <label title="When will the task start?">
-                            Start Date: </label><input type="date" name="tStart" value="<?php echo $estimation->start_dt(); ?>"/>
+                            Start Date: </label><input type="date" name="tStart" value="<?php echo $estimation->start_dt_AM(); ?>"/>
                         <label title="When did the task end?">
-                            Actual End date: </label><input type="date" name="tActEnd" value="<?php echo $estimation->act_end_dt(); ?>"/>
+                            Actual End date: </label><input type="date" name="tActEnd" value="<?php echo $estimation->act_end_dt_AM(); ?>"/>
                         <label title="When will the task end?">
-                            Deadline: </label><input type="date" name="tDeadline" value="<?php echo $estimation->est_end_dt(); ?>"/>
+                            Deadline: </label><input type="date" name="tDeadline" value="<?php echo $estimation->est_end_dt_AM(); ?>"/>
                         <label title="How many hours were assigned to the project?">
                             Actual Hours: </label><input type="text" name="tAct_hr" value="<?php echo $estimation->act_hr(); ?>"/>
                         <label title="How many hours will be assigned to the task?">
@@ -106,18 +106,18 @@
                     ?>
                     <div id="staff" class="section">
                         <h2>Associated Staff Members</h2>
-                        <label>First Name: </label><input type="text" name="stFirst" value="<?php echo isset($staff) ? $staff->staff_first_nm() : null; ?>"/>
-                        <label>Last Name: </label><input type="text" name="stLast" value="<?php echo isset($staff) ? $staff->staff_last_nm() : null; ?>"/>
-                        <label>Phone Extension: </label><input type="tel" name="stTel" value="<?php echo isset($staff) ? $staff->staff_phone() : null; ?>"/>
-                        <label>Email: </label><input type="text" name="stEmail" value="<?php echo isset($staff) ? $staff->staff_email() : null; ?>"/>
+                        <label>First Name: </label><input type="text" name="stFirst" value="<?php echo $staff->staff_first_nm(); ?>"/>
+                        <label>Last Name: </label><input type="text" name="stLast" value="<?php echo $staff->staff_last_nm(); ?>"/>
+                        <label>Phone Extension: </label><input type="tel" name="stTel" value="<?php echo $staff->staff_phone(); ?>"/>
+                        <label>Email: </label><input type="text" name="stEmail" value="<?php echo $staff->staff_email(); ?>"/>
                     </div> <!--End of staff-->
-                    <input type="hidden" value="<?php echo isset($task) ? $task->proj_id() : null; ?>"
+                    <input type="hidden" value="<?php echo $task->proj_id(); ?>"
                            name="proj_id"/>
-                    <input type="hidden" value="<?php echo isset($task) ? $task->tsk_id() : null; ?>" 
+                    <input type="hidden" value="<?php echo $task->tsk_id(); ?>" 
                            name="task_id"/>
-                    <input type="hidden" value="<?php echo isset($estimation) ? $estimation->est_id() : null; ?>" 
+                    <input type="hidden" value="<?php echo $estimation->est_id(); ?>" 
                            name="est_id"/>
-                    <input type="hidden" value="<?php echo isset($staff) ? $staff->staff_id() : null; ?>" 
+                    <input type="hidden" value="<?php echo $staff->staff_id(); ?>" 
                            name="staff_id"/>
                     <div id="actions" class="section">
                         <input type="button" value="Cancel" class="button"

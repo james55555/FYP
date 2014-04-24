@@ -50,7 +50,6 @@ class Add_Controller extends Main_Controller
         //assign to an array
 
         $this->newTask = Task_Model::addTask($_POST);
-
         return $this->showView();
         }
 

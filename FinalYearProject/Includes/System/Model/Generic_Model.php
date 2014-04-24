@@ -18,7 +18,17 @@ abstract class Generic_Model
     public static function __delete($var, $table, $field)
         {
         //Trim beginning and end of $var for ' character
-        $var = trim($var, "'");
+        if (is_array($var))
+            {
+            foreach ($var as $vTrim)
+                {
+                $var = trim($vTrim, "'");
+                }
+            } else
+            {
+            $var = trim($var, "'");
+            }
+
         //Run the query
         $success = Database_Queries::deleteFrom($table, $field, $var, null);
         //If the query hasn't been succesful then alert.
@@ -43,12 +53,13 @@ abstract class Generic_Model
      */
 
     public abstract function set($variable, $newValue);
-/*
- * Function to cast stdClass object as an array (used mainly in getObj functions)
- * @param (object) $obj     This is the object to be converted
- * 
- * @return (array) $array   This is the converted object
- */
+    /*
+     * Function to cast stdClass object as an array (used mainly in getObj functions)
+     * @param (object) $obj     This is the object to be converted
+     * 
+     * @return (array) $array   This is the converted object
+     */
+
     public static function castStdObj($obj)
         {
         if (isset($obj) && is_object($obj))

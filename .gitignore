@@ -1,6 +1,11 @@
 #PHP-Unit Testing installation
 /FinalYearProject/Vendor/bin/
 /FinalYearProject/Vendor/symfony/
+js-validator/
 #Windows Files
 desktop.ini
 thumbs.db
+debug.php
+revCommit.patch
+testmysql.php
+working.zip

@@ -75,6 +75,24 @@ a:hover, button {
     margin: 0 auto;
     display: block;
 }
+/*Container div used to store information (usually forms)*/
+#content{
+    /*Position block*/
+    margin: 0 auto;
+    background-color: #FFFFFF;
+    margin-top: 2.5%;
+    text-align: center;
+    width: 40%;
+    display: block;
+    overflow: auto;
+}
+#content h1, #content h2 {
+    border-bottom: solid 1px #aaa;
+    margin-bottom: 10px;
+}
+#content h2{
+    padding-top: .5em;
+}
 .hide {
     display: none;
 }

@@ -48,8 +48,14 @@ class Task_Model
                 {
                 $val = null;
                 }
+            //Retrosepctive fix to resolve task description printing bug
+            if ($key === "tsk_descr")
+                {
+                $this->tsk_dscr = $val;
+                }
             $this->$key = $val;
             }
+        $this->tsk_id = $row['tsk_id'];
         //$this->tsk_id = $row->tsk_id;
         //$this->tsk_id = $row->TSK_ID;
         //Get the project corresponding to the linked id
@@ -179,9 +185,9 @@ class Task_Model
         $db = new Database();
         $fields = $db->filterParameters($fields);
         //Optional field
-        if (isset($fields['tDpnd[]']))
+        if (isset($fields['tDpnd']))
             {
-            $dpnds = $fields['tDpnd[]'];
+            $dpnds = $fields['tDpnd'];
             } else
             {
             $dpnds = "NULL";
@@ -282,16 +288,16 @@ class Task_Model
         try
             {
             //Check TASK table
-            $taskExists = mysql_query("SELECT * FROM TASK "
+            mysql_query("SELECT * FROM TASK "
                     . "WHERE TSK_ID='" . $task_id . "';");
-            if (mysql_num_rows($taskExists) === 0)
+            if (mysql_affected_rows() < 1)
                 {
                 throw new Exception("Task doesn't exist");
                 }
             //Check ESTIMATION table
-            $estimationExists = mysql_query("SELECT * FROM ESTIMATION "
+            mysql_query("SELECT * FROM ESTIMATION "
                     . "WHERE EST_ID='" . $est_id . "';");
-            if (mysql_num_rows($estimationExists) === 0)
+            if (mysql_affected_rows() < 1)
                 {
                 $estFields = array($fields['tAct_hr'],
                     $fields['tPln_hr'],
@@ -309,8 +315,8 @@ class Task_Model
             }
         $db->close();
         $db->connect();
-        try
-            {
+        $db->start();
+            try {
             //Run the update query against the PROJECT table
             $task_update = "UPDATE TASK SET"
                     . " STATUS='" . $fields['status'] . "',"

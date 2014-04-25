@@ -45,9 +45,9 @@ class Edit_Controller extends Main_Controller
                 }
             $this->registry->View_Template->dependencies = new Dependency_Model($dpnd_id);
             //Set estimation ID variable
-            var_dump($this->task);
             $est_id = $this->task->estimation();
             //Make task variabl available
+            
             $this->registry->View_Template->task = $this->task;
             $view = 'editTask';
             }

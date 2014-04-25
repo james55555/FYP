@@ -19,9 +19,11 @@
     </head>
     <body>
         <?php include("header.php"); ?>
+        <?php echo var_dump($task); ?>
         <div id="container">
             <div class="upper">
                 <?php
+                $ns = "Not set";
                 $noEstimate = "No estimate set!";
                 ?>
 
@@ -73,7 +75,7 @@
                                     echo $status;
                                     } else
                                     {
-                                    echo "Not set.";
+                                    echo $ns;
                                     }
                                 ?>
                             </div>
@@ -139,7 +141,7 @@
                                         echo $planned_hours;
                                         } else
                                         {
-                                        echo "Not set.";
+                                        echo $ns;
                                         }
                                     ?>
                                 </div>
@@ -153,7 +155,7 @@
                                         echo $actual_hours;
                                         } else
                                         {
-                                        echo "Not set.";
+                                        echo $ns;
                                         }
                                     ?>
                                 </div>
@@ -167,7 +169,7 @@
                                         echo $actual_end_date;
                                         } else
                                         {
-                                        echo "Not set";
+                                        echo $ns;
                                         }
                                     echo "</div>"//End of info div
                                     . "</li>"
@@ -200,7 +202,7 @@
                                                     }
                                                 } else
                                                 {
-                                                echo "Not set";
+                                                echo $ns;
                                                 }
                                             ?>
                                         </div>

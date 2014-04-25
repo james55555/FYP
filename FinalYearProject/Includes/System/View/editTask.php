@@ -13,7 +13,6 @@
         <script type="text/javascript" src="Includes/common/Scripts/confirmAction.js"></script>
         <script type="text/javascript" src="Includes/common/Scripts/resetFields.js"></script>
 
-
         <link rel="stylesheet" type="text/css" href="Includes/CSS/reset.css"/>
         <link rel="stylesheet" type="text/css" href="Includes/CSS/main.css"/>
         <link rel="stylesheet" type="text/css" href="Includes/CSS/TaskAction.css"/>
@@ -25,9 +24,9 @@
             include("header.php");
             ?> 
             <div id="content" class="centralBox">
-                <h1>Edit Task</h1>
+                <h1>Edit Task - <?php echo $task->tsk_nm(); ?></h1>
                 <form id="addTask" action="?page=Edit&action=editTask" 
-                      method="post" onsubmit="return taskValidation()">
+                      method="post">
                     <div id="details" class="section">
                         <h2>Details</h2>
                         <label>Name: </label><input type="text" name="tName" value="<?php echo $task->tsk_nm(); ?>"/>
@@ -62,7 +61,7 @@
                             {
                             echo "<h2>Choose Task Dependencies: </h2>";
                             //Set up checkbox for all tasks in the same project
-                            foreach ($projTasks as $task)
+                            foreach ($projTasks as $dpdTask)
                                 {
                                 $dpnt = $dependencies->dpnd_on();
                                 try
@@ -74,7 +73,7 @@
                                         {
                                         throw new Exception($chckBoxStr);
                                         }
-                                    if ($dpnt === $task->tsk_id())
+                                    if ($dpnt === $dpdTask->tsk_id())
                                         {
                                         $selected = " checked/>";
                                         } else
@@ -86,14 +85,14 @@
                                     {
                                     foreach ($dpnt as $id)
                                         {
-                                        if ($id === $task->tsk_id())
+                                        if ($id === $dpdTask->tsk_id())
                                             {
                                             $selected = "checked/>";
                                             } else
                                             {
                                             $selected = "/>";
                                             }
-                                            echo $chckBoxStr . $selected;
+                                        echo $chckBoxStr . $selected;
                                         }
                                     }
                                 }

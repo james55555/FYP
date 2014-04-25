@@ -10,10 +10,22 @@ class Home_Controller extends Main_Controller
 
     public function main()
         {
+        try{
         //Get all projects assigned to user in session available
-        $this->registry->View_Template->projects = Project_Model::getAllUserProj($_SESSION['user']->user_id);
+        $list = Project_Model::getAllUserProj($_SESSION['user']->user_id);
+        if(is_string($list)){
+            throw new Exception($list);
+            }
+        $this->registry->View_Template->projects = $list;
+        }
+        catch(Exception $e){
+            $this->registry->View_Template->error = true;
+            $this->registry->View_Template->heading = "Project Query Error!";
+            $this->registry->View_Template->message = $e->getMessage() . "<br/>" . mysql_error();
+            $this->registry->View_Template->show('showMessage');
+            }
         //Show the home screen
-        $this->registry->View_Template->show('home');
+        $this->registry->View_Template->show('Home');
         }
 
     public function delete()

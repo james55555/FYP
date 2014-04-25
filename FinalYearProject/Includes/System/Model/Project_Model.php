@@ -78,9 +78,9 @@ class Project_Model extends Validator_Model
             $db->connect();
 
             $query = "SELECT PR.proj_id, PR.proj_nm, PR.proj_descr"
-                    . " FROM PROJECT PR"
+                    . " FROM project PR"
                     . " WHERE PR.proj_id IN"
-                    . " (SELECT PROJ_ID FROM USER_PROJECT UP"
+                    . " (SELECT proj_id FROM user_project UP"
                     . " WHERE UP.user_id='" . $acc_id . "');";
             $result = mysql_query($query);
             if (!$result)
@@ -89,7 +89,7 @@ class Project_Model extends Validator_Model
                 }
             } catch (Exception $e)
             {
-            echo $e->getMessage();
+            return $e->getMessage();
             }
         $projects = array();
         while ($row = mysql_fetch_object($result))

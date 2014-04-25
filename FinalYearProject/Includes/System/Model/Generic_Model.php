@@ -28,14 +28,13 @@ abstract class Generic_Model
             {
             $var = trim($var, "'");
             }
-
         //Run the query
-        $success = Database_Queries::deleteFrom($table, $field, $var, null);
+        $success = Database_Queries::deleteFrom($table, $field, $var);
         //If the query hasn't been succesful then alert.
         if (!$success)
             {
-            throw new Exception($table . "table delete error: " . print_r($success)
-            . "<br/>Query: " . mysql_error());
+            throw new Exception($table . " table delete error"
+            . "<br/>Error: " . mysql_error());
             }
         return true;
         }

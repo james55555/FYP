@@ -48,12 +48,11 @@ class Database_Queries extends Database
                 }
             } elseif (is_array($check[3]))
             {
-            $id = $check[3][0];
+            $id = strtolower($check[3][0]);
             } else
             {
-            $id = $check[3];
+            $id = strtolower($check[3]);
             }
-        $check[1] = strtolower($check[1]);
         //Format vars for insert
         $qId = "'$id'";
         //If limit is 0 then return unlimited
@@ -122,18 +121,17 @@ class Database_Queries extends Database
      * @return (boolean)    Field to represent whether query has been successful or not
      */
 
-    public static function deleteFrom($table, $colCheck, $paramID, $setQuery)
+    public static function deleteFrom($table, $colCheck, $paramID, $setQuery = null)
         {
         $db = new Database();
         $db->connect();
-
         if (!isset($setQuery) && isset($paramID))
             {
             //Filter the variables
             $paramID = trim($paramID, "'");
 
-            $check = array($table, $colCheck, $paramID);
-            $db->filterParameters($check);
+            $filter = array($table, $colCheck, $paramID);
+            $check = $db->filterParameters($filter);
             //Before any deletes are run, archive the data
             $archSuccess = self::archive($check[0], $check[1], $check[2]);
             if (!$archSuccess)
@@ -158,20 +156,14 @@ class Database_Queries extends Database
             {
             return true;
             }
+            echo $query . "<br/>";
         //Start the delete transaction 
-        mysql_query("START TRANSACTION;");
+        $db->start();
         //Run the query to delete
         $result = mysql_query($query);
 
         //Assign true or false based on returned result
-        $success = $db->querySuccess($result);
-        if ($success)
-            {
-            mysql_query("COMMIT;");
-            } else
-            {
-            mysql_query("ROLLBACK;");
-            }
+        $success = $db->endStatement($result);
         $db->close();
         return $success;
         }
@@ -259,5 +251,4 @@ class Database_Queries extends Database
         $db->close();
         return true;
         }
-
     }

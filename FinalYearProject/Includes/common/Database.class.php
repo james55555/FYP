@@ -83,14 +83,14 @@ class Database
                 if (is_string($array[$key]))
                     {
                     // If they are, perform the real escape function over the selected node
-                    $array[$key] = trim(mysql_real_escape_string($array[$key]), "'");
+                    $array[$key] = strtolower(trim(mysql_real_escape_string($array[$key]), "'"));
                     }
                 }
             // Check if the parameter is a string
             if (is_string($array))
                 {
                 // If it is, perform a  mysql_real_escape_string on the parameter
-                $array = trim(mysql_real_escape_string($array), "'");
+                $array = strtolower(trim(mysql_real_escape_string($array), "'"));
                 }
             // Return the filtered result
             return $array;

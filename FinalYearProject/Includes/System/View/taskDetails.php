@@ -54,8 +54,7 @@
                     </p>
                 </div> <!--End of end date div-->
                 <button id="up" 
-                        onclick="javascript:location.href = '?page=Task&proj_id=\n\
-                        <?php echo $project->proj_id(); ?>'">
+                        onclick="javascript:location.href = '?page=Task&proj_id=<?php echo $project->proj_id(); ?>'">
                     <img src="Includes/CSS/img/Icons/up.png" 
                          alt="up" title="Return to task list"
                          width="20" height="20"/>
@@ -83,7 +82,7 @@
                         <li><div class="infoTitle">Task Description: </div>
                             <div class="info">
                                 <?php
-                                $descr = $task->tsk_dscr();
+                                $descr = $task->tsk_descr();
                                 $web = $task->web_addr();
                                 if (isset($descr))
                                     {
@@ -96,7 +95,7 @@
                             </div>
                         </li>
                         <?php
-                        if (isset($web) && $web !== '')
+                        if (isset($web))
                             {
                             ?>
                             <li><div class="infoTitle">Web Address: </div>

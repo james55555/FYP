@@ -20,7 +20,7 @@ class Task_Model
     private
             $web_addr;
     private
-            $tsk_dscr;
+            $tsk_descr;
     private
             $estimation;
     private
@@ -48,11 +48,6 @@ class Task_Model
                 {
                 $val = null;
                 }
-            //Retrosepctive fix to resolve task description printing bug
-            if ($key === "tsk_descr")
-                {
-                $this->tsk_dscr = $val;
-                }
             $this->$key = $val;
             }
         $this->tsk_id = $row['tsk_id'];
@@ -74,40 +69,34 @@ class Task_Model
         $this->dpnd = TaskDependency_Model::getDpID($row['tsk_id']);
         }
 
-    public
-            function tsk_id()
+    public function tsk_id()
         {
         return $this->tsk_id;
         }
 
-    public
-            function proj_id()
+    public function proj_id()
         {
         return $this->proj_id;
         }
 
-    public
-            function tsk_status()
+    public function tsk_status()
         {
         return $this->status;
         }
 
-    public
-            function tsk_nm()
+    public function tsk_nm()
         {
         return $this->task_nm;
         }
 
-    public
-            function web_addr()
+    public function web_addr()
         {
         return $this->web_addr;
         }
 
-    public
-            function tsk_dscr()
+    public function tsk_descr()
         {
-        return $this->tsk_dscr;
+        return $this->tsk_descr;
         }
 
     public function estimation()
@@ -316,7 +305,8 @@ class Task_Model
         $db->close();
         $db->connect();
         $db->start();
-            try {
+        try
+            {
             //Run the update query against the PROJECT table
             $task_update = "UPDATE TASK SET"
                     . " STATUS='" . $fields['status'] . "',"

@@ -32,7 +32,7 @@
                         <label>Name: </label><input type="text" name="tName" value="<?php echo $task->tsk_nm(); ?>"/>
                         <label>Description:  </label><textarea 
                             maxlength="200"
-                            name="tDescr"><?php echo $task->tsk_dscr(); ?></textarea>
+                            name="tDescr"><?php echo $task->tsk_descr(); ?></textarea>
                         <label>Web Address: </label><input type="text" name="web_addr"
                                                            value="<?php echo $task->web_addr(); ?>"/>                    
                         <label>Status: </label>

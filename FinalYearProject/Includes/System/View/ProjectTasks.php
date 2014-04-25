@@ -104,7 +104,7 @@
                                 . "</a>"
                                 . "</td>" .
                                 "<td>{$task->tsk_nm()}</td>" .
-                                "<td>{$task->tsk_dscr()}</td>" .
+                                "<td>{$task->tsk_descr()}</td>" .
                                 "<td>{$task->tsk_status()}</td>";
                                 ?>    
                                 <td>

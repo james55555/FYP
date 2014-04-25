@@ -90,7 +90,7 @@ class Task_ModelTest extends PHPUnit_Framework_TestCase
         }
 
     /**
-     * @covers Task_Model::tsk_dscr
+     * @covers Task_Model::tsk_descr
      * @todo   Implement testTsk_dscr().
      */
     public function testTsk_dscr()

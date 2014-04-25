@@ -3,28 +3,29 @@
 /*
  * Router class to load correct controller
  */
+
 Class Router
     {
 
     private
             $registry;
-    //variables to store Controller path details
-    //path of controller
+//variables to store Controller path details
+//path of controller
     private
             $path;
-    //array to store controller parameters
+//array to store controller parameters
     private
             $parms = array();
-    //file name of controller
+//file name of controller
     private
             $fileName;
-    //name of controller without .php suffix
+//name of controller without .php suffix
     private
             $controller;
-    //name of controller class
+//name of controller class
     private
             $class;
-    //function to be performed when called
+//function to be performed when called
     private
             $action;
 
@@ -47,31 +48,29 @@ Class Router
         if (is_dir($path))
             {
             $this->path = $path;
-            }
-        else
+            } else
             {
             throw new Exception("Incorrect Path");
             }
         }
 
-/*
- * Loader function
- */
+    /*
+     * Loader function
+     */
+
     public
             function loader()
         {
-//assign controller from getController to this->controller
-            $this->controller = $this->getController();
-
+        //assign controller from getController to this->controller
+        $this->controller = $this->getController();
+        try
+            {
             //Check if the fileName is available
             if (!!!is_readable($this->fileName))
                 {
                 //added echo and else if
-                echo "Filename not readable: <br/>" 
-                . var_dump($this->fileName);
-                //$this->controller = 'Error';
-                }
-            elseif (is_readable($this->fileName))
+                throw new Exception("<br/>Filename not readable: $this->fileName");
+                } elseif (is_readable($this->fileName))
                 {
                 //include the controller
                 include_once($this->fileName);
@@ -79,20 +78,22 @@ Class Router
             //name controller class i.e. Login_Controller
             $class = $this->controller . '_Controller';
             // new Login_Controller
-            // 
             $controller = new $class($this->registry);
             //verify that the contents of the array can be called as a function
             if (is_callable(array($controller, $this->action)) == false)
                 {
                 $action = 'main';
                 //if the action is callable then run the action
-                }
-            else
+                } else
                 {
                 $action = $this->action;
                 }
             //run action
             $controller->$action();
+            } catch (Exception $e)
+            {
+            echo "<a href=\"history.go(-1);\">" . $e->getMessage() . "</a>";
+            }
         }
 
     /*
@@ -102,21 +103,18 @@ Class Router
     protected
             function getController()
         {
-        $this->controller = empty($_GET['page']) ? 'Login' : $_GET['page'];
-
-        //Store action action in @var action
+        $this->controller = empty($_GET['page']) ? 'Login' : ucfirst($_GET['page']);
+//Store action action in @var action
         $this->action = $this->getAction();
 
-
-        //get the controller source file.
-        //use ? delimiter to exit concatenation and concatenate earlier?
+//get the controller source file.
+//use ? delimiter to exit concatenation and concatenate earlier?
         $this->fileName = trim(__CONTROLLER_PATH . $this->controller . '_Controller.php');
         if (is_readable($this->fileName))
             {
             include_once $this->fileName;
-            }
-        else
-            {
+            } else
+            {   
             $this->controller = 'Error';
             $this->fileName = trim(__CONTROLLER_PATH . $this->controller . '_Controller.php');
             include_once $this->fileName;
@@ -136,8 +134,7 @@ Class Router
         if (empty($_GET['action']))
             {
             $this->action = 'main';
-            }
-        else
+            } else
             {
             $this->action = $_GET['action'];
             }

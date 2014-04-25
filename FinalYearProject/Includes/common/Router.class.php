@@ -103,13 +103,11 @@ Class Router
     protected
             function getController()
         {
-        $this->controller = empty($_GET['page']) ? 'Login' : ucfirst($_GET['page']);
+        $this->controller = empty($_GET['page']) ? 'login' : $_GET['page'];
 //Store action action in @var action
         $this->action = $this->getAction();
-
-//get the controller source file.
-//use ? delimiter to exit concatenation and concatenate earlier?
-        $this->fileName = trim(__CONTROLLER_PATH . $this->controller . '_Controller.php');
+        //Crreate the fileName to call
+        $this->fileName = trim(__CONTROLLER_PATH . ucfirst($this->controller) . '_Controller.php');
         if (is_readable($this->fileName))
             {
             include_once $this->fileName;

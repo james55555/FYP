@@ -43,9 +43,9 @@ Class View_Template
         {
         try
             {
-            $viewName = ucfirst($viewName);
+            $viewName = strtolower($viewName);
             //Assign path to view name
-            $fullViewName = __VIEW_PATH . DIRECTORY_SEPARATOR .
+            $fullViewName = __VIEW_PATH .
                     $viewName . '.php';
             if (file_exists($fullViewName))
                 {

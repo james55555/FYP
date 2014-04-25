@@ -14,11 +14,11 @@ class Database
     private
             $DB_server = 'localhost';
     private
-            $DB_user = 'root';
+            $DB_user = 'grahamj1';
     private
-            $DB_pwd = '';
+            $DB_pwd = 'Water+Spider';
     private
-            $DB_nm = 'fyp';
+            $DB_nm = 'grahamj1';
 
     /*
      * Connect to database

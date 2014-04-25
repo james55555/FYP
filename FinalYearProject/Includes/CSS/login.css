@@ -57,13 +57,13 @@
     text-shadow: 1px 1px #0047CC;
     font-size:16px;
 }
+#actions {
+    display: inline-block;
+}
 #actions #submit {
     float:left;
 }
 .error {
     color: red;
     text-align: center;
-}
-#loginIssue{
-    display: inline-block;
 }

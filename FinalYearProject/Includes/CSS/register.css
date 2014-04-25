@@ -11,29 +11,13 @@
 .centralBox #content{
     /*Position block*/
     width: 50%;
-    display: block;
-    overflow: auto;
 }
-#content h1, #content #personal, #content #credentials {
-    border-bottom: 1px solid #aaa;
-}
- #content #personal, #content #credentials {
-    padding-bottom: .75em;
-}
-#content #personal {
-    padding-top: .75em;
-}
-#content #credentials {
-    margin-top: -.75em;
-}
-.regInput input[type=text], .regInput input[type=password]{
+input[type=text], input[type=password]{
     width: 80%;
-    padding: 4px;
-    margin-bottom: 2px;
+    text-align:center;
 }
-#navigation{
-     text-align: center;
-     vertical-align: bottom;
+.regInput{
+    clear:both;
 }
 .error {
     background: #FFB2B2;
@@ -47,5 +31,4 @@
     color: red;
     font-weight:bold;
 }
-
 

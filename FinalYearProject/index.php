@@ -1,5 +1,4 @@
 <?php
-
 /*
  *  Namespace       : Vendor
  *  Document        : index.php

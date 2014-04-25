@@ -27,16 +27,15 @@ class Login_Controller extends Main_Controller
                     throw new Exception("<p>Invalid Credentials</p>");
                     }
                 //If authentication was successful
-                header('Location: ?page=home');
+                header('Location: ?page=Home');
                 }
             } catch (Exception $ex)
             {
             //If caught, make error_string available to view
             $this->registry->View_Template->error_string = $ex->getMessage();
             }
-
         //Does the errror string have to be in the registry? yes
-        $this->registry->View_Template->show('login');
+        $this->registry->View_Template->show('Login');
         }
 
     /*

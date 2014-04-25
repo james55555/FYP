@@ -52,6 +52,7 @@
                     <div id="actions">
                         <input type="submit" value="Login" class="button" id="submit"/>
                     </div>
+                    <span style="clear:both"></span>
                 </form>
                 <div id="loginIssue">
                     <!--Send user to registration form-->

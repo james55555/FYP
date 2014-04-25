@@ -49,7 +49,7 @@ class Edit_Controller extends Main_Controller
             //Make task variabl available
             
             $this->registry->View_Template->task = $this->task;
-            $view = 'editTask';
+            $view = 'edittask';
             }
         $this->registry->View_Template->estimation = new Estimation_Model($est_id);
         $this->registry->View_Template->show($view);

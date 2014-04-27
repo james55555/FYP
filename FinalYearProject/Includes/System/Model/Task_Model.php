@@ -280,16 +280,19 @@ class Task_Model
             //Check TASK table
             $db->query("SELECT * FROM TASK "
                     . "WHERE TSK_ID='" . $task_id . "';");
-            if ($db->getAffectedRows() < 1)
+            if ($db->getAffectedRows() < 0)
                 {
                 throw new Exception("Task doesn't exist");
                 }
+                $task = new Task_Model($task_id);
             //Check ESTIMATION table
-            $db->query("SELECT * FROM ESTIMATION "
+            $estCheck_Res = $db->query("SELECT * FROM ESTIMATION "
                     . "WHERE EST_ID='" . $est_id . "';");
-            if ($db->getAffectedRows() < 1)
+            if (mysqli_num_rows($estCheck_Res) < 1)
                 {
-                $estFields = array($fields['tAct_hr'],
+                $estFields = array(
+                    "NULL",
+                    $fields['tAct_hr'],
                     $fields['tPln_hr'],
                     $DatesForUpdate['tStart'],
                     $DatesForUpdate['tActEnd'],
@@ -316,7 +319,7 @@ class Task_Model
                     . " TSK_DESCR='" . $fields['tDescr'] . "'"
                     . " WHERE TSK_ID='" . $task_id . "';";
             $task_result = $db->query($task_update);
-            if (!$task_result || $db->getAffectedRows() < 1)
+            if (!!!$task_result)
                 {
                 throw new Exception("No task rows updated!"
                 . "<br/>" . $db->getMysql_err());
@@ -327,10 +330,10 @@ class Task_Model
                     . " PLN_HR='" . $fields['tPln_hr'] . "',"
                     . " START_DT='" . $DatesForUpdate['tStart'] . "',"
                     . " ACT_END_DT='" . $DatesForUpdate['tActEnd'] . "',"
-                    . " EST_END_DT='" . $DatesForUpdate['tDeadline'] . "',"
+                    . " EST_END_DT='" . $DatesForUpdate['tDeadline'] . "'"
                     . " WHERE EST_ID='" . $est_id . "';";
             $est_result = $db->query($est_update);
-            if (!$est_result && $db->getAffectedRows() < 1)
+            if (!!!$est_result && mysql_affected_rows() < 1)
                 {
                 throw new Exception("No ESTIMATION rows updated!"
                 . "<br/>" . $db->getMysql_err());
@@ -344,7 +347,7 @@ class Task_Model
                     . " WHERE STAFF_ID='" . $staff_id . "';";
             $staff_result = $db->query($staff_update);
 
-            if (!$staff_result && $db->getAffectedRows() < 1)
+            if (!!!$staff_result)
                 {
                 throw new Exception("No STAFF rows updated");
                 }
@@ -536,6 +539,7 @@ class Task_Model
                 }
             $db->close(); //Close database as following construct and destruct db
             //Run estimation insert query
+
             $estimationFields = array("NULL",
                 "NULL",
                 $fields['tPln_hr'],
@@ -631,7 +635,7 @@ class Task_Model
                 {
                 "Changes committed";
                 }
-                return $e->getMessage();
+            return $e->getMessage();
             }
         }
 

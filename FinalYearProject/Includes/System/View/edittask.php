@@ -74,11 +74,11 @@
                             . " and " . $projEst->est_end_dt();
                             ?></p>
                         <label title="When will the task start?">
-                            Start Date: </label><input type="date" name="tStart" value="<?php echo $estimation->start_dt_AM(); ?>"/>
+                            Start Date: </label><input type="date" name="tStart" value="<?php echo $estimation->start_dt(); ?>"/>
                         <label title="When did the task end?">
-                            Actual End date: </label><input type="date" name="tActEnd" value="<?php echo $estimation->act_end_dt_AM(); ?>"/>
+                            Actual End date: </label><input type="date" name="tActEnd" value="<?php echo $estimation->act_end_dt(); ?>"/>
                         <label title="When will the task end?">
-                            Deadline: </label><input type="date" name="tDeadline" value="<?php echo $estimation->est_end_dt_AM(); ?>"/>
+                            Deadline: </label><input type="date" name="tDeadline" value="<?php echo $estimation->est_end_dt(); ?>"/>
                         <label title="How many hours were assigned to the project?">
                             Actual Hours: </label><input type="text" name="tAct_hr" value="<?php echo $estimation->act_hr(); ?>"/>
                         <label title="How many hours will be assigned to the task?">

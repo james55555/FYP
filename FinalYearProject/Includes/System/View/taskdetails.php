@@ -180,23 +180,11 @@
                                         <div class="info">
                                             <?php
                                             echo "<br/>";
-                                            if (isset($dependencies))
+                                            if (!empty($dependencies) || sizeof($dependencies) > 0)
                                                 {
-                                                if (is_array($dependencies->dpnd_on()))
+                                                foreach ($dependencies as $dp)
                                                     {
-                                                    foreach ($dependencies->dpnd_on() as
-                                                                $dpTask)
-                                                        {
-                                                        echo "<a href=\"?page=Task&action=details&task_id={$dpTask->dpnd_on()}\">
-                                            {$dpTask->dpnd_on()}</a><br/>";
-                                                        }
-                                                    } elseif (is_string($dependencies))
-                                                    {
-                                                    echo "<a href=\"?page=Task&action=details&task_id={$dependencies->dpnd_on()}\">
-                                            {$dependencies->dpnd_on()}</a>";
-                                                    } else
-                                                    {
-                                                    echo "None";
+                                                    echo $dp . "<br/>";
                                                     }
                                                 } else
                                                 {

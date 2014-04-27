@@ -146,6 +146,9 @@ class Database
             if(isset($date) && is_string($date) && $date !== "NULL"){
             $date = date('Y-m-d', strtotime(str_replace('-', '/', $date)));
             }
+            else {
+                $date = "NULL";
+                }
             return $date;
             }
 

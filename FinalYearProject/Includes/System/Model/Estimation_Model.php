@@ -20,13 +20,15 @@ class Estimation_Model extends Generic_Model
             $est_end_dt;
     private
             $est_id;
-    //Dates in American formatting (for use in HTML)
-    private $start_dt_AM;
-    private $act_end_dt_AM;
-    private $est_end_dt_AM;
+
+    /*
+     * This initializes an Estimation_Model object
+     * @param (String)  $est_id      Estimation object identifier
+     * @param (Bool)    $amConv      Optional param to identify whether American or English format is needed
+     */
 
     public
-            function __construct($est_id)
+            function __construct($est_id, $amConv = false)
         {
         try
             {
@@ -35,42 +37,40 @@ class Estimation_Model extends Generic_Model
                 {
                 throw new Exception("NULL");
                 }
-            foreach ($row as $key => $val)
-                {
-                $key = strtolower($key);
-                if ($key === "start_dt" ||
-                        $key === "act_end_dt" ||
-                        $key === "est_end_dt")
-                    {
-                    $row->$key = new DateTime($val);
-                    }
-                }
-
             //If the no error has been thrown then continue creating object
             $this->est_id = $row->est_id;
             $this->act_hr = $row->act_hr;
             $this->pln_hr = $row->pln_hr;
-            $this->start_dt = $row->start_dt->format('d-m-Y');
-            $this->start_dt_AM = $row->start_dt->format('Y-m-d');
-            $this->act_end_dt = $row->act_end_dt->format('d-m-Y');
-            //Format American dates
-            $this->act_end_dt_AM = $row->act_end_dt->format('Y-m-d');
-            $this->est_end_dt = $row->est_end_dt->format('d-m-Y');
-            $this->est_end_dt_AM = $row->est_end_dt->format('Y-m-d');
-            //If the value is set as String NULL then set to null value
             foreach ($row as $key => $val)
                 {
-                if ($val === "NULL")
+                echo "key: " . $key . " :val: " . $val . "<br/>";
+                if ($val === '0000-00-00')
                     {
-                    $this->set($key, null);
+                    $row->$key = "NULL";
+                    }
+                if (substr(strtolower($key), -2) === "dt" && $val !== "NULL")
+                    {
+                    //Convert String to date for Formatting
+                    $dt = DateTime::createFromFormat("Y-m-d", $val);
+                    if (!!!$amConv)
+                        {
+                        //Format the value to British
+                        $row->$key = $dt->format("d-m-Y");
+                        } else
+                        {
+                        $row->$key = $dt->format("Y-m-d");
+                        }
                     }
                 }
+            $this->act_end_dt = $row->act_end_dt;
+            $this->start_dt = $row->start_dt;
+            $this->est_end_dt = $row->est_end_dt;
             } catch (Exception $e)
             {
             $var = $e->getMessage();
             //Insert four values of "NULL" into $fields
             $fields = array();
-            for ($i = 0; $i !== 5; $i++)
+            for ($i = 0; $i !== 6; $i++)
                 {
                 array_push($fields, $var);
                 }
@@ -99,29 +99,14 @@ class Estimation_Model extends Generic_Model
         return $this->start_dt;
         }
 
-    public function start_dt_AM()
-        {
-        return $this->start_dt_AM;
-        }
-
     public function act_end_dt()
         {
         return $this->act_end_dt;
         }
 
-    public function act_end_dt_AM()
-        {
-        return $this->act_end_dt_AM;
-        }
-
     public function est_end_dt()
         {
         return $this->est_end_dt;
-        }
-
-    public function est_end_dt_AM()
-        {
-        return $this->est_end_dt_AM;
         }
 
     /*
@@ -229,14 +214,10 @@ class Estimation_Model extends Generic_Model
         $db->connect();
         $db->start();
         //Format dates 2,3 and 4 for database insert.
-        for ($i = 2; $i < 6; $i++)
+        for ($i = 3; $i < 6; $i++)
             {
-            if ($fields[$i] !== "NULL")
-                {
-                $fields[$i] = $db->formatDatesForDb($fields[$i])->format('Y-m-d');
-                }
+            $fields[$i] = $db->formatDatesForDb($fields[$i]);
             }
-            var_dump($fields);
         //Set insert into ESTIMATION
         $estimation_insert = "INSERT INTO ESTIMATION ("
                 . "EST_ID, "
@@ -252,7 +233,6 @@ class Estimation_Model extends Generic_Model
                 . " '" . $fields[3] . "',"
                 . " '" . $fields[4] . "',"
                 . " '" . $fields[5] . "');";
-        echo $estimation_insert;
         //Run query and get estimation id.
         $estimation_result = $db->query($estimation_insert);
         $est_id = $db->getInsertId();

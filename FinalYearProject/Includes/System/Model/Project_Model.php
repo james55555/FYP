@@ -82,7 +82,7 @@ class Project_Model extends Validator_Model
                     . " WHERE PR.proj_id IN"
                     . " (SELECT proj_id FROM user_project UP"
                     . " WHERE UP.user_id='" . $acc_id . "');";
-            $result = mysqli_query($db->getConn(), $query);
+            $result = $db->query($query);
             if (!$result)
                 {
                 throw new Exception("Error finding projects");

@@ -39,12 +39,25 @@ class Task_Controller extends Main_Controller
         $this->registry->View_Template->project = new Project_Model
                 ($task->proj_id());
         $est_id = $task->estimation();
-
         $this->registry->View_Template->taskEstimation = new Estimation_Model($est_id);
+
         //Optional field
         $this->registry->View_Template->taskStaff = new Staff_Model($task->staff());
         //Optional field
-        $this->registry->View_Template->taskDependencies = new Dependency_Model($task->dpnd());
+        $dependencies = array();
+        $dp = new Dependency_Model($task->dpnd());
+        //Assign or cast dependency array
+        is_array($dp->dpnd_on()) ? $dpnd = $dp->dpnd_on() : $dpnd = (array) $dp->dpnd_on();
+        //Foreach dependency list use the task id
+        foreach ($dpnd as $id)
+            {
+            $taskObj = Task_Model::getTask($id);
+            $hLink = "<a href=\"?page=Task&action=details&task_id={$taskObj->tsk_id()}\">
+                                            {$taskObj->tsk_nm()}</a>";
+            //Push the HTML link into an array to be made available to the View
+                                            array_push($dependencies, $hLink);
+            }
+        $this->registry->View_Template->dependencies = $dependencies;
         $this->registry->View_Template->task = $task;
         $this->registry->View_Template->show('taskDetails');
         }

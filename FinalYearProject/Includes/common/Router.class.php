@@ -69,8 +69,9 @@ Class Router
     public
             function loader()
         {
-        //assign controller from getController to this->controller
+        //assign controller from getController to this->controller);
         $this->controller = $this->getController();
+        
         try
             {
             //Check if the fileName is available
@@ -112,13 +113,13 @@ Class Router
             function getController()
         {
         $this->controller = empty($_GET['page']) ? 'login' : $_GET['page'];
-        //echo "Controller: " . $this->controller . "<br/>";
+        
 //Store action action in @var action
         $this->action = $this->getAction();
         //echo "Action: " . $this->action . "<br/>";
         //Crreate the fileName to call
         $this->fileName = trim(__CONTROLLER_PATH . ucfirst($this->controller) . '_Controller.php');
-        //echo "Filename: " . $this->fileName;
+            //echo "Filename: " . $this->fileName;
         if (is_readable($this->fileName))
             {
             //  echo "<br/>filename readable: " . $this->fileName;

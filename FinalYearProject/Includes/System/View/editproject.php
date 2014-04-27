@@ -46,7 +46,7 @@
 
                         <label title="When will the project start?">
                             Start Date: </label>
-                        <input type="date" name="pStart" value="<?php echo $estimation->start_dt_AM(); ?>">
+                        <input type="date" name="pStart" value="<?php echo $estimation->start_dt(); ?>">
 
                         <label title="The actual hours assigned to the project">
                             Actual hours: 
@@ -54,12 +54,12 @@
 
                         <label title="The date the project actxually finished">
                             Actual End Date: 
-                        </label><input type="date" name="pActEnd" value="<?php echo $estimation->act_end_dt_AM(); ?>"/>
+                        </label><input type="date" name="pActEnd" value="<?php echo $estimation->act_end_dt(); ?>"/>
 
                         <label>
                             Deadline: 
                         </label><input type="date" name="pDeadline" 
-                                       value="<?php echo $estimation->est_end_dt_AM(); ?>"/>
+                                       value="<?php echo $estimation->est_end_dt(); ?>"/>
 
                         <label>
                             Estimate: 

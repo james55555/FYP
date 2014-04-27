@@ -24,28 +24,23 @@ class Edit_Controller extends Main_Controller
             $this->registry->View_Template->project = $this->project;
             }//Else if vars are set to TASK
         else
-            {
+            {   
             $this->task = new Task_Model($_GET['task_id']);
-//$this->registry->View_Template->projTasks = Task_Model::getAllTasks($proj_id);
+            //$this->registry->View_Template->projTasks = Task_Model::getAllTasks($proj_id);
             $project = new Project_Model($this->task->proj_id());
             $this->registry->View_Template->projEst = new Estimation_Model($project->estimation());
-//Set staff object
+            //Set staff object
             $staff_id = $this->task->staff();
             $this->registry->View_Template->staff = new Staff_Model($staff_id);
             //Set dependency array
-            $this->registry->View_Template->dependencies = $this->processDependency();
+            $this->registry->View_Template->dependencies = $this->processDependency($this->task);
             //Set estimation ID variable
             $est_id = $this->task->estimation();
             //Make task variabl available
             $this->registry->View_Template->task = $this->task;
             $view = 'edittask';
             }
-            var_dump(new Estimation_Model($est_id));
-            $est = new Estimation_Model($est_id);
-            echo $est->start_dt();
-            echo "<br/>";
-            echo $est->start_dt_AM();
-        $this->registry->View_Template->estimation = new Estimation_Model($est_id);
+        $this->registry->View_Template->estimation = new Estimation_Model($est_id, true);
         $this->registry->View_Template->show($view);
         }
 
@@ -121,47 +116,6 @@ class Edit_Controller extends Main_Controller
         $this->registry->View_Template->show('showMessage');
         }
 
-    private function processDependency()
-        {
-//Set project variables (for use internally)
-        $proj_id = $this->task->proj_id();
-        $projTasks = Task_Model::getAllTasks($proj_id);
-        //var_dump($projTasks);
-        $dependencies = array();
-//unset(array_keys($projTasks, $this->task->tsk_id()));
-        $dp = new Dependency_Model($this->task->dpnd());
 
-        foreach ($projTasks as $key => $val)
-            {
-            try{
-                //Remove the Task object if it is the same as the current task
-            if ($val->tsk_id() === $this->task->tsk_id())
-                {
-                //Issues with using direct $key val so cast to int
-                $key = (int) $key;
-                //Remove the current task from the list of dependencies
-                unset($projTasks[$key]);
-                throw new Exception();
-                }
-                
-                //Find all task ids that exist in dp->dpnd()
-                if ($dp->dpnd_on() === $val->tsk_id())
-                    {
-                    $checked = "checked";
-                    } else
-                    {
-                    $checked = '';
-                    }
-                    //Push checkbox string into array
-                $chckBoxStr = "<label id=\"dpndNm\">{$val->tsk_nm()}</label>"
-                        . "<input type=\"checkbox\" name=\"tDpnd[]\" "
-                        . "value=\"{$val->tsk_id()}\" $checked/>";
-                array_push($dependencies, $chckBoxStr);
-                } catch (Exception $ex) {
-                    //Exception caught - used to bypass logic
-                }
-            }
-        return $dependencies;
-        }
 
     }

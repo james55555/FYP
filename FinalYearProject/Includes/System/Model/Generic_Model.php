@@ -34,7 +34,7 @@ abstract class Generic_Model
         if (!$success)
             {
             throw new Exception($table . " table delete error"
-            . "<br/>Error: " . mysql_error());
+            . "<br/>Error: " . mysqli_error());
             }
         return true;
         }

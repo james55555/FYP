@@ -161,8 +161,8 @@ class Staff_Model extends Generic_Model
 
         if ($db->querySuccess($query))
             {
-            $result = mysql_query($query);
-            $row = mysql_fetch_object($result);
+            $result = mysqli_query($query);
+            $row = mysqli_fetch_object($result);
             $staff = new Staff_Model($row);
             } else
             {
@@ -227,7 +227,7 @@ class Staff_Model extends Generic_Model
         $db = new Database();
         $db->connect();
 
-        mysql_query("START TRANSACTION;");
+        $db->start();
         //Set insert into STAFF
         $staff_insert = "INSERT INTO STAFF ("
                 . " STAFF_ID,"
@@ -243,7 +243,7 @@ class Staff_Model extends Generic_Model
                 . " '" . $fields[3] . "');";
 
         //Run query to insert into table and get the STAFF_ID
-        $staff_result = mysql_query($staff_insert);
+        $staff_result = $db->query($staff_insert);
         $staff_id = $db->getInsertId();
         if ($db->endStatement($staff_result))
             {

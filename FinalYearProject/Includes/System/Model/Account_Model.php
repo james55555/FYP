@@ -125,14 +125,14 @@ class Account_Model extends Validator_Model
                 . " FROM account"
                 . " WHERE user_id='" . $user_id . "'";
 
-        $testQuery = mysql_query($existingQuery);
+        $testQuery = mysqli_query($existingQuery);
         if ($db->querySuccess($testQuery))
             {
 //Number of entries with that username
-            $numExisting = mysql_num_rows($testQuery);
+            $numExisting = mysqli_num_rows($testQuery);
             } else
             {
-            return "query error... " . mysql_error();
+            return "query error... " . mysqli_error();
             }
         if ($numExisting === 0)
             {
@@ -151,12 +151,12 @@ class Account_Model extends Validator_Model
                     . $lName . "','"
                     . $em . "')";
 
-            $result = mysql_query($insert);
+            $result = mysqli_query($insert);
             if (!$db->querySuccess($result))
                 {
                 return "Error inserting data into database."
-                        . "MYSQL Error: " . mysql_errno()
-                        . "<br/> MYSQL details: " . mysql_error();
+                        . "MYSQL Error: " . mysqli_errno()
+                        . "<br/> MYSQL details: " . mysqli_error();
                 }
             } else
             {

@@ -185,11 +185,11 @@ class Estimation_Model extends Generic_Model
                 . " ON TSK.PROJ_ID = PROJ.PROJ_ID"
                 . " and proj.PROJ_ID ='" . $proj_id . "'";
 
-        $result = mysql_query($query);
+        $result = mysqli_query($query);
         if ($result !== false)
             {
             $estimations = array();
-            while ($row = mysql_fetch_object($result))
+            while ($row = mysqli_fetch_object($result))
                 {
                 array_push($estimations, new Estimation_Model($row));
                 }
@@ -247,7 +247,7 @@ class Estimation_Model extends Generic_Model
                 . " '" . $fields[3] . "',"
                 . " '" . $fields[4] . "');";
         //Run query and get estimation id.
-        $estimation_result = mysql_query($estimation_insert);
+        $estimation_result = $db->query($estimation_insert);
         $est_id = $db->getInsertId();
         if ($db->endStatement($estimation_result))
             {

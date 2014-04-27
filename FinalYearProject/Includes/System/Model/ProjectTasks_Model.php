@@ -48,14 +48,14 @@ class ProjectTasks_Model
                 . "WHERE proj_id IN "
                 . "(SELECT proj_id FROM task "
                 . "WHERE tsk_id ='" . $task_id . "');";
-        $result = mysql_query($query);
+        $result = mysqli_query($query);
         $success = $db->endStatement($result);
         $db->close();
         if (!$success)
             {
             return null;
             }
-        return mysql_fetch_object($result);
+        return mysqli_fetch_object($result);
         }
 
     public static function deleteTask($tsk_id)

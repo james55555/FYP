@@ -57,44 +57,11 @@
                         <?php
                         //only show task dependencies if there are tasks associated
                         //with the project in question
-                        if (isset($projTasks))
+                        if (count($dependencies))
                             {
                             echo "<h2>Choose Task Dependencies: </h2>";
-                            //Set up checkbox for all tasks in the same project
-                            foreach ($projTasks as $dpdTask)
-                                {
-                                $dpnt = $dependencies->dpnd_on();
-                                try
-                                    {
-                                    $chckBoxStr = "<label id=\"dpndNm\">{$task->tsk_nm()}</label>"
-                                            . "<input type=\"checkbox\" name=\"tDpnd[]\" "
-                                            . "value=\"{$task->tsk_id()}\"";
-                                    if (is_array($dpnt))
-                                        {
-                                        throw new Exception($chckBoxStr);
-                                        }
-                                    if ($dpnt === $dpdTask->tsk_id())
-                                        {
-                                        $selected = " checked/>";
-                                        } else
-                                        {
-                                        $selected = "/>";
-                                        }
-                                    echo $chckBoxStr . $selected;
-                                    } catch (Exception $e)
-                                    {
-                                    foreach ($dpnt as $id)
-                                        {
-                                        if ($id === $dpdTask->tsk_id())
-                                            {
-                                            $selected = "checked/>";
-                                            } else
-                                            {
-                                            $selected = "/>";
-                                            }
-                                        echo $chckBoxStr . $selected;
-                                        }
-                                    }
+                            foreach($dependencies as $check){
+                                echo $check;
                                 }
                             }
                         ?>

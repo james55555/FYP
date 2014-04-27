@@ -157,14 +157,14 @@ class Dependency_Model extends Generic_Model
                 }
             }
         //Run the query
-        $taskDpnd_result = mysql_query($taskDpnd_insert);
+        $taskDpnd_result = $db->query($taskDpnd_insert);
         $dpnd_id = $db->getInsertId();
         if ($db->endStatement($taskDpnd_result))
             {
             $dependencies = new Dependency_Model($dpnd_id);
             } else
             {
-            $dependencies = "Error inserting into dependency database!" . mysql_error();
+            $dependencies = "Error inserting into dependency database!" . mysqli_error();
             }
         $db->close();
         return $dependencies;

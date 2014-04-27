@@ -4,5 +4,5 @@ setEnv TZ Europe/London
 RewriteEngine on
 RewriteCond %{REQUEST_URI} !^/FinalYearProject/index.php
 RewriteCond %{REQUEST_URI} !(\.css|\.js|\.png|\.jpg|\.gif|\.eot|\.svg|\.ttf|\.woff)
-#(Stack Exchange inc, 2012)
+#If URL doesn't equal idnex.php, route through index file
 RewriteRule ^(.+)$ index.php?arg=$1 [QSA,L]

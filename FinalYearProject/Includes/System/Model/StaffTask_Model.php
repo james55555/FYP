@@ -39,9 +39,9 @@ class StaffTask_Model extends Staff_Model
 
         if ($db->querySuccess($query))
             {
-            $result = mysql_query($query);
+            $result = $db->query($query);
 
-            $row = mysql_fetch_object($result);
+            $row = mysqli_fetch_object($result);
             if (is_object($row))
                 {
                 $staff_id = $row->STAFF_ID;
@@ -51,8 +51,6 @@ class StaffTask_Model extends Staff_Model
                 }
             }
         $db->close();
-
-
         return $staff_id;
         }
 

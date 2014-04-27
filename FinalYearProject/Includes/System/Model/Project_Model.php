@@ -82,7 +82,7 @@ class Project_Model extends Validator_Model
                     . " WHERE PR.proj_id IN"
                     . " (SELECT proj_id FROM user_project UP"
                     . " WHERE UP.user_id='" . $acc_id . "');";
-            $result = mysql_query($query);
+            $result = mysqli_query($db->getConn(), $query);
             if (!$result)
                 {
                 throw new Exception("Error finding projects");
@@ -92,7 +92,7 @@ class Project_Model extends Validator_Model
             return $e->getMessage();
             }
         $projects = array();
-        while ($row = mysql_fetch_object($result))
+        while ($row = mysqli_fetch_object($result))
             {
             array_push($projects, new Project_Model($row->proj_id));
             }
@@ -205,7 +205,7 @@ class Project_Model extends Validator_Model
             return "Start date can't be after the deadline date!";
             }
         //Start the transaction
-        mysql_query("START TRANSACTION;");
+        mysqli_query("START TRANSACTION;");
         //Set insert into PROJECT String
         $proj_insert = "INSERT INTO PROJECT ("
                 . " proj_id,"
@@ -216,7 +216,7 @@ class Project_Model extends Validator_Model
                 . " '" . $proj_nm . "',"
                 . " '" . $proj_descr . "'); ";
         //Run the query and get the project id
-        $project_result = mysql_query($proj_insert);
+        $project_result = mysqli_query($proj_insert);
         $proj_insert_id = $db->getInsertId();
         //Set insert into USER_PROJECT
         $userProj_insert = "INSERT INTO USER_PROJECT ("
@@ -226,7 +226,7 @@ class Project_Model extends Validator_Model
                 . " '" . $account->user_id . "',"
                 . " '" . $proj_insert_id . "');";
         //Run query
-        $userProject_result = mysql_query($userProj_insert);
+        $userProject_result = mysqli_query($userProj_insert);
         //Set insert into ESTIMATION
         $estimation_insert = "INSERT INTO ESTIMATION ("
                 . "EST_ID, "
@@ -243,7 +243,7 @@ class Project_Model extends Validator_Model
                 . "NULL, "
                 . "'" . $proj_deadline . "');";
         //Run query and get estimation id.
-        $estimation_result = mysql_query($estimation_insert);
+        $estimation_result = mysqli_query($estimation_insert);
         $est_insert_id = $db->getInsertId();
         //Set insert into PROJECT_ESTIMATION
         $proj_est = "INSERT INTO PROJECT_ESTIMATION"
@@ -252,17 +252,17 @@ class Project_Model extends Validator_Model
                 . " VALUES ("
                 . " '" . $proj_insert_id . "',"
                 . " '" . $est_insert_id . "');";
-        $projectEstimation_result = mysql_query($proj_est);
+        $projectEstimation_result = mysqli_query($proj_est);
 
         //If all queries are successful then commit the changes
         if ($project_result && $userProject_result && $estimation_result && $projectEstimation_result)
             {
-            mysql_query("COMMIT;");
+            mysqli_query("COMMIT;");
             }
         //If any of the queries fail then rollback the query and print out error details
         else
             {
-            mysql_query("ROLLBACK;");
+            mysqli_query("ROLLBACK;");
             return "Error inserting into the database<br/>";
             }
         return true;
@@ -276,7 +276,7 @@ class Project_Model extends Validator_Model
     public static function editProject($fields)
         {
         $db = new Database();
-
+$db->connect();
         $fields = $db->filterParameters($fields);
         //GET project variables
         $proj_id = $fields['proj_id'];
@@ -305,20 +305,20 @@ class Project_Model extends Validator_Model
         //Connect to database to run queries
         $db->connect();
         //Start the transaction
-        mysql_query("START TRANSACTION;");
+        $db->start();
 //Run the the row check to ensure the row to be updated exists
         try
             {
-            $rowExists = mysql_query("SELECT * FROM PROJECT"
+            $rowExists = $db->query("SELECT * FROM PROJECT"
                     . " WHERE proj_id='" . $proj_id . "';");
-            if (mysql_num_rows($rowExists) === 0)
+            if (is_string($rowExists) || mysqli_num_rows($rowExists) === 0)
                 {
                 throw new Exception("Row doesn't exist");
                 }
             } catch (Exception $e)
             {
-            mysql_query("ROLLBACK;");
-            return $e->getMessage() . "<br/>" . mysql_error();
+            $db->rollback();
+            return $e->getMessage() . "<br/>" . mysqli_error();
             }
         try
             {
@@ -327,14 +327,14 @@ class Project_Model extends Validator_Model
                     . " proj_nm='" . $proj_nm . "',"
                     . " proj_descr='" . $proj_descr . "'"
                     . " WHERE proj_id='" . $proj_id . "';";
-            $project_result = mysql_query($project_update);
+            $project_result = $db->query($project_update);
 
             if (!$project_result)
                 {
                 throw new Exception("Updated no project rows!<br/>" . $project_update);
                 }
             //Run the update query against the ESTIMATION table    
-            if (!isset($est_id) || !$est_id)
+            if (!!!isset($est_id) || !!!$est_id)
                 {
                 throw new Exception("EST_ID wasn't set!");
                 }
@@ -345,17 +345,17 @@ class Project_Model extends Validator_Model
                     . " ACT_END_DT='" . $pAct_End . "',"
                     . " EST_END_DT='" . $proj_deadline . "'"
                     . " WHERE EST_ID='" . $est_id . "';";
-            $estimation_result = mysql_query($estimation_update);
-            if (!$estimation_result && mysql_affected_rows() === 0)
+            $estimation_result = $db->query($estimation_update);
+            if (!!!$estimation_result && mysqli_affected_rows($db->getConn()) === 0)
                 {
                 throw new Exception("Updated no estimation rows!");
                 }
             } catch (Exception $ex)
             {
-            mysql_query("ROLLBACK;");
+            $db->rollback();
             return $ex->getMessage();
             }
-        mysql_query("COMMIT;");
+        $db->start();
         return true;
         }
 

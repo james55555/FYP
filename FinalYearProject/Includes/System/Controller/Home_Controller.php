@@ -10,18 +10,20 @@ class Home_Controller extends Main_Controller
 
     public function main()
         {
-        try{
-        //Get all projects assigned to user in session available
-        $list = Project_Model::getAllUserProj($_SESSION['user']->user_id);
-        if(is_string($list)){
-            throw new Exception($list);
-            }
-        $this->registry->View_Template->projects = $list;
-        }
-        catch(Exception $e){
+        try
+            {
+            //Get all projects assigned to user in session available
+            $list = Project_Model::getAllUserProj($_SESSION['user']->user_id);
+            if (is_string($list))
+                {
+                throw new Exception($list);
+                }
+            $this->registry->View_Template->projects = $list;
+            } catch (Exception $e)
+            {
             $this->registry->View_Template->error = true;
             $this->registry->View_Template->heading = "Project Query Error!";
-            $this->registry->View_Template->message = $e->getMessage() . "<br/>" . mysql_error();
+            $this->registry->View_Template->message = $e->getMessage() . "<br/>" . mysqli_error();
             $this->registry->View_Template->show('showMessage');
             }
         //Show the home screen
@@ -46,9 +48,10 @@ class Home_Controller extends Main_Controller
                 }
             if ($this->success)
                 {
+                $this->registry->View_Template->error = false;
                 $this->registry->View_Template->heading = "Success";
                 $this->registry->View_Template->message = "Project successfully deleted<br/>"
-                        . "Click <a href=\"?page=\Home\"> here </a>" .
+                        . "Click <a href=\"?page=Home\"> here </a>" .
                         " to view your projects";
                 } else
                 {

@@ -19,7 +19,6 @@
     </head>
     <body>
         <?php include("header.php"); ?>
-        <?php echo var_dump($task); ?>
         <div id="container">
             <div class="upper">
                 <?php
@@ -212,7 +211,7 @@
                                     <div id="actions">
                                         <!--Buttons to take users to edit or delete for each project-->
                                         <!--Edit button-->
-                                        <a href="?page=Edit&isProject=false&task_id=<?php echo $task->tsk_id(); ?>">
+                                        <a href="?page=Edit&is_project=false&task_id=<?php echo $task->tsk_id(); ?>">
                                             <button type="submit" id="editT">
                                                 <img src="Includes/CSS/img/Icons/edit.png" 
                                                      alt="edit" title="Edit Task"

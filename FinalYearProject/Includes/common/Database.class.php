@@ -14,11 +14,11 @@ class Database
     private
             $DB_server = 'localhost';
     private
-            $DB_user = 'grahamj1';
+            $DB_user = 'root';
     private
-            $DB_pwd = 'Water+Spider';
+            $DB_pwd = '';
     private
-            $DB_nm = 'grahamj1';
+            $DB_nm = 'fyp';
 
     /*
      * Connect to database
@@ -28,10 +28,10 @@ class Database
             function connect()
         {
 
-        $this->conn = mysql_connect($this->DB_server, $this->DB_user, $this->DB_pwd, true) or die("Unable to Connect to MySQL\n" . mysqli_connect_error());
+        $this->conn = mysqli_connect($this->DB_server, $this->DB_user, $this->DB_pwd, $this->DB_nm) or die("Unable to Connect to MySQL\n" . mysqli_connect_error());
         if (is_resource($this->conn))
             {
-            mysql_select_db($this->DB_nm, $this->conn) or die("Unable to Select Database \n" . mysqli_connect_error());
+            mysqli_select_db($this->DB_nm, $this->conn) or die("Unable to Select Database \n" . mysqli_connect_error());
             }
         }
 
@@ -42,15 +42,16 @@ class Database
     public
             function close()
         {
-        if (mysql_ping() !== null)
+        try
             {
-            if (mysql_close($this->conn))
+            if (!!!mysqli_close($this->conn))
                 {
-                $this->conn = null;
+                throw new Exception("Error closing database!");
                 }
-            } else
+            $this->conn = null;
+            } catch (Exception $e)
             {
-            throw new Exception("Error closing database!");
+            $this->registry->View_Template->showError($e->getMessage(), "Contact your administrator");
             }
         }
 
@@ -83,14 +84,14 @@ class Database
                 if (is_string($array[$key]))
                     {
                     // If they are, perform the real escape function over the selected node
-                    $array[$key] = strtolower(trim(mysql_real_escape_string($array[$key]), "'"));
+                    $array[$key] = strtolower(trim(mysqli_real_escape_string($this->conn, $array[$key]), "'"));
                     }
                 }
             // Check if the parameter is a string
             if (is_string($array))
                 {
-                // If it is, perform a  mysql_real_escape_string on the parameter
-                $array = strtolower(trim(mysql_real_escape_string($array), "'"));
+                // If it is, perform a  mysqli_real_escape_string on the parameter
+                $array = strtolower(trim(mysqli_real_escape_string($this->conn, $array), "'"));
                 }
             // Return the filtered result
             return $array;
@@ -103,7 +104,7 @@ class Database
      */
     public function getInsertId()
         {
-        return mysql_insert_id($this->conn);
+        return mysqli_insert_id($this->conn);
         }
 
     /*
@@ -112,17 +113,17 @@ class Database
 
     public function start()
         {
-        mysql_query("START TRANSACTION;");
+        mysqli_query($this->conn, "START TRANSACTION;");
         }
 
     public function commit()
         {
-        mysql_query("COMMIT;");
+        mysqli_query($this->conn, "COMMIT;");
         }
 
     public function rollback()
         {
-        mysql_query("ROLLBACK;");
+        mysqli_query($this->conn, "ROLLBACK;");
         }
 
     public function endStatement($result)
@@ -144,7 +145,7 @@ class Database
             {
             $field = "'" . $field . "'";
             }
-            return $fields;
+        return $fields;
         }
 
     /*
@@ -157,10 +158,10 @@ class Database
 
     public function query($query)
         {
-        $result = mysql_result(mysql_query($query, $this->conn));
-        if (!$this->querySuccess($result))
+        $result = mysqli_query($this->conn, $query);
+        if (!!!$this->querySuccess($result))
             {
-            $result = mysql_error($this->conn);
+            $result = false;
             }
         return $result;
         }
@@ -169,14 +170,28 @@ class Database
      * Get current status of connection
      * **Used for testing purposes
      */
-
+        /*
+         * Function to get mysql error
+         * 
+         * @return (String) $error
+         */
+        public function getMysql_err(){
+            return mysqli_error($this->conn);
+            }
     public function getConn()
         {
         return $this->conn;
         }
-
+/*
+ * Functioin to return the affected rows by either an update or delete
+ * 
+ * @return (int) $num   Rows affected
+ */
+        public function getAffectedRows(){
+            return mysqli_affected_rows($this->conn);
+            }
     /*
-     * Function to ascertain success of mysql_result 
+     * Function to ascertain success of mysqli_result 
      * (Convert mysql result into boolean)
      *  If the @param is false then there has been an issue running the query
      *                          Therefore return boolean false

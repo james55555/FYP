@@ -50,17 +50,17 @@ class Login_Controller extends Main_Controller
     private
             function login($user, $password)
         {
-//Default - set session to null
+        //Default - set session to null
         $_SESSION['user'] = null;
-// Get the account from the database
+        // Get the account from the database
         $acc = Account_Model::getUser($user);
-//Ensure password is correct
+        //Ensure password is correct
         if (isset($acc))
             {
-//Unhash t
+            //Unhash the password and check against provided password
             if (PassHash::check_password($acc->password, $password))
                 {
-//Log in successful, set up new session and set boolean to false
+                //Log in successful, set up new session and set boolean to false
                 $_SESSION['user'] = $acc;
                 return true;
                 }

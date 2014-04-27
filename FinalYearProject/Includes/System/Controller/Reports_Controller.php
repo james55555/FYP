@@ -12,9 +12,9 @@ class Reports_Controller extends Main_Controller
     public function main()
         {
 
-        $this->registry->error = true;
-        $this->registry->heading = "This page is under construction";
-        $this->registry->message = "This will be completed: 11/04/2014";
+        $this->registry->View_Template->error = true;
+        $this->registry->View_Template->heading = "This page is under construction";
+        $this->registry->View_Template->message = "This will be completed in the near future";
 
         $this->registry->View_Template->show('showMessage');
         }

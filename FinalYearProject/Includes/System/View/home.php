@@ -65,7 +65,7 @@
                         <td>
                             <!--Buttons to take users to edit or delete for each project-->
 
-                            <a href="?page=Edit&isProject=true&proj_id=<?php echo $projid; ?>">
+                            <a href="?page=Edit&is_project=true&proj_id=<?php echo $projid; ?>">
                                 <button type="submit" id="editP">
                                     <img src="Includes/CSS/img/Icons/edit.png"
                                          alt="edit" title="Edit Project"

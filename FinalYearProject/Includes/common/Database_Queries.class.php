@@ -26,6 +26,7 @@ class Database_Queries extends Database
             $paramID, $operand = "=", $num = 0, $asc = true)
         {
         $db = new Database();
+        $db->connect();
         //Ensure paramaters are set up correctly
         $filter = array($reqCol, $table, $colCheck, $paramID);
         $check = $db->filterParameters($filter);
@@ -72,21 +73,21 @@ class Database_Queries extends Database
         {
         $db = new Database();
         $db->connect();
-        $result = mysql_query($query);
+        $result = mysqli_query($db->getConn(), $query);
         try
             {
             //If the query returns successful then
             if ($db->querySuccess($result))
                 {
                 //if the query returns one row
-                if (mysql_num_rows($result) === 1)
+                if (mysqli_num_rows($result) === 1)
                     {
-                    $row = mysql_fetch_object($result);
+                    $row = mysqli_fetch_object($result);
                     }//End of mysql num rows === 1
-                elseif (mysql_num_rows($result) > 1)
+                elseif (mysqli_num_rows($result) > 1)
                     {
                     $objects = array();
-                    while ($row = mysql_fetch_object($result))
+                    while ($row = mysqli_fetch_object($result))
                         {
                         array_push($objects, new $model($row));
                         }
@@ -100,7 +101,7 @@ class Database_Queries extends Database
                 }//End of query success
             else
                 {
-                throw new Exception("Query Error: " . mysql_error() .
+                throw new Exception("Query Error: " . mysqli_error() .
                 "<br/>Query: " . $query);
                 }
             } catch (Exception $e)
@@ -156,11 +157,10 @@ class Database_Queries extends Database
             {
             return true;
             }
-            echo $query . "<br/>";
         //Start the delete transaction 
         $db->start();
         //Run the query to delete
-        $result = mysql_query($query);
+        $result = mysqli_query($this->conn, $query);
 
         //Assign true or false based on returned result
         $success = $db->endStatement($result);
@@ -202,22 +202,22 @@ class Database_Queries extends Database
         $db = new Database();
         $db->connect();
         //Start transaction to archive data
-        mysql_query("START TRANSACTION;");
+        $db->start();
         //Check if the row alreadys exists in PROJECT in ARCHIVE DB
-        $rowExists = mysql_query(" SELECT *"
+        $rowExists = mysqli_query($this->conn, " SELECT *"
                 . " FROM ARCHIVE." . $table
                 . " WHERE " . $colCheck
                 . " ='" . $id . "'; ");
         //The statement to identify if it exists
-        if (mysql_num_rows($rowExists) === 0)
+        if (mysqli_num_rows($this->conn, $rowExists) === 0)
             {
             //Get the number of fields in the table
-            $numFields = mysql_num_fields($rowExists);
+            $numFields = mysqli_num_fields($this->conn, $rowExists);
             $fields = array();
             //Loop through the fields and assign each to the $fields array
             for ($i = 0; $i < $numFields - 1; $i++)
                 {
-                array_push($fields, mysql_field_name($rowExists, $i));
+                array_push($fields, mysqli_field_name($rowExists, $i));
                 }
             //Insert null value to be updated to current timestamp
             array_push($fields, "NULL");
@@ -232,7 +232,7 @@ class Database_Queries extends Database
                     . " ON DUPLICATE KEY UPDATE "
                     . $colCheck . "='" . $id . "';";
 
-            $archive_result = mysql_query($archive_query);
+            $archive_result = mysqli_query($db->getConn(), $archive_query);
             } else
             {
             $archive_result = null;
@@ -240,10 +240,10 @@ class Database_Queries extends Database
         //Validate whether these queries have returned expected results
         if ($archive_result)
             {
-            mysql_query("COMMIT;");
+            $db->commit();
             } elseif (!isset($archive_result) || !$archive_result)
             {
-            mysql_query("ROLLBACK;");
+            $db->rollback();
             } else
             {
             throw new Exception("This shouldn't happen");

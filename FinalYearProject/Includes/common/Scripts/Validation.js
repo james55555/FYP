@@ -9,7 +9,6 @@ jQuery(function($) {
     var form = document.forms[0];
 
     $("#" + form.id + " input[name='submit']").click(function(e) {
-        e.preventDefault();
         var errors = [];
         var empty = [];
 

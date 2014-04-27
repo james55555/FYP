@@ -63,14 +63,19 @@ Class View_Template
             //the user to the show message page and display error
             } catch (Exception $e)
             {
-            $this->registry->error = true;
-
-            $this->registry->heading = $e->getMessage();
-            $this->registry->message = "There has been an issue taking you to this page."
-                    . "<br/>File doesn't exist.";
-            $this->show('showMessage');
+            $message = "There has been an issue taking you to this page."
+                    . "<br/>View file doesn't exist.";
+            $this->showError($e->getMessage(), $message);
             }
         include $fullViewName;
+        }
+
+    public function showError($heading, $message)
+        {
+        $this->registry->View_Template->error = true;
+        $this->registry->View_Template->heading = $heading;
+        $this->registry->View_Template->message = $message;
+        $this->show('showmessage');
         }
 
     }

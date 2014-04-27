@@ -44,13 +44,21 @@ Class Router
     public
             function setPath($path)
         {
-
-        if (is_dir($path))
+        try
             {
-            $this->path = $path;
-            } else
+            if (is_dir($path))
+                {
+                $this->path = $path;
+                } else
+                {
+                throw new Exception($path);
+                }
+            } catch (Exception $e)
             {
-            throw new Exception("Incorrect Path");
+            $this->registry->View_Template->error = true;
+            $this->registry->View_Template->heading = "Invalid path provided!";
+            $this->registry->View_Template->message = "Path Provided: " . $e->getMessage();
+            $this->registry->View_Template->show('showmessage');
             }
         }
 
@@ -80,7 +88,7 @@ Class Router
             // new Login_Controller
             $controller = new $class($this->registry);
             //verify that the contents of the array can be called as a function
-            if (is_callable(array($controller, $this->action)) == false)
+            if (!!!is_callable(array($controller, $this->action)))
                 {
                 $action = 'main';
                 //if the action is callable then run the action
@@ -88,7 +96,7 @@ Class Router
                 {
                 $action = $this->action;
                 }
-            //run action
+            //run action using Controller object
             $controller->$action();
             } catch (Exception $e)
             {
@@ -104,17 +112,21 @@ Class Router
             function getController()
         {
         $this->controller = empty($_GET['page']) ? 'login' : $_GET['page'];
+        //echo "Controller: " . $this->controller . "<br/>";
 //Store action action in @var action
         $this->action = $this->getAction();
+        //echo "Action: " . $this->action . "<br/>";
         //Crreate the fileName to call
         $this->fileName = trim(__CONTROLLER_PATH . ucfirst($this->controller) . '_Controller.php');
+        //echo "Filename: " . $this->fileName;
         if (is_readable($this->fileName))
             {
+            //  echo "<br/>filename readable: " . $this->fileName;
             include_once $this->fileName;
             } else
-            {   
+            {
             $this->controller = 'Error';
-            $this->fileName = trim(__CONTROLLER_PATH . $this->controller . '_Controller.php');
+            $this->fileName = trim(__CONTROLLER_PATH . ucfirst($this->controller) . '_Controller.php');
             include_once $this->fileName;
             }
         return $this->controller;

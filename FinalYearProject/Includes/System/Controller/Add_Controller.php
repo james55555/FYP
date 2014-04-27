@@ -8,7 +8,7 @@
 class Add_Controller extends Main_Controller
     {
 
-    private $isProject = false;
+    private $is_project = false;
     protected $newProject;
     protected $newTask;
 
@@ -30,7 +30,7 @@ class Add_Controller extends Main_Controller
 
     public function addProject()
         {
-        $this->isProject = true;
+        $this->is_project = true;
         //assign to an array
         $fields = array();
 
@@ -46,7 +46,7 @@ class Add_Controller extends Main_Controller
 
     public function addTask()
         {
-        $this->isProject = false;
+        $this->is_project = false;
         //assign to an array
 
         $this->newTask = Task_Model::addTask($_POST);
@@ -62,7 +62,7 @@ class Add_Controller extends Main_Controller
     private function showView()
         {
         //Identify whether or not the object is a project or task
-        if ($this->isProject)
+        if ($this->is_project)
             {
             //If the project is set to an array or string then an error message needs to be printed
             if (is_array($this->newProject) ||
@@ -78,7 +78,7 @@ class Add_Controller extends Main_Controller
                 $this->registry->View_Template->message = "Click <a href=\"?page=Home\"> here </a> "
                         . "to view your projects";
                 }
-            } elseif (!$this->isProject)
+            } elseif (!$this->is_project)
             {
             if (is_array($this->newTask) ||
                     is_string($this->newTask))

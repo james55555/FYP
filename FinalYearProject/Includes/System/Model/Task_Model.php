@@ -172,6 +172,7 @@ class Task_Model
             function editTask($fields)
         {
         $db = new Database();
+        $db->connect();
         $fields = $db->filterParameters($fields);
         //Optional field
         if (isset($fields['tDpnd']))
@@ -277,16 +278,16 @@ class Task_Model
         try
             {
             //Check TASK table
-            mysql_query("SELECT * FROM TASK "
+            $db->query("SELECT * FROM TASK "
                     . "WHERE TSK_ID='" . $task_id . "';");
-            if (mysql_affected_rows() < 1)
+            if ($db->getAffectedRows() < 1)
                 {
                 throw new Exception("Task doesn't exist");
                 }
             //Check ESTIMATION table
-            mysql_query("SELECT * FROM ESTIMATION "
+            $db->query("SELECT * FROM ESTIMATION "
                     . "WHERE EST_ID='" . $est_id . "';");
-            if (mysql_affected_rows() < 1)
+            if ($db->getAffectedRows() < 1)
                 {
                 $estFields = array($fields['tAct_hr'],
                     $fields['tPln_hr'],
@@ -300,7 +301,7 @@ class Task_Model
             } catch (Exception $ex)
             {
             $db->rollback();
-            return $ex->getMessage() . "<br/>" . mysql_error();
+            return $ex->getMessage() . "<br/>" . $db->getMysql_err();
             }
         $db->close();
         $db->connect();
@@ -314,11 +315,11 @@ class Task_Model
                     . " WEB_ADDR='" . $fields['web_addr'] . "',"
                     . " TSK_DESCR='" . $fields['tDescr'] . "'"
                     . " WHERE TSK_ID='" . $task_id . "';";
-            $task_result = mysql_query($task_update);
-            if (!$task_result || mysql_affected_rows() === -1)
+            $task_result = $db->query($task_update);
+            if (!$task_result || $db->getAffectedRows() < 1)
                 {
                 throw new Exception("No task rows updated!"
-                . "<br/>" . mysql_error());
+                . "<br/>" . $db->getMysql_err());
                 }
             //Run update query against ESTIMATION table
             $est_update = "UPDATE ESTIMATION SET "
@@ -328,11 +329,11 @@ class Task_Model
                     . " ACT_END_DT='" . $DatesForUpdate['tActEnd'] . "',"
                     . " EST_END_DT='" . $DatesForUpdate['tDeadline'] . "',"
                     . " WHERE EST_ID='" . $est_id . "';";
-            $est_result = mysql_query($est_update);
-            if (!$est_result && mysql_affected_rows() === 0)
+            $est_result = $db->query($est_update);
+            if (!$est_result && $db->getAffectedRows() < 1)
                 {
                 throw new Exception("No ESTIMATION rows updated!"
-                . "<br/>" . mysql_error());
+                . "<br/>" . $db->getMysql_err());
                 }
             //Run update query against STAFF table
             $staff_update = "UPDATE STAFF SET "
@@ -341,9 +342,9 @@ class Task_Model
                     . " STAFF_PHONE='" . $staffFields['stTel'] . "',"
                     . " STAFF_EMAIL='" . $staffFields['stEmail'] . "'"
                     . " WHERE STAFF_ID='" . $staff_id . "';";
-            $staff_result = mysql_query($staff_update);
+            $staff_result = $db->query($staff_update);
 
-            if (!$staff_result && mysql_affected_rows() === 0)
+            if (!$staff_result && $db->getAffectedRows() < 1)
                 {
                 throw new Exception("No STAFF rows updated");
                 }
@@ -356,7 +357,7 @@ class Task_Model
                     $dpnd_update = "UPDATE DEPENDENCY SET "
                             . "DEPENDENCY_ON='" . $on . "'"
                             . "WHERE DEPENDENCY_ID='" . $id . "';";
-                    if (!$dpnd_update && mysql_affected_rows() === 0)
+                    if (!$dpnd_update && $db->getAffectedRows() < 1)
                         {
                         throw new Exception("Dependency update failed!");
                         }
@@ -364,10 +365,10 @@ class Task_Model
                 }
             } catch (Exception $ex)
             {
-            mysql_query("ROLLBACK;");
+            $db->rollback();
             return $ex->getMessage();
             }
-        mysql_query("COMMIT;");
+        $db->start();
         return true;
         }
 
@@ -526,7 +527,7 @@ class Task_Model
                     . " '" . $fields['web_addr'] . "',"
                     . " '" . $fields['tDescr'] . "');";
             //Run the query and get the task ID
-            $task_result = mysql_query($task_insert);
+            $task_result = $db->query($task_insert);
             $task_id = $db->getInsertId();
             if (!$db->endStatement($task_result))
                 {
@@ -546,7 +547,7 @@ class Task_Model
                 $est_id = $est_result->est_id();
                 } else
                 {
-                throw new Exception($est_result . mysql_error());
+                throw new Exception($est_result . $db->getMysql_err());
                 }
             //Run staff insert query
             $stfields = array($staffFields['stFirst'], $staffFields['stLast'],
@@ -584,7 +585,7 @@ class Task_Model
                     . " VALUES( "
                     . " '" . $task_id . "',"
                     . " '" . $est_id . "');";
-            $taskEst_result = mysql_query($taskEst_insert);
+            $taskEst_result = $db->query($taskEst_insert);
             if (!$db->endStatement($taskEst_result))
                 {
                 throw new Exception("Error inserting into task estimation");
@@ -597,7 +598,7 @@ class Task_Model
                     . " '" . $dpnd_id . "',"
                     . " '" . $task_id . "');";
             //Insert into TASK_DEPENDENCY table
-            $taskDpnd_result = mysql_query($taskDpnd_insert);
+            $taskDpnd_result = $db->query($taskDpnd_insert);
             if (!$db->endStatement($taskDpnd_result))
                 {
                 throw new Exception("Error inserting into task dependency");
@@ -611,7 +612,7 @@ class Task_Model
                     . " '" . $task_id . "',"
                     . " '" . $staff_id . "');";
             //Run the query to insert into table
-            $staffTask_result = mysql_query($staffTask_insert);
+            $staffTask_result = $db->query($staffTask_insert);
             if (!$db->endStatement($staffTask_result))
                 {
                 throw new Exception("Error inserting into staff task");
@@ -657,7 +658,7 @@ class Task_Model
                 $length = 200;
                 } elseif ($field === "status")
                 {
-                if (!in_array($content, array("", "Not Started", "In Progress", "Finished")))
+                if (!in_array($content, array("", "not started", "in progress", "finished")))
                     {
                     return "Correct status needs to be supplied";
                     }

@@ -9,45 +9,34 @@
 class Edit_Controller extends Main_Controller
     {
 
-    private $isProject = false;
+    private $is_project = false;
     private $project;
     private $task;
 
     public function main()
         {
-        //if is task or is project
-        if (isset($_GET['isProject']) && $_GET['isProject'] === "true")
+//if is task or is project
+        if (isset($_GET['is_project']) && $_GET['is_project'] === "true")
             {
             $this->project = new Project_Model($_GET['proj_id']);
-            $view = 'editProject';
+            $view = 'editproject';
             $est_id = $this->project->estimation();
             $this->registry->View_Template->project = $this->project;
             }//Else if vars are set to TASK
         else
             {
             $this->task = new Task_Model($_GET['task_id']);
-            //Set project variables (for use internally)
-            $proj_id = $this->task->proj_id();
-            $this->registry->View_Template->projTasks = Task_Model::getAllTasks($proj_id);
-            //$this->registry->View_Template->projTasks = Task_Model::getAllTasks($proj_id);
-            $project = new Project_Model($proj_id);
+//$this->registry->View_Template->projTasks = Task_Model::getAllTasks($proj_id);
+            $project = new Project_Model($this->task->proj_id());
             $this->registry->View_Template->projEst = new Estimation_Model($project->estimation());
-            //Set staff object
+//Set staff object
             $staff_id = $this->task->staff();
             $this->registry->View_Template->staff = new Staff_Model($staff_id);
-            //Set dependency objects
-            if (is_array($this->task->dpnd()))
-                {
-                $dpnd_id = $this->task->dpnd()[0];
-                } else
-                {
-                $dpnd_id = $this->task->dpnd();
-                }
-            $this->registry->View_Template->dependencies = new Dependency_Model($dpnd_id);
+            //Set dependency array
+            $this->registry->View_Template->dependencies = $this->processDependency();
             //Set estimation ID variable
             $est_id = $this->task->estimation();
             //Make task variabl available
-            
             $this->registry->View_Template->task = $this->task;
             $view = 'edittask';
             }
@@ -63,9 +52,9 @@ class Edit_Controller extends Main_Controller
 
     public function editProject()
         {
-        $this->isProject = true;
+        $this->is_project = true;
         $proj_id = $_POST['proj_id'];
-        //boolean to return true on success, false otherwise
+//boolean to return true on success, false otherwise
         $updated = Project_Model::editProject($_POST);
         return $this->showView($updated, $proj_id);
         }
@@ -78,10 +67,10 @@ class Edit_Controller extends Main_Controller
 
     public function editTask()
         {
-        $this->isProject = false;
+        $this->is_project = false;
 
         $proj_id = $_POST['proj_id'];
-        //Assign posted fields to an array
+//Assign posted fields to an array
         $updated = Task_Model::editTask($_POST);
         return $this->showView($updated, $proj_id);
         }
@@ -98,7 +87,7 @@ class Edit_Controller extends Main_Controller
         try
             {
             $link = "<a href=\"?page=Home\"> home </a>";
-            if ($this->isProject)
+            if ($this->is_project)
                 {
                 $model = "Project";
                 } else
@@ -125,6 +114,49 @@ class Edit_Controller extends Main_Controller
             $this->registry->View_Template->message = $success;
             }
         $this->registry->View_Template->show('showMessage');
+        }
+
+    private function processDependency()
+        {
+//Set project variables (for use internally)
+        $proj_id = $this->task->proj_id();
+        $projTasks = Task_Model::getAllTasks($proj_id);
+        //var_dump($projTasks);
+        $dependencies = array();
+//unset(array_keys($projTasks, $this->task->tsk_id()));
+        $dp = new Dependency_Model($this->task->dpnd());
+
+        foreach ($projTasks as $key => $val)
+            {
+            try{
+                //Remove the Task object if it is the same as the current task
+            if ($val->tsk_id() === $this->task->tsk_id())
+                {
+                //Issues with using direct $key val so cast to int
+                $key = (int) $key;
+                //Remove the current task from the list of dependencies
+                unset($projTasks[$key]);
+                throw new Exception();
+                }
+                
+                //Find all task ids that exist in dp->dpnd()
+                if ($dp->dpnd_on() === $val->tsk_id())
+                    {
+                    $checked = "checked";
+                    } else
+                    {
+                    $checked = '';
+                    }
+                    //Push checkbox string into array
+                $chckBoxStr = "<label id=\"dpndNm\">{$val->tsk_nm()}</label>"
+                        . "<input type=\"checkbox\" name=\"tDpnd[]\" "
+                        . "value=\"{$val->tsk_id()}\" $checked/>";
+                array_push($dependencies, $chckBoxStr);
+                } catch (Exception $ex) {
+                    //Exception caught - used to bypass logic
+                }
+            }
+        return $dependencies;
         }
 
     }

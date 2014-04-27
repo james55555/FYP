@@ -27,7 +27,6 @@ class Register_Controller extends Main_Controller
         $valid = $this->checkForm();
         if ($valid)
             {
-            die("dead");
             $this->registry->View_Template->error = true;
             $this->registry->View_Template->heading = "Registration success!";
             $this->registry->View_Template->message = "You are now a registered user."

@@ -54,9 +54,11 @@
                             //Set up checkbox for all tasks in the same project
                             foreach ($projTasks as $task)
                                 {
-                                echo "<label id=\"dpndNm\">{$task['task_nm']}</label>"
+                                is_array($task) ? $name = $task['task_nm'] : $name = $task->tsk_nm();
+                                is_array($task) ? $id = $task['tsk_id'] : $id = $task->tsk_id();
+                                echo "<label id=\"dpndNm\">{$name}</label>"
                                 . "<input type=\"checkbox\" name=\"tDpnd[]\" "
-                                . "value=\"{$task['tsk_id']}\"/>";
+                                . "value=\"{$id}\"/>";
                                 }
                             }
                         ?>

@@ -134,8 +134,6 @@ class Dependency_Model extends Generic_Model
         {
         $db = new Database();
         $db->connect();
-        //format all null variables with ''
-        $db->createSQLVars($fields);
         //start transaction
         $taskDpnd_insert = "INSERT INTO DEPENDENCY ("
                 . "DEPENDENCY_ID,"

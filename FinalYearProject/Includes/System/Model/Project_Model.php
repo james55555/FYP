@@ -205,7 +205,7 @@ class Project_Model extends Validator_Model
             return "Start date can't be after the deadline date!";
             }
         //Start the transaction
-        mysqli_query("START TRANSACTION;");
+        $db->start();
         //Set insert into PROJECT String
         $proj_insert = "INSERT INTO PROJECT ("
                 . " proj_id,"
@@ -216,7 +216,7 @@ class Project_Model extends Validator_Model
                 . " '" . $proj_nm . "',"
                 . " '" . $proj_descr . "'); ";
         //Run the query and get the project id
-        $project_result = mysqli_query($proj_insert);
+        $project_result = $db->query($proj_insert);
         $proj_insert_id = $db->getInsertId();
         //Set insert into USER_PROJECT
         $userProj_insert = "INSERT INTO USER_PROJECT ("
@@ -226,7 +226,7 @@ class Project_Model extends Validator_Model
                 . " '" . $account->user_id . "',"
                 . " '" . $proj_insert_id . "');";
         //Run query
-        $userProject_result = mysqli_query($userProj_insert);
+        $userProject_result = $db->query($userProj_insert);
         //Set insert into ESTIMATION
         $estimation_insert = "INSERT INTO ESTIMATION ("
                 . "EST_ID, "
@@ -243,7 +243,7 @@ class Project_Model extends Validator_Model
                 . "NULL, "
                 . "'" . $proj_deadline . "');";
         //Run query and get estimation id.
-        $estimation_result = mysqli_query($estimation_insert);
+        $estimation_result = $db->query($estimation_insert);
         $est_insert_id = $db->getInsertId();
         //Set insert into PROJECT_ESTIMATION
         $proj_est = "INSERT INTO PROJECT_ESTIMATION"
@@ -252,17 +252,17 @@ class Project_Model extends Validator_Model
                 . " VALUES ("
                 . " '" . $proj_insert_id . "',"
                 . " '" . $est_insert_id . "');";
-        $projectEstimation_result = mysqli_query($proj_est);
+        $projectEstimation_result = $db->query($proj_est);
 
         //If all queries are successful then commit the changes
         if ($project_result && $userProject_result && $estimation_result && $projectEstimation_result)
             {
-            mysqli_query("COMMIT;");
+            $db->commit();
             }
         //If any of the queries fail then rollback the query and print out error details
         else
             {
-            mysqli_query("ROLLBACK;");
+            $db->rollback();
             return "Error inserting into the database<br/>";
             }
         return true;

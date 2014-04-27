@@ -125,7 +125,7 @@ class Account_Model extends Validator_Model
                 . " FROM account"
                 . " WHERE user_id='" . $user_id . "'";
 
-        $testQuery = mysqli_query($existingQuery);
+        $testQuery = $db->query($existingQuery);
         if ($db->querySuccess($testQuery))
             {
 //Number of entries with that username
@@ -151,7 +151,7 @@ class Account_Model extends Validator_Model
                     . $lName . "','"
                     . $em . "')";
 
-            $result = mysqli_query($insert);
+            $result = $db->query($insert);
             if (!$db->querySuccess($result))
                 {
                 return "Error inserting data into database."

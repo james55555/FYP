@@ -122,7 +122,8 @@ class Database_Queries extends Database
      * @return (boolean)    Field to represent whether query has been successful or not
      */
 
-    public static function deleteFrom($table, $colCheck, $paramID, $setQuery = null)
+    public static function deleteFrom($table, $colCheck, $paramID,
+            $setQuery = null)
         {
         $db = new Database();
         $db->connect();
@@ -160,7 +161,7 @@ class Database_Queries extends Database
         //Start the delete transaction 
         $db->start();
         //Run the query to delete
-        $result = mysqli_query($this->conn, $query);
+        $result = $db->query($query);
 
         //Assign true or false based on returned result
         $success = $db->endStatement($result);
@@ -204,20 +205,18 @@ class Database_Queries extends Database
         //Start transaction to archive data
         $db->start();
         //Check if the row alreadys exists in PROJECT in ARCHIVE DB
-        $rowExists = mysqli_query($this->conn, " SELECT *"
+        $rowExists = $db->query(" SELECT *"
                 . " FROM ARCHIVE." . $table
                 . " WHERE " . $colCheck
                 . " ='" . $id . "'; ");
         //The statement to identify if it exists
-        if (mysqli_num_rows($this->conn, $rowExists) === 0)
+        if (mysqli_num_rows($rowExists) === 0)
             {
-            //Get the number of fields in the table
-            $numFields = mysqli_num_fields($this->conn, $rowExists);
             $fields = array();
-            //Loop through the fields and assign each to the $fields array
-            for ($i = 0; $i < $numFields - 1; $i++)
+            $sql_fields = mysqli_fetch_fields($rowExists);
+            foreach ($sql_fields as $field)
                 {
-                array_push($fields, mysqli_field_name($rowExists, $i));
+                array_push($fields, $field->name);
                 }
             //Insert null value to be updated to current timestamp
             array_push($fields, "NULL");
@@ -251,4 +250,5 @@ class Database_Queries extends Database
         $db->close();
         return true;
         }
+
     }

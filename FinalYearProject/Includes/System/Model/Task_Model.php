@@ -425,6 +425,7 @@ class Task_Model
     public static function addTask($fields)
         {
         $db = new Database();
+        $db->connect();
         $fields = $db->filterParameters($fields);
 
         //Optional field
@@ -538,9 +539,9 @@ class Task_Model
             $estimationFields = array("NULL",
                 "NULL",
                 $fields['tPln_hr'],
-                $DatesForUpdate['tStart']->format('Y-m-d'),
+                $DatesForUpdate['tStart'],
                 "NULL",
-                $DatesForUpdate['tDeadline']->format('Y-m-d'));
+                $DatesForUpdate['tDeadline']);
             $est_result = Estimation_Model::add($estimationFields);
             if (is_object($est_result))
                 {
@@ -620,7 +621,6 @@ class Task_Model
             return new Task_Model($task_id);
             } catch (Exception $e)
             {
-            echo "Error: " . $e->getMessage();
             $dbConn = $db->getConn();
             if (isset($dbConn))
                 {
@@ -631,6 +631,7 @@ class Task_Model
                 {
                 "Changes committed";
                 }
+                return $e->getMessage();
             }
         }
 

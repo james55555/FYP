@@ -227,10 +227,16 @@ class Estimation_Model extends Generic_Model
         {
         $db = new Database();
         $db->connect();
-        //format all null variables with ''
-        $fields = $db->createSQLVars($fields);
-
         $db->start();
+        //Format dates 2,3 and 4 for database insert.
+        for ($i = 2; $i < 6; $i++)
+            {
+            if ($fields[$i] !== "NULL")
+                {
+                $fields[$i] = $db->formatDatesForDb($fields[$i])->format('Y-m-d');
+                }
+            }
+            var_dump($fields);
         //Set insert into ESTIMATION
         $estimation_insert = "INSERT INTO ESTIMATION ("
                 . "EST_ID, "
@@ -241,11 +247,12 @@ class Estimation_Model extends Generic_Model
                 . "EST_END_DT) "
                 . "VALUES( "
                 . "NULL,"
-                . " '" . $fields[0] . "',"
                 . " '" . $fields[1] . "',"
                 . " '" . $fields[2] . "',"
                 . " '" . $fields[3] . "',"
-                . " '" . $fields[4] . "');";
+                . " '" . $fields[4] . "',"
+                . " '" . $fields[5] . "');";
+        echo $estimation_insert;
         //Run query and get estimation id.
         $estimation_result = $db->query($estimation_insert);
         $est_id = $db->getInsertId();

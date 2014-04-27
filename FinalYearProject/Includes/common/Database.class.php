@@ -139,14 +139,15 @@ class Database
             }
         }
 
-    public function createSQLVars($fields)
-        {
-        foreach ($fields as $field)
-            {
-            $field = "'" . $field . "'";
+        /*
+         * Function to convert date object to string for insert query
+         */
+        public function formatDatesForDb($date){
+            if(isset($date) && is_string($date) && $date !== "NULL"){
+            $date = date('Y-m-d', strtotime(str_replace('-', '/', $date)));
             }
-        return $fields;
-        }
+            return $date;
+            }
 
     /*
      * Function to run query and return either result or error message
@@ -176,7 +177,12 @@ class Database
          * @return (String) $error
          */
         public function getMysql_err(){
+            if(isset($this->conn)){
             return mysqli_error($this->conn);
+            }
+            else {
+                return "This connection isn't set";
+                }
             }
     public function getConn()
         {

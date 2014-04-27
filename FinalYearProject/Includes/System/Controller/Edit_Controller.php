@@ -40,6 +40,11 @@ class Edit_Controller extends Main_Controller
             $this->registry->View_Template->task = $this->task;
             $view = 'edittask';
             }
+            var_dump(new Estimation_Model($est_id));
+            $est = new Estimation_Model($est_id);
+            echo $est->start_dt();
+            echo "<br/>";
+            echo $est->start_dt_AM();
         $this->registry->View_Template->estimation = new Estimation_Model($est_id);
         $this->registry->View_Template->show($view);
         }

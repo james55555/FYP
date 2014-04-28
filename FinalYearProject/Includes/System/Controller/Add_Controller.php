@@ -14,6 +14,10 @@ class Add_Controller extends Main_Controller
 
     public function main()
         {
+        
+        $this->registry->variable; //Incorrect
+        $this->registry->View_Template->variable; //Correct
+        
         //Direct to page depending on whether the object is project or task
         if (isset($_GET['isProj']) && $_GET['isProj'] === "true")
             {

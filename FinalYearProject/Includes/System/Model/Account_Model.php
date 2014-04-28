@@ -107,7 +107,7 @@ class Account_Model extends Validator_Model
         $db = new Database();
         $db->connect();
         $db->filterParameters($registrationFields);
-
+        
 //Assign array variables to abbreviations for later use
         $user_id = $registrationFields['user_id'];
         $password = $registrationFields['password'];
@@ -155,7 +155,6 @@ class Account_Model extends Validator_Model
             if (!$db->querySuccess($result))
                 {
                 return "Error inserting data into database."
-                        . "MYSQL Error: " . mysqli_errno()
                         . "<br/> MYSQL details: " . mysqli_error();
                 }
             } else

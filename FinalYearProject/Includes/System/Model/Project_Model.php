@@ -207,7 +207,7 @@ class Project_Model extends Validator_Model
         //Start the transaction
         $db->start();
         //Set insert into PROJECT String
-        $proj_insert = "INSERT INTO PROJECT ("
+        $proj_insert = "INSERT INTO project ("
                 . " proj_id,"
                 . " proj_nm,"
                 . " proj_descr"
@@ -219,7 +219,7 @@ class Project_Model extends Validator_Model
         $project_result = $db->query($proj_insert);
         $proj_insert_id = $db->getInsertId();
         //Set insert into USER_PROJECT
-        $userProj_insert = "INSERT INTO USER_PROJECT ("
+        $userProj_insert = "INSERT INTO user_project ("
                 . " user_id, "
                 . " proj_id)"
                 . " VALUES ("
@@ -228,7 +228,7 @@ class Project_Model extends Validator_Model
         //Run query
         $userProject_result = $db->query($userProj_insert);
         //Set insert into ESTIMATION
-        $estimation_insert = "INSERT INTO ESTIMATION ("
+        $estimation_insert = "INSERT INTO estimation ("
                 . "EST_ID, "
                 . "ACT_HR, "
                 . "PLN_HR, "
@@ -246,14 +246,13 @@ class Project_Model extends Validator_Model
         $estimation_result = $db->query($estimation_insert);
         $est_insert_id = $db->getInsertId();
         //Set insert into PROJECT_ESTIMATION
-        $proj_est = "INSERT INTO PROJECT_ESTIMATION"
+        $proj_est = "INSERT INTO project_estimation"
                 . " (proj_id,"
                 . " est_id)"
                 . " VALUES ("
                 . " '" . $proj_insert_id . "',"
                 . " '" . $est_insert_id . "');";
         $projectEstimation_result = $db->query($proj_est);
-
         //If all queries are successful then commit the changes
         if ($project_result && $userProject_result && $estimation_result && $projectEstimation_result)
             {
@@ -262,10 +261,17 @@ class Project_Model extends Validator_Model
         //If any of the queries fail then rollback the query and print out error details
         else
             {
+            var_dump($project_result);
+            echo "<br/>";
+            var_dump($userProject_result);
+            echo "<br/>";
+            var_dump($estimation_result);
+            echo "<br/>";
+            var_dump($projectEstimation_result);
+            echo "Err: " . $db->getMysql_err();
             $db->rollback();
-            return "Error inserting into the database<br/>";
-            }
-        return true;
+            return "Error inserting into the database<br/>" . $db->getMysql_err();
+        }
         }
 
     /*
@@ -309,7 +315,7 @@ $db->connect();
 //Run the the row check to ensure the row to be updated exists
         try
             {
-            $rowExists = $db->query("SELECT * FROM PROJECT"
+            $rowExists = $db->query("SELECT * FROM project"
                     . " WHERE proj_id='" . $proj_id . "';");
             if (is_string($rowExists) || mysqli_num_rows($rowExists) === 0)
                 {
@@ -323,7 +329,7 @@ $db->connect();
         try
             {
             //Run the update query against the PROJECT table
-            $project_update = "UPDATE PROJECT SET"
+            $project_update = "UPDATE project SET"
                     . " proj_nm='" . $proj_nm . "',"
                     . " proj_descr='" . $proj_descr . "'"
                     . " WHERE proj_id='" . $proj_id . "';";
@@ -338,7 +344,7 @@ $db->connect();
                 {
                 throw new Exception("EST_ID wasn't set!");
                 }
-            $estimation_update = "UPDATE ESTIMATION SET"
+            $estimation_update = "UPDATE estimation SET"
                     . " ACT_HR='" . $pAct_hr . "',"
                     . " PLN_HR='" . $pln_hr . "',"
                     . " START_DT='" . $proj_start . "',"

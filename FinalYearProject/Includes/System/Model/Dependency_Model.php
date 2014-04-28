@@ -99,7 +99,7 @@ class Dependency_Model extends Generic_Model
     public static function get($dpnd_id)
         {
         $fields = array("DEPENDENCY_ID", "DEPENDENT_ON");
-        $dependency = Database_Queries::selectFrom("Dependency_Model", $fields, "DEPENDENCY", "DEPENDENCY_ID", $dpnd_id);
+        $dependency = Database_Queries::selectFrom("Dependency_Model", $fields, "dependency", "DEPENDENCY_ID", $dpnd_id);
         $dpnd = Generic_Model::castStdObj($dependency);
         return $dpnd;
         }
@@ -135,7 +135,7 @@ class Dependency_Model extends Generic_Model
         $db = new Database();
         $db->connect();
         //start transaction
-        $taskDpnd_insert = "INSERT INTO DEPENDENCY ("
+        $taskDpnd_insert = "INSERT INTO dependency ("
                 . "DEPENDENCY_ID,"
                 . " DEPENDENT_ON)"
                 . " VALUES ("
@@ -146,7 +146,7 @@ class Dependency_Model extends Generic_Model
             foreach ($fields[1] as $dpnd)
                 {
                 $db->start();
-                $taskDpnd_insert = "INSERT INTO DEPENDENCY ("
+                $taskDpnd_insert = "INSERT INTO dependency ("
                         . "DEPENDENCY_ID,"
                         . " DEPENDENT_ON)"
                         . " VALUES ("

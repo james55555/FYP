@@ -516,7 +516,7 @@ class Task_Model
             $db->start();
 
             //Set insert into TASK string
-            $task_insert = "INSERT INTO TASK ("
+            $task_insert = "INSERT INTO task ("
                     . " TSK_ID,"
                     . " PROJ_ID,"
                     . " STATUS,"
@@ -540,7 +540,8 @@ class Task_Model
             $db->close(); //Close database as following construct and destruct db
             //Run estimation insert query
 
-            $estimationFields = array("NULL",
+            $estimationFields = array(
+                "NULL",
                 "NULL",
                 $fields['tPln_hr'],
                 $DatesForUpdate['tStart'],
@@ -584,7 +585,7 @@ class Task_Model
                 }
             $db->connect(); //Reconnect to the db
             //Set query to create link between TASK and ESTIMATION
-            $taskEst_insert = "INSERT INTO TASK_ESTIMATION ("
+            $taskEst_insert = "INSERT INTO task_estimation ("
                     . "tsk_id,"
                     . " est_id)"
                     . " VALUES( "
@@ -596,7 +597,7 @@ class Task_Model
                 throw new Exception("Error inserting into task estimation");
                 }
             //Set query for TASK_DEPENDENCY insert
-            $taskDpnd_insert = "INSERT INTO TASK_DEPENDENCY ("
+            $taskDpnd_insert = "INSERT INTO task_dependency ("
                     . "DEPENDENCY_ID,"
                     . " TSK_ID)"
                     . " VALUES ("
@@ -610,7 +611,7 @@ class Task_Model
                 }
             //Set insert into STAFF
             //Set insert into STAFF_TASK
-            $staffTask_insert = "INSERT INTO STAFF_TASK ("
+            $staffTask_insert = "INSERT INTO staff_task ("
                     . "TSK_ID,"
                     . " STAFF_ID)"
                     . " VALUES ("
@@ -628,7 +629,6 @@ class Task_Model
             $dbConn = $db->getConn();
             if (isset($dbConn))
                 {
-                echo "<br/>Rolled Back";
                 $db->rollback();
                 $db->close();
                 } else

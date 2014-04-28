@@ -229,7 +229,7 @@ class Staff_Model extends Generic_Model
 
         $db->start();
         //Set insert into STAFF
-        $staff_insert = "INSERT INTO STAFF ("
+        $staff_insert = "INSERT INTO staff ("
                 . " STAFF_ID,"
                 . " STAFF_FIRST_NM,"
                 . " STAFF_LAST_NM,"

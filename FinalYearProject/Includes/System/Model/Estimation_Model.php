@@ -220,7 +220,7 @@ class Estimation_Model extends Generic_Model
             $fields[$i] = $db->formatDatesForDb($fields[$i]);
             }
         //Set insert into ESTIMATION
-        $estimation_insert = "INSERT INTO ESTIMATION ("
+        $estimation_insert = "INSERT INTO estimation ("
                 . "EST_ID, "
                 . "ACT_HR, "
                 . "PLN_HR, "

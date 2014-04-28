@@ -22,7 +22,6 @@ class Task_Controller extends Main_Controller
         $this->registry->View_Template->project_tasks = $tasks;
         $tasks && !is_array($tasks) ? array($tasks) : $tasks;
         $this->project = new Project_Model($_GET['proj_id']);
-
         $this->registry->View_Template->projectEstimation = new Estimation_Model($this->project->estimation());
 //Show the projectTasks view
         $this->registry->View_Template->show('projectTasks');
@@ -35,7 +34,7 @@ class Task_Controller extends Main_Controller
 
     public function details()
         {
-        $task = new Task_Model($_GET['task_id']);
+        $task = new Task_Model($_GET['task_id']);   
         $this->registry->View_Template->project = new Project_Model
                 ($task->proj_id());
         $est_id = $task->estimation();

@@ -64,9 +64,13 @@ textarea {
     max-height: 75px;
     font-family: Calibri, sans-serif;
 }
+a:link{
+    color: #0033CC;
+}
 a:hover, button {
     cursor: pointer; 
 }
+
 /*Set #container defaults*/
 #container
 {
@@ -98,7 +102,9 @@ a:hover, button {
     width:50%;
 }
 #content input[type=text],
-#content input[type=date] {
+#content input[type=date],
+#content input[type=email],
+#content input[type=tel]{
     float:left;
     width: 50%;
     padding: 2px;

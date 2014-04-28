@@ -27,11 +27,31 @@ class Database
     public //static
             function connect()
         {
-
-        $this->conn = mysqli_connect($this->DB_server, $this->DB_user, $this->DB_pwd, $this->DB_nm) or die("Unable to Connect to MySQL\n" . mysqli_connect_error());
-        if (is_resource($this->conn))
+        try
             {
-            mysqli_select_db($this->DB_nm, $this->conn) or die("Unable to Select Database \n" . mysqli_connect_error());
+            if (!!!$this->conn = 
+                    mysqli_connect($this->DB_server, $this->DB_user, $this->DB_pwd, $this->DB_nm))
+                {
+                throw new Exception("Unable to connect: " . mysqli_connect_error());
+                }
+                if(is_resource($this->conn)){
+                    mysqli_select_db($this->DB_nm, $this->conn) or die("Unable to Select Database \n" . mysqli_connect_error());
+                }
+            
+            } catch (Exception $e)
+            {
+            //Ensure connect doesn't enter a non-exitable loop
+            $i = 1;
+            if ($i === 2)
+                {
+                die($e->getMessage());
+                }
+            $i++;
+            //If caught once, try remote server credentials
+            $this->DB_user = "grahamj1";
+            $this->DB_pwd = "Water+Spider";
+            $this->DB_nm = "grahamj1";
+            $this->connect();
             }
         }
 
@@ -139,18 +159,21 @@ class Database
             }
         }
 
-        /*
-         * Function to convert date object to string for insert query
-         */
-        public function formatDatesForDb($date){
-            if(isset($date) && is_string($date) && $date !== "NULL"){
+    /*
+     * Function to convert date object to string for insert query
+     */
+
+    public function formatDatesForDb($date)
+        {
+        if (isset($date) && is_string($date) && $date !== "NULL")
+            {
             $date = date('Y-m-d', strtotime(str_replace('-', '/', $date)));
+            } else
+            {
+            $date = "NULL";
             }
-            else {
-                $date = "NULL";
-                }
-            return $date;
-            }
+        return $date;
+        }
 
     /*
      * Function to run query and return either result or error message
@@ -174,31 +197,39 @@ class Database
      * Get current status of connection
      * **Used for testing purposes
      */
-        /*
-         * Function to get mysql error
-         * 
-         * @return (String) $error
-         */
-        public function getMysql_err(){
-            if(isset($this->conn)){
+    /*
+     * Function to get mysql error
+     * 
+     * @return (String) $error
+     */
+
+    public function getMysql_err()
+        {
+        if (isset($this->conn))
+            {
             return mysqli_error($this->conn);
+            } else
+            {
+            return "This connection isn't set";
             }
-            else {
-                return "This connection isn't set";
-                }
-            }
+        }
+
     public function getConn()
         {
         return $this->conn;
         }
-/*
- * Functioin to return the affected rows by either an update or delete
- * 
- * @return (int) $num   Rows affected
- */
-        public function getAffectedRows(){
-            return mysqli_affected_rows($this->conn);
-            }
+
+    /*
+     * Functioin to return the affected rows by either an update or delete
+     * 
+     * @return (int) $num   Rows affected
+     */
+
+    public function getAffectedRows()
+        {
+        return mysqli_affected_rows($this->conn);
+        }
+
     /*
      * Function to ascertain success of mysqli_result 
      * (Convert mysql result into boolean)

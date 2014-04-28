@@ -43,7 +43,9 @@ class Estimation_Model extends Generic_Model
             $this->pln_hr = $row->pln_hr;
             foreach ($row as $key => $val)
                 {
-                if (substr(strtolower($key), -2) === "dt" && $val !== "NULL")
+                
+                if (substr(strtolower($key), -2) === "dt" && 
+                        ($val !== "NULL" && isset($val)))
                     {
                     //Convert String to date for Formatting
                     $dt = DateTime::createFromFormat("Y-m-d", $val);

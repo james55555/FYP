@@ -32,12 +32,6 @@
 #content {
     width:40%
 }
-#content h1{
-    border-bottom: 1px solid #aaa;
-}
-#content li{
-    list-style: none;
-}
 .infoTitle {
     float:left;
     text-align:right;

@@ -3,7 +3,8 @@ This project looks to create a Time Management System for Professionals managing
 
 The system is being designed using RUP and will be designed using four iterations, each advancing in complexity.
 
-The code has been designed using the model-view-controller architecture situated under the include/ namespace.
+The system has been designed based on the Model-View-Controller architecture.
+This is more clear when viewing the \Includes namespace folder structure.
 
 @author:	James Graham
 @module:	CS3010

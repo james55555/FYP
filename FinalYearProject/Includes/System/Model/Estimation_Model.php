@@ -43,11 +43,6 @@ class Estimation_Model extends Generic_Model
             $this->pln_hr = $row->pln_hr;
             foreach ($row as $key => $val)
                 {
-                echo "key: " . $key . " :val: " . $val . "<br/>";
-                if ($val === '0000-00-00')
-                    {
-                    $row->$key = "NULL";
-                    }
                 if (substr(strtolower($key), -2) === "dt" && $val !== "NULL")
                     {
                     //Convert String to date for Formatting
@@ -61,6 +56,10 @@ class Estimation_Model extends Generic_Model
                         $row->$key = $dt->format("Y-m-d");
                         }
                     }
+                    //If the lue hasn't been set then set it to null
+                    if($val === '0000-00-00'){
+                        $row->$key = null;
+                        }
                 }
             $this->act_end_dt = $row->act_end_dt;
             $this->start_dt = $row->start_dt;

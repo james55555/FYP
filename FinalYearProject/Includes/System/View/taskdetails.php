@@ -88,7 +88,7 @@
                                     echo $descr;
                                     } else
                                     {
-                                    echo "No task description available.";
+                                    echo $ns;
                                     }
                                 ?>
                             </div>
@@ -118,7 +118,7 @@
                                     . " " . $staff->staff_last_nm();
                                     } else
                                     {
-                                    echo "No staff member associated with task";
+                                    echo $ns;
                                     }
                                 ?>
                             </div>

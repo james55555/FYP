@@ -27,9 +27,3 @@
 #description {
     width: 100px;
 }
-#actions{
-    text-align:center;
-}
-#editT, #delT{
- background: transparent;   
-}

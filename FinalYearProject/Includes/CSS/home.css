@@ -10,9 +10,6 @@
     text-align:center;
     /*border: none;*/
 }
-#editP, #delP{
-    background:transparent;
-}
 
 /*Set the properties of the button*/
 .upper{

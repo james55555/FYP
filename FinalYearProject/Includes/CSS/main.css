@@ -150,6 +150,11 @@ a.button{
     -moz-box-sizing: border-box;
     -ms-box-sizing: border-box;
 }
+.imgButton{
+    background: transparent;
+    margin-bottom: 0;
+    margin-top: 0;
+}
 /*Colouring for block elements throughout the website*/
 .blockColour{
     background-image: linear-gradient(bottom, #0047CC, #0085CC);

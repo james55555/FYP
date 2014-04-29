@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <?php
+
 /*
  *  Namespace       : Include
  *  File name       : Home
@@ -23,6 +24,7 @@
 
     <body>
         <?php
+
         include("header.php");
         ?>`
         <div id="container">
@@ -33,21 +35,26 @@
                        onclick="javascript:location.href =
                                        '?page=Add&action=addProj&isProj=true'"/>
             </div>
-            <table id="myProjects" class="table">
-                <tr>
-                    <th>Project Id</th>
-                    <th>Project Name</th>
-                    <th>Project Description</th>
-                    <th>Action</th>
-                </tr>
-                <?php
-                //print out project details project-by-project
-                try
+            <?php
+
+            try
+                {
+                if (!isset($projects) || empty($projects))
                     {
-                    if (!isset($projects) || empty($projects))
-                        {
-                        throw new Exception("No Projects created yet.");
-                        }
+                    throw new Exception("No Projects created yet<br/>"
+                    . "<a href='?page=Add&action=addProj&isProj=true'>Add one?</a>");
+                    }
+                ?>
+                <table id="myProjects" class="table">
+                    <tr>
+                        <th>Project Id</th>
+                        <th>Project Name</th>
+                        <th>Project Description</th>
+                        <th>Action</th>
+                    </tr>
+                    <?php
+
+                    //print out project details project-by-project
                     foreach ($projects as $project)
                         {
                         $projid = $project->proj_id();
@@ -66,23 +73,22 @@
                             <!--Buttons to take users to edit or delete for each project-->
 
                             <a href="?page=Edit&is_project=true&proj_id=<?php echo $projid; ?>">
-                                <button type="submit" id="editP">
+                                <button type="submit" id="editP" class="button imgButton">
                                     <img src="Includes/CSS/img/Icons/edit.png"
                                          alt="edit" title="Edit Project"
                                          width="20" height="20"/>
                                 </button>
                             </a>
-                            <button id="delP" onclick="return confirmAction('delete',
-                                                    '<?php echo $project->proj_nm(); ?>')">
-                                <a href="?page=Home&action=delete&proj_id=
-                                   <?php echo $projid; ?>">
+                            <a href="?page=Home&action=delete&proj_id=<?php echo $projid; ?>">
+                                <button id="delP" class="button imgButton" onclick="return confirmAction('delete', '<?php echo $project->proj_nm(); ?>')">
                                     <img src="Includes/CSS/img/Icons/delete.png"
                                          alt="edit" title="Delete Project"
                                          width="20" height="20"/>
-                                </a>
-                            </button>
+                                </button>
+                            </a>
                         </td> <!--End of actions cell-->
                         <?php
+
                         //Close table row for each projct
                         echo "</tr>";
                         } //End of foreach loop
@@ -96,9 +102,10 @@
             </table>
 
         </div> <!--End of container div-->
-        <?php
-        include("footer.php");
-        ?>
+<?php
+
+include("footer.php");
+?>
     </body>
 </html>
 

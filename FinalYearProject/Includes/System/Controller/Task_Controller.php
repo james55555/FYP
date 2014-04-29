@@ -34,28 +34,40 @@ class Task_Controller extends Main_Controller
 
     public function details()
         {
-        $task = new Task_Model($_GET['task_id']);   
-        $this->registry->View_Template->project = new Project_Model
-                ($task->proj_id());
-        $est_id = $task->estimation();
-        $this->registry->View_Template->taskEstimation = new Estimation_Model($est_id);
+        $task = new Task_Model($_GET['task_id']);
+        $proj = new Project_Model($task->proj_id());
+        $this->registry->View_Template->project = $proj;
+
+        $this->registry->View_Template->taskEstimation = new Estimation_Model($task->estimation());
+
         //Optional field
-        $this->registry->View_Template->taskStaff = new Staff_Model($task->staff());
+        $this->registry->View_Template->staff = new Staff_Model($task->staff());
         //Optional field
-        $dependencies = array();
+
+        $depOn_arr = array();
         $dp = new Dependency_Model($task->dpnd());
-        //Assign or cast dependency array
-        is_array($dp->dpnd_on()) ? $dpnd = $dp->dpnd_on() : $dpnd = (array) $dp->dpnd_on();
-        //Foreach dependency list use the task id
-        foreach ($dpnd as $id)
+        //dpnd_on can either be array or string - transfer to $depOn_arr for either
+        if (is_string($dp->dpnd_on()))
             {
-            $taskObj = Task_Model::getTask($id);
-            $hLink = "<a href=\"?page=Task&action=details&task_id={$taskObj->tsk_id()}\">
-                                            {$taskObj->tsk_nm()}</a>";
-            //Push the HTML link into an array to be made available to the View
-            array_push($dependencies, $hLink);
+            array_push($depOn_arr, $dp->dpnd_on());
+            } else
+            {
+            foreach ($dp->dpnd_on() as $id)
+                {
+                array_push($depOn_arr, $id);
+                }
             }
-        $this->registry->View_Template->dependencies = $dependencies;
+        foreach ($depOn_arr as $key => $val)
+            {
+            //Task dependent on this one
+            $dependent = Task_Model::getTask($val);
+            //Foreach dependency list use the task id
+            $hLink = "<a href=\"?page=Task&action=details&task_id={$dependent['tsk_id']}\">
+          {$dependent['tsk_nm']}</a>";
+            $depOn_arr[$key] = $hLink;
+            }
+        $this->registry->View_Template->dependencies = $depOn_arr;
+
         $this->registry->View_Template->task = $task;
         $this->registry->View_Template->show('taskDetails');
         }

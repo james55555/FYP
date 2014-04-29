@@ -103,14 +103,16 @@ class Database
                 if (is_string($array[$key]))
                     {
                     // If they are, perform the real escape function over the selected node
-                    $array[$key] = trim(mysqli_real_escape_string($this->conn, $array[$key]), "'");
+                    $tempKey = trim(mysqli_real_escape_string($this->conn, $array[$key]), "'");
+                    $array[$key] = htmlspecialchars($tempKey);
                     }
                 }
             // Check if the parameter is a string
             if (is_string($array))
                 {
                 // If it is, perform a  mysqli_real_escape_string on the parameter
-                $array = trim(mysqli_real_escape_string($this->conn, $array), "'");
+                $temp = trim(mysqli_real_escape_string($this->conn, $array), "'");
+                $array = htmlspecialchars($temp);
                 }
             // Return the filtered result
             return $array;

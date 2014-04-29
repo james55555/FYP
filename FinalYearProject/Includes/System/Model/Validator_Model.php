@@ -7,6 +7,7 @@
  */
 abstract class Validator_Model
     {
+
     /*
      * This function can be used to validate a variable
      * 
@@ -20,7 +21,7 @@ abstract class Validator_Model
      */
 
     public static function variableCheck($field, $string, $type, $length,
-            $optional = false)
+            $optional = false, $min = 0)
         {
         // assign the type
         $type = 'is_' . $type;
@@ -35,14 +36,22 @@ abstract class Validator_Model
                 {
                 array_push($errors, $empty);
                 }
-            } elseif (!$type($string) && !is_string(Validator_Model::optionalVar($string, $field)))
+            }
+        //Check the variable is type of
+        elseif (!$type($string) && !is_string(Validator_Model::optionalVar($string, $field)))
             {
             $typeErr = "String and type don't match!<br>"
                     . "Field is: " . $field . "<br>"
                     . "Trying to run: " . $type . "(" . $string . ")";
             array_push($errors, $typeErr);
             }
-
+        else if ($type === "is_numeric" || $type === "is_int")
+            {
+            if ($string < $min)
+                {
+                array_push($errors, $field . " must be more than " . $min);
+                }
+            }
         // then we check how long the string is
         elseif (strlen($string) > $length)
             {
@@ -78,7 +87,8 @@ abstract class Validator_Model
                 {
                 array_push($emailError, "Ensure " . $field . " contains correct characters!");
                 }
-            } else
+            }
+        else
             {
             return false;
             }
@@ -87,46 +97,6 @@ abstract class Validator_Model
             $emailError = null;
             }
         return $emailError;
-        }
-
-    /*
-     * Helper method to filter variables using htmlspecialchars in order to keep their
-     * meaning when rendered in HTML.
-     * @param $array array
-     * @return $array array
-     * (Based on Database::FilterParameters, potential for more dynamic method?)
-     */
-
-    public static function htmlChar($array)
-        {
-        // Check if the parameter is an array
-        if (is_array($array))
-            {
-            // Loop through the initial dimension
-            foreach ($array as $key => $value)
-                {
-                // Check if any nodes are arrays themselves
-                if (is_array($array[$key]))
-                    {
-                    // If they are, let the function call itself over that particular node
-                    $array[$key] = $this->htmlChar($array[$key]);
-                    }
-                // Check if the nodes are strings
-                if (is_string($array[$key]))
-                    {
-                    // If they are, perform the htmlspecialchars function over the selected node
-                    $array[$key] = htmlspecialchars($array[$key]);
-                    }
-                }
-            // Check if the parameter is a string
-            if (is_string($array))
-                {
-                // If it is, perform a  htmlspecialchars on the parameter
-                $array = htmlspecialchars($array);
-                }
-            // Return the filtered result
-            return $array;
-            }
         }
 
     /*
@@ -146,7 +116,8 @@ abstract class Validator_Model
             if ($optional)
                 {
                 return false;
-                } else
+                }
+            else
                 {
                 return $empty;
                 }
@@ -161,14 +132,15 @@ abstract class Validator_Model
                 {
                 return "Invalid date format!";
                 }
-                $date = new DateTime($date);
+            $date = new DateTime($date);
             }
         $maxDate = new DateTime('2200-01-01');
         $minDate = new DateTime('1900-01-01');
         if ($date > $maxDate)
             {
             return "Year can't be after 2200";
-            } elseif ($date < $minDate)
+            }
+        elseif ($date < $minDate)
             {
             return "Year can't be before 1900";
             }
@@ -195,5 +167,4 @@ abstract class Validator_Model
         }
 
     }
-
 ?>

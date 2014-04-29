@@ -35,12 +35,10 @@
                         ?>
                     </p>
                 </div> <!--End of end date div-->
-                <button id="up" 
-                        onclick="javascript:location.href = '?page=Task&proj_id=<?php echo $project->proj_id(); ?>'">
-                    <img src="Includes/CSS/img/Icons/up.png" 
-                         alt="up" title="Return to task list"
-                         width="20" height="20"/>
-                </button>
+                <a href='?page=Task&proj_id=<?php echo $project->proj_id(); ?>'
+                   class="button" id="up"
+                   title="Return to task list for project: <?php echo $project->proj_nm(); ?>">Task List
+                </a>
             </div> <!--End of upper class-->
             <div id="content" class="centralBox">
                 <h1>Details for: <?php echo $task->tsk_nm(); ?></h1>
@@ -131,6 +129,10 @@
                                  width="30" height="30"/>
                         </button>
                     </a>
+                    <div id="iconCopyright">
+                        Icons made by <a href="http://www.flaticon.com/free-icon/pencil-striped-symbol-for-interface-edit-buttons_34022" title="SimpleIcon" target="_blank">SimpleIcon</a>
+                        from <a href="http://www.flaticon.com" title="Flaticon" target="_blank">www.flaticon.com</a>
+                    </div>
                 </div><!--End of actions-->
                 <span style="clear:both;"></span>
             </div> <!--End of content-->      

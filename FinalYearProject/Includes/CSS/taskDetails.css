@@ -8,6 +8,7 @@
 .upper{
     text-align: center;
     margin-bottom: 20px;
+    margin-top: 20px;
 }
 .upper#start {
     float: left;
@@ -20,11 +21,6 @@
     font-weight: bold;
     color: red;
     margin-right: 20px;
-}
-.upper #up {
-    margin-top: 20px;
-    padding: 5px;
-    background: none;
 }
 
 /*Content design*/
@@ -44,6 +40,11 @@
 }
 #content #actions {
     /*Needs to float to position under buttons*/
+    border-top: solid 1px #aaa;
+    padding-top: 10px;
     float: left;
     width: 100%;
+}
+#content #iconCopyright{
+    font-size: small;
 }

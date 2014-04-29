@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <?php
-
 /*
  *  Namespace       : Include
  *  File name       : Home
@@ -24,19 +23,16 @@
 
     <body>
         <?php
-
         include("header.php");
         ?>`
         <div id="container">
             <div class="upper">
                 <h1>My Projects</h1>
-                <!--Image button to represent add new project-->
                 <input type="submit" class="button" value="Add New"
-                       onclick="javascript:location.href =
-                                       '?page=Add&action=addProj&isProj=true'"/>
+                       onclick="javascript:location.href = '?page=Add&action=addProj&isProj=true'"
+                       title="Add a new project"
             </div>
             <?php
-
             try
                 {
                 if (!isset($projects) || empty($projects))
@@ -53,7 +49,6 @@
                         <th>Action</th>
                     </tr>
                     <?php
-
                     //print out project details project-by-project
                     foreach ($projects as $project)
                         {
@@ -72,14 +67,16 @@
                         <td>
                             <!--Buttons to take users to edit or delete for each project-->
 
-                            <a href="?page=Edit&is_project=true&proj_id=<?php echo $projid; ?>">
+                            <a href="?page=Edit&is_project=true&proj_id=<?php echo $projid; ?>"
+                               title="Edit Task">
                                 <button type="submit" id="editP" class="button imgButton">
                                     <img src="Includes/CSS/img/Icons/edit.png"
                                          alt="edit" title="Edit Project"
                                          width="20" height="20"/>
                                 </button>
                             </a>
-                            <a href="?page=Home&action=delete&proj_id=<?php echo $projid; ?>">
+                            <a href="?page=Home&action=delete&proj_id=<?php echo $projid; ?>"
+                               title="Delete task">
                                 <button id="delP" class="button imgButton" onclick="return confirmAction('delete', '<?php echo $project->proj_nm(); ?>')">
                                     <img src="Includes/CSS/img/Icons/delete.png"
                                          alt="edit" title="Delete Project"
@@ -88,7 +85,6 @@
                             </a>
                         </td> <!--End of actions cell-->
                         <?php
-
                         //Close table row for each projct
                         echo "</tr>";
                         } //End of foreach loop
@@ -102,10 +98,9 @@
             </table>
 
         </div> <!--End of container div-->
-<?php
-
-include("footer.php");
-?>
+        <?php
+        include("footer.php");
+        ?>
     </body>
 </html>
 

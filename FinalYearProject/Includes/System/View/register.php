@@ -57,11 +57,11 @@
                                title="No more than 25 characters"
                                style="float:initial; width: 80%;"
                                data-validate="true"/><span id="spuser_id"></span>    
-                        <input style="width:80%;" type="password" name="password" id="password"
+                        <input type="password" name="password" id="password"
                                placeholder="New Password"
                                title="No more than 25 characters"
                                data-validate="true"/><span id="sppassword"></span>
-                        <input style="width:80%;" type="password" name="password2" id="password2"
+                        <input type="password" name="password2" id="password2"
                                placeholder="Re-enter password"
                                data-validate="true"/><span id="sppassword2"></span>
                     </div>

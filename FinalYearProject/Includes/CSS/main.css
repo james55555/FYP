@@ -86,7 +86,7 @@ a:hover, button {
     background-color: #FFFFFF;
     margin-top: 2.5%;
     text-align: center;
-    width: 40%;
+    width: 400px;
     display: block;
     overflow: auto;
 }

@@ -42,3 +42,8 @@
     width: 60%;
     padding-left: 10px;
 }
+#content #actions {
+    /*Needs to float to position under buttons*/
+    float: left;
+    width: 100%;
+}

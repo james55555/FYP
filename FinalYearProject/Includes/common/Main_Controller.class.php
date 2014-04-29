@@ -34,7 +34,7 @@ abstract
      * @param (Bool)   $new       If a new tasks is being added ignore the selection
      */
 
-    protected function processDependency($task, $new = false)
+    protected function processDependency($task, $new = false, $edit = true)
         {
 //Set project variables (for use internally)
         $proj_id = $task->proj_id();
@@ -69,10 +69,16 @@ abstract
                     $checked = '';
                     }
                 //Push checkbox string into array
-                $chckBoxStr = "<label id=\"dpndNm\">{$val->tsk_nm()}</label>"
-                        . "<input type=\"checkbox\" name=\"tDpnd[]\" "
-                        . "value=\"{$val->tsk_id()}\" $checked/>";
-                array_push($dependencies, $chckBoxStr);
+                if ($edit)
+                    {
+                    $chckBoxStr = "<label id=\"dpndNm\">{$val->tsk_nm()}</label>"
+                            . "<input type=\"checkbox\" name=\"tDpnd[]\" "
+                            . "value=\"{$val->tsk_id()}\" $checked/>";
+                    array_push($dependencies, $chckBoxStr);
+                    } else
+                    {
+                    array_push($dependencies, $val->tsk_nm());
+                    }
                 } catch (Exception $ex)
                 {
                 //Exception caught - used to bypass logic

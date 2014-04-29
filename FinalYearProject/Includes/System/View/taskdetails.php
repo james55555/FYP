@@ -111,6 +111,7 @@
                             </li>
                         </div> <!--End of dependencies-->
                 </ul>
+                <span id="clear:both;"></span>
                 <div id="actions">
                     <!--Buttons to take users to edit or delete for each project-->
                     <!--Edit button-->

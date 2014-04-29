@@ -45,39 +45,7 @@ class Task_Controller extends Main_Controller
         $task->set("staff", $sMember->staff_id());
         $this->registry->View_Template->staff = $sMember;
         //Optional field
-
-        $depOn_arr = array();
-        $dp = new Dependency_Model($task->dpnd());
-        $task->set("dpnd", $dp->dpnd_id());
-        //dpnd_on can either be array or string - transfer to $depOn_arr for either
-        try{
-            $dpid = $dp->dpnd_on();
-            if(!!!isset($dpid)){
-                throw new Exception("No dependencies");
-                }
-        if (is_string($dpid))
-            {
-            array_push($depOn_arr, $dpid);
-            } elseif(is_array($dpid))
-            {
-            foreach ($dpid as $id)
-                {
-                array_push($depOn_arr, $id);
-                }
-            }
-        foreach ($depOn_arr as $key => $val)
-            {
-            //Task dependent on this one
-            $dependent = Task_Model::getTask($val);
-            //Foreach dependency list use the task id
-            $hLink = "<a href=\"?page=Task&action=details&task_id={$dependent['tsk_id']}\">
-          {$dependent['tsk_nm']}</a>";
-            $depOn_arr[$key] = $hLink;
-            }
-            } catch (Exception $e) {
-                array_push($depOn_arr, $e->getMessage());
-            }
-        $this->registry->View_Template->dependencies = $depOn_arr;
+        $this->registry->View_Template->dependencies = $this->processDependency($task, false, false);
 
         $this->registry->View_Template->task = $task;
         $this->registry->View_Template->show('taskDetails');
@@ -123,14 +91,4 @@ class Task_Controller extends Main_Controller
             }
         $this->registry->View_Template->show('showMessage');
         }
-
-    /*
-     * Function to redirect user to add task page
-     */
-
-    public function addTask()
-        {
-        $this->registry->View_Template->show('addTask');
-        }
-
     }

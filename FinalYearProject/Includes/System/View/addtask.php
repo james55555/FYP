@@ -50,13 +50,13 @@
                         <?php
                         //only show task dependencies if their are tasks associated
                         //with the project in question
-                        if (isset($projTasks))
+                        if (count($projTasks) > 0)
                             {
                             echo "<h2>Choose Task Dependencies: </h2>";
                             //Set up checkbox for all tasks in the same project
                             foreach ($projTasks as $task)
                                 {
-                                echo $task;
+                               echo $task;
                                 }
                             }
                         ?>
@@ -79,12 +79,15 @@
                     </div>
                     <!--Optional for user-->
                     <div id="staff" class="section">
-                        <h2>Associated Staff Members</h2>
-                        <label>First Name: </label><input type="text" name="stFirst"/>
-                        <label>Last Name: </label><input type="text" name="stLast"/>
+                        <h2>Associated Staff Members (optional)</h2>
+                        <label>First Name: </label><input type="text" name="stFirst"
+                                                          placeholder="i.e. James"/>
+                        <label>Last Name: </label><input type="text" name="stLast"
+                                                         placeholder="i.e. Graham"/>
                         <label>Phone Extension: </label><input type="tel" name="stTel"
-                                                               placeholder="No more than four numbers"/>
-                        <label>Email: </label><input type="email" name="stEmail"/>
+                                                               placeholder="i.e. 2121 (4 number max)"/>
+                        <label>Email: </label><input type="email" name="stEmail"
+                                                     placeholder="i.e. james@email.com"/>
                     </div> <!--End of staff-->
                     <input type="hidden" value="<?php echo $_GET['proj_id']; ?>"
                            name="proj_id"/>

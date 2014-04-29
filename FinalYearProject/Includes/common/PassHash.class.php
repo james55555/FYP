@@ -49,7 +49,7 @@ class PassHash
  
         $new_hash = crypt($password, $full_salt);
  
-        return ($hash == $new_hash);
+        return ($hash === $new_hash);
     }
 }
  

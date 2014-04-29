@@ -33,10 +33,10 @@ class Register_Controller extends Main_Controller
                     . "<br/><a href=\"?page=Login\">Login with new details</a>";
             } else
             {
-            //Set user session to null so that header doesn't appear
+//Set user session to null so that header doesn't appear
             $this->registry->View_Template->error = true;
             $this->registry->View_Template->heading = "Error adding user!";
-            //Print errors             
+//Print errors             
             $this->registry->View_Template->message = $this->newUser;
             }
 
@@ -49,30 +49,24 @@ class Register_Controller extends Main_Controller
 
     private function checkForm()
         {
-        $valid = false;
-
-        //assign to an array.
-        $registrationFields = array();
-
-
-        $registrationFields['fname'] = $_POST['fname'];
-        $registrationFields['lname'] = $_POST['lname'];
-        $registrationFields['email'] = $_POST['email'];
-        $registrationFields['user_id'] = $_POST['user_id'];
-        $registrationFields['password'] = PassHash::hash($_POST['password']);
-
-        $this->newUser = Account_Model::addUser($registrationFields);
-        if (is_bool($this->newUser))
+        try
             {
-            $valid = true;
-            } elseif (is_array($this->newUser) || is_string($this->newUser))
+            if ($_POST['password'] !== $_POST['password2'])
+                {
+                throw new Exception("Passwords don't match!");
+                }
+            $this->newUser = Account_Model::addUser($_POST);
+            if (is_string($this->newUser) || is_array($this->newUser))
+                {
+                return false;
+                }
+            } catch (Exception $ex)
             {
-            $valid = false;
+            $this->newUser = $ex->getMessage();
+            return false;
             }
-
-        return $valid;
+        return true;
         }
-
     }
 ?>
 

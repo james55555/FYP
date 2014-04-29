@@ -41,18 +41,26 @@ class Task_Controller extends Main_Controller
         $this->registry->View_Template->taskEstimation = new Estimation_Model($task->estimation());
 
         //Optional field
-        $this->registry->View_Template->staff = new Staff_Model($task->staff());
+        $sMember = new Staff_Model($task->staff());
+        $task->set("staff", $sMember->staff_id());
+        $this->registry->View_Template->staff = $sMember;
         //Optional field
 
         $depOn_arr = array();
         $dp = new Dependency_Model($task->dpnd());
+        $task->set("dpnd", $dp->dpnd_id());
         //dpnd_on can either be array or string - transfer to $depOn_arr for either
-        if (is_string($dp->dpnd_on()))
+        try{
+            $dpid = $dp->dpnd_on();
+            if(!!!isset($dpid)){
+                throw new Exception("No dependencies");
+                }
+        if (is_string($dpid))
             {
-            array_push($depOn_arr, $dp->dpnd_on());
-            } else
+            array_push($depOn_arr, $dpid);
+            } elseif(is_array($dpid))
             {
-            foreach ($dp->dpnd_on() as $id)
+            foreach ($dpid as $id)
                 {
                 array_push($depOn_arr, $id);
                 }
@@ -65,6 +73,9 @@ class Task_Controller extends Main_Controller
             $hLink = "<a href=\"?page=Task&action=details&task_id={$dependent['tsk_id']}\">
           {$dependent['tsk_nm']}</a>";
             $depOn_arr[$key] = $hLink;
+            }
+            } catch (Exception $e) {
+                array_push($depOn_arr, $e->getMessage());
             }
         $this->registry->View_Template->dependencies = $depOn_arr;
 

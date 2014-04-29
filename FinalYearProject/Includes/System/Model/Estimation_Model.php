@@ -43,8 +43,8 @@ class Estimation_Model extends Generic_Model
             $this->pln_hr = $row->pln_hr;
             foreach ($row as $key => $val)
                 {
-                
-                if (substr(strtolower($key), -2) === "dt" && 
+
+                if (substr(strtolower($key), -2) === "dt" &&
                         ($val !== "NULL" && isset($val)))
                     {
                     //Convert String to date for Formatting
@@ -58,10 +58,11 @@ class Estimation_Model extends Generic_Model
                         $row->$key = $dt->format("Y-m-d");
                         }
                     }
-                    //If the lue hasn't been set then set it to null
-                    if($val === '0000-00-00'){
-                        $row->$key = null;
-                        }
+                //If the lue hasn't been set then set it to null
+                if ($val === '0000-00-00')
+                    {
+                    $row->$key = null;
+                    }
                 }
             $this->act_end_dt = $row->act_end_dt;
             $this->start_dt = $row->start_dt;
@@ -75,8 +76,10 @@ class Estimation_Model extends Generic_Model
                 {
                 array_push($fields, $var);
                 }
-            //Add a new, empty staff object
-            $this->add($fields);
+            //Add a new, staff object
+            $new = $this->add($fields);
+            //As the object is empty the only field we need is the DB generated ID
+            $this->est_id = $new->est_id();
             }
         }
 
@@ -108,38 +111,6 @@ class Estimation_Model extends Generic_Model
     public function est_end_dt()
         {
         return $this->est_end_dt;
-        }
-
-    /*
-     * Inherit method to set a new variable
-     */
-
-    public function set($variable, $newValue)
-        {
-        try
-            {
-            $variable = strtolower($variable);
-
-            $this->$variable = $newValue;
-            if ($this->$variable !== $newValue)
-                {
-                throw new Exception("Error setting new value");
-                }
-            } catch (Exception $ex)
-            {
-            echo $ex->getMessage() . "<br/>" . $ex->getTraceAsString();
-            }
-        }
-
-    public function setEmptyNull($row)
-        {
-        foreach ($row as $key => $val)
-            {
-            if ($val === "NULL")
-                {
-                $this->set($key, null);
-                }
-            }
         }
 
     public static function get($est_id)
@@ -198,14 +169,25 @@ class Estimation_Model extends Generic_Model
             }
         return $est_id;
         }
-
+    public static function archive($est_id)
+        {
+        $success = Database_Queries::archive("ESTIMATION", "EST_ID", $est_id);
+        if (!!!$success)
+            {
+            return "Error archiving staff data!";
+            }
+        return true;
+        }
     public static function delete($est_id)
         {
         $table = "ESTIMATION";
         $field = "est_id";
 
-        $success = parent::__delete($est_id, $table, $field);
-
+        $success = Database_Queries::archive($table, $field, $est_id);
+        if (!!!$success)
+            {
+            return "Error archiving Estimation data!!";
+            }
         return $success;
         }
 
@@ -214,10 +196,13 @@ class Estimation_Model extends Generic_Model
         $db = new Database();
         $db->connect();
         $db->start();
-        //Format dates 2,3 and 4 for database insert.
-        for ($i = 3; $i < 6; $i++)
+        //If the variable is a date then format it accordingly.
+        foreach ($fields as $key => $val)
             {
-            $fields[$i] = $db->formatDatesForDb($fields[$i]);
+            if (!!!is_string($val) && !!!is_numeric($val))
+                {
+                $fields[$key] = $val->format('Y-m-d');
+                }
             }
         //Set insert into ESTIMATION
         $estimation_insert = "INSERT INTO estimation ("
@@ -234,7 +219,8 @@ class Estimation_Model extends Generic_Model
                 . " '" . $fields[3] . "',"
                 . " '" . $fields[4] . "',"
                 . " '" . $fields[5] . "');";
-        //Run query and get estimation id.
+
+//Run query and get estimation id.
         $estimation_result = $db->query($estimation_insert);
         $est_id = $db->getInsertId();
         if ($db->endStatement($estimation_result))

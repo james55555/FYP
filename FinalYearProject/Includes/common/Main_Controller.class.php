@@ -27,18 +27,18 @@ abstract
      */
 
     public abstract function main();
-    
-      /*
-       * Function to prepare an array of associated tasks
-       * @param (Object) $task      This is a task object 
-       * @param (Bool)   $new       If a new tasks is being added ignore the selection
-       */
+
+    /*
+     * Function to prepare an array of associated tasks
+     * @param (Object) $task      This is a task object 
+     * @param (Bool)   $new       If a new tasks is being added ignore the selection
+     */
+
     protected function processDependency($task, $new = false)
         {
 //Set project variables (for use internally)
         $proj_id = $task->proj_id();
         $projTasks = Task_Model::getAllTasks($proj_id);
-        //var_dump($projTasks);
         $dependencies = array();
 //unset(array_keys($projTasks, $this->task->tsk_id()));
         $dp = new Dependency_Model($task->dpnd());
@@ -46,7 +46,8 @@ abstract
             {
             try
                 {
-                if(!!!is_object($val) && is_array($val)){
+                if (!!!is_object($val) && is_array($val))
+                    {
                     $val = new Task_Model($val['tsk_id']);
                     }
                 //Remove the Task object if it is the same as the current task
@@ -79,7 +80,6 @@ abstract
             }
         return $dependencies;
         }
-
 
     }
 

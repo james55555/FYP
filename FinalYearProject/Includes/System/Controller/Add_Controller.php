@@ -13,11 +13,7 @@ class Add_Controller extends Main_Controller
     protected $newTask;
 
     public function main()
-        {
-        
-        $this->registry->variable; //Incorrect
-        $this->registry->View_Template->variable; //Correct
-        
+        {        
         //Direct to page depending on whether the object is project or task
         if (isset($_GET['isProj']) && $_GET['isProj'] === "true")
             {
@@ -52,7 +48,6 @@ class Add_Controller extends Main_Controller
         {
         $this->is_project = false;
         //assign to an array
-
         $this->newTask = Task_Model::addTask($_POST);
         return $this->showView();
         }

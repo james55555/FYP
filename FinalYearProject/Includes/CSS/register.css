@@ -12,10 +12,11 @@
     /*Position block*/
     width: 50%;
 }
-input[type=text], input[type=password]{
+input[type=text], input[type=password] {
     width: 80%;
     text-align:center;
 }
+
 .regInput{
     clear:both;
 }

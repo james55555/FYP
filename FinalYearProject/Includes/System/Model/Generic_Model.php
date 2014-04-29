@@ -33,25 +33,12 @@ abstract class Generic_Model
         //If the query hasn't been succesful then alert.
         if (!$success)
             {
-            throw new Exception($table . " table delete error"
-            . "<br/>Error: " . mysqli_error());
+            throw new Exception($table . " table delete error<br/>"
+                    . "Contact your administrator.");
             }
         return true;
         }
 
-    /*
-     * Function to set any String values as NULL (used for insert) to PHP null
-     */
-
-    public abstract function setEmptyNull($row);
-    /*
-     * @abstract set
-     * Setter method to set any values to a new value
-     * This method cannot be used within this class due to the use of $this->
-     * @param (var) $variable 
-     */
-
-    public abstract function set($variable, $newValue);
     /*
      * Function to cast stdClass object as an array (used mainly in getObj functions)
      * @param (object) $obj     This is the object to be converted

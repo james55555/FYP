@@ -114,6 +114,9 @@ class Task_Model
         return $this->dpnd;
         }
 
+        public function set($key, $val){
+            $this->$key = $val;
+            }
     /*
      * method to get a task by its id.
      * Task is to be returned. If task is null then there are no task for @param tsk_id
@@ -234,6 +237,7 @@ class Task_Model
             {
             return $validAct;
             }
+
         //Validate staff fields
         $validStaff = Staff_Model::validateStaffFields($staffFields);
         if (is_string($validStaff) || is_array($validStaff))
@@ -247,30 +251,12 @@ class Task_Model
             return $valid;
             }
 
-        //Loop through $fields and set empty values to null
-        foreach ($fields as $field => $val)
-            {
-            if (is_string(Validator_Model::optionalVar($val, $field)))
-                {
-                $fields[$field] = "NULL";
-                }
-            }
-        //Loop through $DatesForUpdate and set empty values to null
-        foreach ($DatesForUpdate as $date => $val)
-            {
-            if (is_string(Validator_Model::optionalVar($val, $date)))
-                {
-                $DatesForUpdate[$date] = "NULL";
-                }
-            }
-        //Loop through $staffFields and set empty values to null
-        foreach ($staffFields as $staff => $val)
-            {
-            if (is_string(Validator_Model::optionalVar($val, $staff)))
-                {
-                $staffFields[$staff] = "NULL";
-                }
-            }
+        $task = new Task_Model($task_id);
+        //Handle empty variables
+        $fields = $task->assignNull($fields);
+        $DatesForUpdate = $task->assignNull($DatesForUpdate);
+        $staffFields = $task->assignNull($staffFields);
+
         //Processing complete, now run update statement
         $db->connect();
         $db->start();
@@ -284,7 +270,6 @@ class Task_Model
                 {
                 throw new Exception("Task doesn't exist");
                 }
-                $task = new Task_Model($task_id);
             //Check ESTIMATION table
             $estCheck_Res = $db->query("SELECT * FROM ESTIMATION "
                     . "WHERE EST_ID='" . $est_id . "';");
@@ -389,23 +374,25 @@ class Task_Model
         $task = new Task_Model($task_id);
 //Prepare queries
 //Delete staff data
+        $staff = Staff_Model::archive($task->staff());
         $staffRef = StaffTask_Model::delete($task_id);
-        $staff = Staff_Model::delete($task->staff());
-        if (!$staff || !$staffRef)
+        if (!!!$staffRef || is_string($staff))
             {
             return false;
             }
 //Delete estimation data
+        $estimate = Estimation_Model::archive($task->estimation());
         $estimateRef = TaskEstimation_Model::delete($task_id);
-        $estimate = Estimation_Model::delete($task->estimation());
-        if (!$estimateRef || !$estimate)
+
+        if (!!!$estimateRef || is_string($estimate))
             {
             return false;
             }
 //Delete dependency data
+
+        $dependency = Dependency_Model::archive($task->dpnd());
         $dpndRef = TaskDependency_Model::delete($task_id);
-        $dependency = Dependency_Model::delete($task->dpnd());
-        if (!$dpndRef || !$dependency)
+        if (!!!$dpndRef || is_string($dependency))
             {
             return false;
             }
@@ -483,30 +470,28 @@ class Task_Model
             return $valid;
             }
 
-        //Loop through $fields and set empty values to null
-        foreach ($fields as $field => $val)
+        //SETUP NULL ASSIGNMENT
+        foreach ($fields as $key => $val)
             {
-            if (is_string(Validator_Model::optionalVar($val, $field)))
+            if (is_string(Validator_Model::optionalVar($val, $key)))
                 {
-                $fields[$field] = "NULL";
+                $fields[$key] = "NULL";
                 }
             }
-        //Loop through $DatesForUpdate and set empty values to null
-        foreach ($DatesForUpdate as $date => $val)
+        foreach ($DatesForUpdate as $key => $val)
             {
-            if (is_string(Validator_Model::optionalVar($val, $date)))
+            if (is_string(Validator_Model::optionalVar($val, $key)))
                 {
-                $DatesForUpdate[$date] = "NULL";
+                $DatesForUpdate[$key] = "NULL";
+                }
+            } foreach ($staffFields as $key => $val)
+            {
+            if (is_string(Validator_Model::optionalVar($val, $key)))
+                {
+                $staffFields[$key] = "NULL";
                 }
             }
-        //Loop through $staffFields and set empty values to null
-        foreach ($staffFields as $staff => $val)
-            {
-            if (is_string(Validator_Model::optionalVar($val, $staff)))
-                {
-                $staffFields[$staff] = "NULL";
-                }
-            }
+
         try
             {
             //Processing complete, now run update statement
@@ -533,9 +518,9 @@ class Task_Model
             //Run the query and get the task ID
             $task_result = $db->query($task_insert);
             $task_id = $db->getInsertId();
-            if (!$db->endStatement($task_result))
+            if (!!!$db->endStatement($task_result))
                 {
-                throw new Exception("Error inserting into task");
+                throw new Exception("Error inserting into task: " . $db->getMysql_err());
                 }
             $db->close(); //Close database as following construct and destruct db
             //Run estimation insert query
@@ -568,13 +553,7 @@ class Task_Model
                 }
 
             //Run dependency insert
-            if ($dpnds === "NULL")
-                {
-                $dpndFields = array("NULL", "NULL");
-                } elseif (is_array($dpnds))
-                {
-                $dpndFields = array("NULL", $dpnds);
-                }
+            $dpndFields = array("NULL", $dpnds);
             $dpnd_result = Dependency_Model::add($dpndFields);
             if (is_object($dpnd_result))
                 {
@@ -663,7 +642,7 @@ class Task_Model
                 $length = 200;
                 } elseif ($field === "status")
                 {
-                if (!in_array($content, array("", "not started", "in progress", "finished")))
+                if (!in_array($content, array("", "Not Started", "In Progress", "Finished")))
                     {
                     return "Correct status needs to be supplied";
                     }
@@ -823,6 +802,29 @@ class Task_Model
             {
             return true;
             }
+        }
+
+    /*
+     * Helper to assign variables to NULL for DB insert for array
+     * 
+     */
+
+    private function assignNull($var)
+        {
+        if (is_array($var))
+            {
+            foreach ($var as $key => $val)
+                {
+                if (is_string(Validator_Model::optionalVar($val, $key)))
+                    {
+                    $var[$key] = "NULL";
+                    }
+                }
+            } elseif (is_string($var))
+            {
+            $var = "NULL";
+            }
+        return $var;
         }
 
     }

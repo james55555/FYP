@@ -30,21 +30,19 @@ class Staff_Model extends Generic_Model
                 {
                 throw new Exception("NULL");
                 }
+                //Convert from SQL NULL to PHP null
             foreach ($row as $key => $val)
                 {
-                $key = strtolower($key);
                 if ($val === "NULL")
                     {
-                    $val = null;
+                    $row[$key] = null;
                     }
-                    $this->$key = $val;
                 }
-/*            $this->staff_id = $row->STAFF_ID;
-            $this->staff_first_nm = $row->STAFF_FIRST_NM;
-            $this->staff_last_nm = $row->STAFF_LAST_NM;
-            $this->staff_phone = $row->STAFF_PHONE;
-            $this->staff_email = $row->STAFF_EMAIL;
-*/
+            $this->staff_id = $row['staff_id'];
+            $this->staff_first_nm = $row['staff_first_nm'];
+            $this->staff_last_nm = $row['staff_last_nm'];
+            $this->staff_phone = $row['staff_phone'];
+            $this->staff_email = $row['staff_email'];
             } catch (Exception $e)
             {
             $var = $e->getMessage();
@@ -55,7 +53,9 @@ class Staff_Model extends Generic_Model
                 array_push($fields, $var);
                 }
             //Add a new, empty staff object
-            $this->addStaffMember($fields);
+            $new = $this->addStaffMember($fields);
+            //As the object is empty the only field we need is the DB generated ID
+            $this->staff_id = $new->staff_id();
             }
         }
 
@@ -87,38 +87,6 @@ class Staff_Model extends Generic_Model
             function staff_email()
         {
         return $this->staff_email;
-        }
-
-    /*
-     * Inherit method to set a new variable
-     */
-
-    public function set($variable, $newValue)
-        {
-        try
-            {
-            $variable = strtolower($variable);
-
-            $this->$variable = $newValue;
-            if ($this->$variable !== $newValue)
-                {
-                throw new Exception("Error setting new value");
-                }
-            } catch (Exception $ex)
-            {
-            echo $ex->getMessage() . "<br/>" . $ex->getTraceAsString();
-            }
-        }
-
-    public function setEmptyNull($row)
-        {
-        foreach ($row as $key => $val)
-            {
-            if ($val === "NULL")
-                {
-                $this->set($key, null);
-                }
-            }
         }
 
     /*
@@ -172,12 +140,14 @@ class Staff_Model extends Generic_Model
         return $staff;
         }
 
-    public static function delete($staff_id)
+    public static function archive($staff_id)
         {
-        $table = "STAFF";
-        $field = "STAFF_ID";
-        $success = parent::__delete($staff_id, $table, $field);
-        return $success;
+        $success = Database_Queries::archive("STAFF", "STAFF_ID", $staff_id);
+        if (!!!$success)
+            {
+            return "Error archiving staff data!";
+            }
+        return true;
         }
 
     public static function validateStaffFields($fields)

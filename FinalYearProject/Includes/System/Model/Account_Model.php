@@ -110,7 +110,7 @@ class Account_Model extends Validator_Model
         
 //Assign array variables to abbreviations for later use
         $user_id = $registrationFields['user_id'];
-        $password = $registrationFields['password'];
+        $password = PassHash::hash($registrationFields['password']);
         $fName = $registrationFields['fname'];
         $lName = $registrationFields['lname'];
         $em = $registrationFields['email'];

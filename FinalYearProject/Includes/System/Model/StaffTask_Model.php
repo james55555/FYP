@@ -57,7 +57,7 @@ class StaffTask_Model extends Staff_Model
     public static function delete($tsk_id)
         {
         $table = "STAFF_TASK";
-        $field = "STAFF_ID";
+        $field = "TSK_ID";
         $success = Generic_Model::__delete($tsk_id, $table, $field);
         return $success;
         }

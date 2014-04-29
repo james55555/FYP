@@ -34,29 +34,36 @@
                       method="post">
                     <div id="personal" class="regInput">
                         <h2>Create your account</h2>
-                        <input type="text" class="valid" name="fname" id="fname"
+                        <input type="text" name="fname" id="fname"
                                placeholder="Your first name" 
-                               title="No more than 30 characters" style="float:initial; width: 80%;"/><span id="spfname"></span>
-                        <input type="text" class="valid" name="lname" id="lname"
+                               title="No more than 30 characters" 
+                               style="float:initial; width: 80%;"
+                               data-validate="true"/><span id="spfname"></span>
+                        <input type="text" name="lname" id="lname"
                                placeholder="Your last name"
                                title="No more than 30 characters"
-                               style="float:initial; width: 80%;"/><span id="splname"></span>
-                        <input type="text" class="valid" name="email" id="email"
+                               style="float:initial; width: 80%;"
+                               data-validate="true"/><span id="splname"></span>
+                        <input type="text" name="email" id="email"
                                data-optional="true" placeholder="Your email address (optional)"
                                title="Must be a valid email"
-                               style="float:initial; width: 80%;"/><span id="spemail"></span>
+                               style="float:initial; width: 80%;"
+                               data-validate="true"/><span id="spemail"></span>
                     </div>
                     <div id="credentials" class="regInput">
                         <h2>Set up your login details</h2>
-                        <input type="text" class="valid" name="user_id" id="user_id"
+                        <input type="text" name="user_id" id="user_id"
                                placeholder="New Username"
                                title="No more than 25 characters"
-                               style="float:initial; width: 80%;"/><span id="spuser_id"></span>    
-                        <input type="password" class="valid" name="password" id="password"
+                               style="float:initial; width: 80%;"
+                               data-validate="true"/><span id="spuser_id"></span>    
+                        <input style="width:80%;" type="password" name="password" id="password"
                                placeholder="New Password"
-                               title="No more than 25 characters"/><span id="sppassword"></span>
-                        <input type="password" class="valid" name="password2" id="password2"
-                               placeholder="Re-enter password"/><span id="sppassword2"></span>
+                               title="No more than 25 characters"
+                               data-validate="true"/><span id="sppassword"></span>
+                        <input style="width:80%;" type="password" name="password2" id="password2"
+                               placeholder="Re-enter password"
+                               data-validate="true"/><span id="sppassword2"></span>
                     </div>
                     <div id="formNav">
                         <input type="button" value="Cancel" class="button"

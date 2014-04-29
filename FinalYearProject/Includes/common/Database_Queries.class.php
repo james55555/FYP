@@ -135,11 +135,8 @@ class Database_Queries extends Database
             $filter = array($table, $colCheck, $paramID);
             $check = $db->filterParameters($filter);
             //Before any deletes are run, archive the data
-            $archSuccess = self::archive($check[0], $check[1], $check[2]);
-            if (!$archSuccess)
-                {
-                echo "<br/>" . $table . " was already archived.<br/>";
-                }
+            self::archive($check[0], $check[1], $check[2]);
+
             //Reconnect to the database
             $db->connect();
 
@@ -204,48 +201,43 @@ class Database_Queries extends Database
         $db->connect();
         //Start transaction to archive data
         $db->start();
-        //Check if the row alreadys exists in PROJECT in ARCHIVE DB
-        $rowExists = $db->query(" SELECT *"
-                . " FROM ARCHIVE." . $table
-                . " WHERE " . $colCheck
-                . " ='" . $id . "'; ");
-        //The statement to identify if it exists
-        if (mysqli_num_rows($rowExists) === 0)
+        try
             {
-            $fields = array();
-            $sql_fields = mysqli_fetch_fields($rowExists);
-            foreach ($sql_fields as $field)
-                {
-                array_push($fields, $field->name);
-                }
-            //Insert null value to be updated to current timestamp
-            array_push($fields, "NULL");
-            //Implode array components for use in query string
-            $tableFields = implode(", ", $fields);
-            //Set up archive query insert
-            $archive_query = "INSERT INTO ARCHIVE." . $table
-                    . " (SELECT " . $tableFields
-                    . " FROM " . $table
+            //Check if the row alreadys exists in PROJECT in ARCHIVE DB
+            $rowExists = $db->query(" SELECT *"
+                    . " FROM ARCHIVE." . $table
                     . " WHERE " . $colCheck
-                    . " ='" . $id . "')"
-                    . " ON DUPLICATE KEY UPDATE "
-                    . $colCheck . "='" . $id . "';";
+                    . " ='" . $id . "'; ");
 
-            $archive_result = mysqli_query($db->getConn(), $archive_query);
-            } else
+                $fields = array();
+                $sql_fields = mysqli_fetch_fields($rowExists);
+                foreach ($sql_fields as $field)
+                    {
+                    if($field->name !== "archive_ts") {
+                        array_push($fields, $field->name);
+                    }
+                    }
+                //Insert null value to be updated to current timestamp
+                array_push($fields, "NULL");
+                //Implode array components for use in query string
+                $tableFields = implode(", ", $fields);
+                //Set up archive query insert
+                $archive_query = "INSERT INTO TEST." . $table
+                        . " (SELECT " . $tableFields
+                        . " FROM " . $table
+                        . " WHERE " . $colCheck
+                        . " ='" . $id . "')"
+                        . " ON DUPLICATE KEY UPDATE "
+                        . $colCheck . "='" . $id . "';";
+                $archive_result = mysqli_query($db->getConn(), $archive_query);
+            } catch (Exception $e)
             {
-            $archive_result = null;
+            echo $e->getMessage();
             }
         //Validate whether these queries have returned expected results
-        if ($archive_result)
+        if ($db->endStatement($archive_result))
             {
-            $db->commit();
-            } elseif (!isset($archive_result) || !$archive_result)
-            {
-            $db->rollback();
-            } else
-            {
-            throw new Exception("This shouldn't happen");
+            return true;
             }
         $db->close();
         return true;

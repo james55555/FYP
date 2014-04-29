@@ -14,28 +14,17 @@ class Dependency_Model extends Generic_Model
 
     public function __construct($dpnd_id)
         {
+        //Get the row for the provided id
         $row = $this->get($dpnd_id);
+
         try
             {
-            if (!isset($row))
+            if (!!!isset($row) || count($row) === 0)
                 {
                 throw new Exception("NULL");
                 }
-            foreach ($row as $key => $val)
-                {
-                $key = strtolower($key);
-                if ($val === "NULL")
-                    {
-                    $$val = null;
-                    }
-                if (is_array($val))
-                    {
-                    foreach ($val as $dpnd)
-                        {
-                        array_push($row, $key[$dpnd]);
-                        }
-                    }
-                }
+            $this->dpnd_id = $row['dependency_id'];
+            $this->dpnd_on = $row['dependent_on'];
             } catch (Exception $e)
             {
             $var = $e->getMessage();
@@ -45,8 +34,10 @@ class Dependency_Model extends Generic_Model
                 {
                 array_push($fields, $var);
                 }
-            //Add a new, empty staff object
-            $this->add($fields);
+            //Add a new, empty staff object (re-run constructor with id)
+            $new = self::add($fields);
+            //As the object is empty the only field we need is the DB generated ID
+            $this->dpnd_id = $new->dpnd_id();
             }
         }
 
@@ -58,38 +49,6 @@ class Dependency_Model extends Generic_Model
     public function dpnd_on()
         {
         return $this->dpnd_on;
-        }
-
-    /*
-     * Inherit method to set a new variable
-     */
-
-    public function set($variable, $newValue)
-        {
-        try
-            {
-            $variable = strtolower($variable);
-
-            $this->$variable = $newValue;
-            if ($this->$variable !== $newValue)
-                {
-                throw new Exception("Error setting new value");
-                }
-            } catch (Exception $ex)
-            {
-            echo $ex->getMessage() . "<br/>" . $ex->getTraceAsString();
-            }
-        }
-
-    public function setEmptyNull($row)
-        {
-        foreach ($row as $key => $val)
-            {
-            if ($val === "NULL")
-                {
-                $this->set($key, null);
-                }
-            }
         }
 
     /*
@@ -108,26 +67,21 @@ class Dependency_Model extends Generic_Model
         {
         $table = "DEPENDENCY";
         $field = "DEPENDENCY_ID";
-        try
+
+        if (!!!is_array($dpnd_id))
             {
-            if (is_array($dpnd_id))
-                {
-                foreach ($dpnd_id as $var)
-                    {
-                    $success = parent::__delete($var, $table, $field);
-                    if ($success === false)
-                        {
-                        throw new Exception($var);
-                        }
-                    }
-                }
-            $success = parent::__delete($dpnd_id, $table, $field);
-            } catch (Exception $e)
-            {
-            echo "Dependency delete failed at " . $e->getMessage();
-            $success = false;
+            $dpnd_id = array($dpnd_id);
             }
-        return $success;
+        foreach ($dpnd_id as $var)
+            {
+            $success = Database_Queries::archive($table, $field, $var);
+            if (!!!$success)
+                {
+                return "Dependency archive failed!<br/>"
+                        . "At dependency id: " . $var;
+                }
+            }
+        return true;
         }
 
     public static function add($fields)
@@ -166,6 +120,32 @@ class Dependency_Model extends Generic_Model
             }
         $db->close();
         return $dependencies;
+        }
+    public static function archive($dp_id)
+        {
+        $success = Database_Queries::archive("DEPENDENCY", "DEPENDENCY_ID", $dp_id);
+        if (!!!$success)
+            {
+            return "Error archiving staff data!";
+            }
+        return true;
+        }
+    public static function update($id, $fields)
+        {
+        $db = new Database();
+        $db->connect();
+
+        //Run update against DEPENDENCY table foreach dependency
+        $dpnd_update = "UPDATE DEPENDENCY SET "
+                . "DEPENDENCY_ON='" . $fields[0] . "'"
+                . "WHERE DEPENDENCY_ID='" . $id . "';";
+
+        if(!!!$db->query($dpnd_update)){
+            return "Error updating dependency!";
+            }
+        
+        $db->close();
+        return true;
         }
 
     }

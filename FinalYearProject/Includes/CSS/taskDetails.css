@@ -28,36 +28,17 @@
 }
 
 /*Content design*/
-
-#content {
-    width:40%
+#content ul{
+    list-style-type: none;
 }
-.infoTitle {
+#content .infoTitle {
     float:left;
     text-align:right;
     width: 30%;
     clear:both;
 }
-.info {
+#content .info {
     float:left;
     width: 60%;
     padding-left: 10px;
-}
-#content #taskDetails{
-    padding-top: .75em;
-}
-#down {
-    clear:both;
-}
-#actions {
-    text-align: center;
-    padding-top: 20px;
-}
-#actions #editT {
-    margin: 10px;
-    background: #f1f1f1;
-}
-#actions #delT {
-    margin: 10px;
-    background: #f1f1f1;
 }

@@ -33,8 +33,6 @@ include __COMMON_PATH . 'PassHash.class.php';
 //include database generic queries class
 include __COMMON_PATH . 'Database_Queries.class.php';
 
-//include pagination class
-include __COMMON_PATH . 'Pagination.class.php';
 /*
  * Autoload undefined class
  * @param className

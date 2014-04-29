@@ -261,14 +261,6 @@ class Project_Model extends Validator_Model
         //If any of the queries fail then rollback the query and print out error details
         else
             {
-            var_dump($project_result);
-            echo "<br/>";
-            var_dump($userProject_result);
-            echo "<br/>";
-            var_dump($estimation_result);
-            echo "<br/>";
-            var_dump($projectEstimation_result);
-            echo "Err: " . $db->getMysql_err();
             $db->rollback();
             return "Error inserting into the database<br/>" . $db->getMysql_err();
         }

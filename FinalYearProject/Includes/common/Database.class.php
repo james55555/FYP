@@ -18,7 +18,7 @@ class Database
     private
             $DB_pwd = '';
     private
-            $DB_nm = 'fyp';
+            $DB_nm = 'grahamj1';
 
     /*
      * Connect to database
@@ -50,7 +50,6 @@ class Database
             //If caught once, try remote server credentials
             $this->DB_user = "grahamj1";
             $this->DB_pwd = "Water+Spider";
-            $this->DB_nm = "grahamj1";
             $this->connect();
             }
         }
@@ -104,14 +103,14 @@ class Database
                 if (is_string($array[$key]))
                     {
                     // If they are, perform the real escape function over the selected node
-                    $array[$key] = strtolower(trim(mysqli_real_escape_string($this->conn, $array[$key]), "'"));
+                    $array[$key] = trim(mysqli_real_escape_string($this->conn, $array[$key]), "'");
                     }
                 }
             // Check if the parameter is a string
             if (is_string($array))
                 {
                 // If it is, perform a  mysqli_real_escape_string on the parameter
-                $array = strtolower(trim(mysqli_real_escape_string($this->conn, $array), "'"));
+                $array = trim(mysqli_real_escape_string($this->conn, $array), "'");
                 }
             // Return the filtered result
             return $array;
@@ -157,22 +156,6 @@ class Database
             $this->rollback();
             return false;
             }
-        }
-
-    /*
-     * Function to convert date object to string for insert query
-     */
-
-    public function formatDatesForDb($date)
-        {
-        if (isset($date) && is_string($date) && $date !== "NULL")
-            {
-            $date = date('Y-m-d', strtotime(str_replace('-', '/', $date)));
-            } else
-            {
-            $date = "NULL";
-            }
-        return $date;
         }
 
     /*

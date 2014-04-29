@@ -11,7 +11,7 @@ jQuery(function($) {
     $("#" + form.id + " input[name='submit']").click(function(e) {
 
         var errors = [];
-
+        var pwCheck = [];
         //Check email contains the right characters
         var em_chars = /([\w\-]+\@[\w\-]+\.[\w\-]+)/;
 

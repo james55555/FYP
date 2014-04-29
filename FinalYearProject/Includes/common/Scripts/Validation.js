@@ -3,6 +3,15 @@
  * to server-side.
  * The input will also be validated server-side to ensure it can be added to 
  * the database without failing.
+ * 
+ * Error messages will show as expected if this criteria is 
+ * met in the HTML document:
+ *      .error class exists in CSS
+ *      A span class with and id of 'sp' followed by the input id
+ *          is positioned to the right of each input
+ *      Two divs or spans exist for form instructions and error message
+ *          Their id's must be #msg and #errMessage respectively
+ * 
  * @returns {Boolean}
  */
 jQuery(function($) {
@@ -11,7 +20,6 @@ jQuery(function($) {
     $("#" + form.id + " input[name='submit']").click(function(e) {
 
         var errors = [];
-        var pwCheck = [];
         //Check email contains the right characters
         var em_chars = /([\w\-]+\@[\w\-]+\.[\w\-]+)/;
 
@@ -32,6 +40,10 @@ jQuery(function($) {
                         if (!val) {
                             throw("Fields Required!");
                         }
+                        else if (field.name === "password" &&
+                                $("#password") !== $("#password2")) {
+                            throw("Passwords don't match!");
+                        }
                     }
                     //If the field type is an email then perform validation
                     else if (field.name === "email" && val !== "") {
@@ -40,21 +52,17 @@ jQuery(function($) {
                             throw("Invalid email");
                         }
                     }
+                    /*else if(field.id === "#password" &&
+                     $("#password") !== $("#password2")){
+                     console.log("passmatch trigger");
+                     throw("Passwords don't match!");
+                     }*/
                 } catch (ex1) {
-                    errors.push(field.name);
-                    /*
-                     * Error messages will show as expected if this criteria is 
-                     * met in the HTML document:
-                     *      .error class exists in CSS
-                     *      A span class with and id of 'sp' followed by the input id
-                     *          is positioned to the right of each input
-                     *      Two divs or spans exist for form instructions and error message
-                     *          Their id's must be #msg and #errMessage respectively
-                     */
-                    $("#" + field.name).addClass('error');
-                    $("span#sp" + field.id).html("*");
-                    $("#msg").hide();
+                    addErrClass(field.name, field.id);
                     $("#errMessage").html(ex1);
+                    if (field.name === "password") {
+                        addErrClass(field.name + 2, field.id + 2);
+                    }
                 }
             }//End of for loop
             if (errors.length !== 0) {
@@ -67,4 +75,16 @@ jQuery(function($) {
         }
         return true;
     });
+
+/*
+ * Function add error class to the HTML given the field name and id
+ * @param (String) fieldName    This is the name of the input associated with the span class
+ * @param (String) fieldId      This is the ID (#) of the input to add the error class to
+ */
+    function addErrClass(fieldName, fieldId) {
+        $("#" + fieldId).addClass('error');
+        $("span#sp" + fieldName).html("*");
+        $("#msg").hide();
+    }
+    ;
 });

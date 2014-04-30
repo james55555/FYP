@@ -41,7 +41,7 @@ jQuery(function($) {
                             throw("Fields Required!");
                         }
                         else if (field.name === "password" &&
-                                $("#password") !== $("#password2")) {
+                                $("#password").val() !== $("#password2").val()) {
                             throw("Passwords don't match!");
                         }
                     }
@@ -52,12 +52,8 @@ jQuery(function($) {
                             throw("Invalid email");
                         }
                     }
-                    /*else if(field.id === "#password" &&
-                     $("#password") !== $("#password2")){
-                     console.log("passmatch trigger");
-                     throw("Passwords don't match!");
-                     }*/
                 } catch (ex1) {
+                    errors.push(field.name);
                     addErrClass(field.name, field.id);
                     $("#errMessage").html(ex1);
                     if (field.name === "password") {
@@ -67,6 +63,7 @@ jQuery(function($) {
             }//End of for loop
             if (errors.length !== 0) {
                 throw (false);
+                errors = [];
             }
         } catch (ex2) {
             //Only caught when the loop has iterated through all nodeList variables
@@ -76,11 +73,11 @@ jQuery(function($) {
         return true;
     });
 
-/*
- * Function add error class to the HTML given the field name and id
- * @param (String) fieldName    This is the name of the input associated with the span class
- * @param (String) fieldId      This is the ID (#) of the input to add the error class to
- */
+    /*
+     * Function add error class to the HTML given the field name and id
+     * @param (String) fieldName    This is the name of the input associated with the span class
+     * @param (String) fieldId      This is the ID (#) of the input to add the error class to
+     */
     function addErrClass(fieldName, fieldId) {
         $("#" + fieldId).addClass('error');
         $("span#sp" + fieldName).html("*");

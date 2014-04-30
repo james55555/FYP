@@ -1,5 +1,4 @@
 <?php
-
 /*
  *  Controller to log the user into the system.
  *  @author James Graham
@@ -7,6 +6,7 @@
 
 class Login_Controller extends Main_Controller
     {
+
     /*
      * This function is run when the user presses 'Login'
      * 
@@ -22,14 +22,15 @@ class Login_Controller extends Main_Controller
             if (isset($_POST['username']) && isset($_POST['password']))
                 {
                 //Check the provided credentials are correct
-                if (!$this->login($_POST['username'], $_POST['password']))
+                if (!!!$this->login($_POST['username'], $_POST['password']))
                     {
                     throw new Exception("<p>Invalid Credentials</p>");
                     }
                 //If authentication was successful
                 header('Location: ?page=Home');
                 }
-            } catch (Exception $ex)
+            }
+        catch (Exception $ex)
             {
             //If caught, make error_string available to view
             $this->registry->View_Template->error_string = $ex->getMessage();
@@ -54,20 +55,20 @@ class Login_Controller extends Main_Controller
         $_SESSION['user'] = null;
         // Get the account from the database
         $acc = Account_Model::getUser($user);
-        //Ensure password is correct
-        if (isset($acc))
-            {
-            //Unhash the password and check against provided password
-            if (PassHash::check_password($acc->password, $password))
+
+            //Ensure password is correct
+            if (isset($acc))
                 {
-                //Log in successful, set up new session and set boolean to false
-                $_SESSION['user'] = $acc;
-                return true;
+                //Unhash the password and check against provided password
+                if (PassHash::check_password($acc->password, $password))
+                    {
+                    //Log in successful, set up new session and set boolean to false
+                    $_SESSION['user'] = $acc;
+                    return true;
+                    }
                 }
-            }
         return false;
         }
 
     }
-
 ?>

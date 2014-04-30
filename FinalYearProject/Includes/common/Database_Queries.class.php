@@ -106,7 +106,7 @@ class Database_Queries extends Database
                 }
             } catch (Exception $e)
             {
-            echo $e->getMessage();
+            return $e->getMessage();
             }
         $db->close();
         return $row;

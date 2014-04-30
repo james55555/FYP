@@ -16,5 +16,16 @@
     margin: 0 auto;
     text-align: center;
 }
+#empty a{
+    text-decoration: underline;
+    color:blue;
+}
+#empty a:hover{
+    background-color: #f1f1f1;
+    color: #0085CC;
+}
+#empty a:visited{
+    color:blue;
+}
 /*Set the size of the image in the button*/
 

@@ -88,15 +88,18 @@
                         //Close table row for each projct
                         echo "</tr>";
                         } //End of foreach loop
-                    }//End of try
-                catch (Exception $e)
-                    {
-                    echo $e->getMessage();
-                    }
-                ?>
-                <!-- When foreach loop has ended, end the table-->
-            </table>
-
+                    ?>
+                    <!-- When foreach loop has ended, end the table-->
+                </table>
+                <?php
+                }//End of try
+            catch (Exception $e)
+                {
+                echo "<div id=\"empty\">";
+                echo $e->getMessage();
+                echo "</div>";
+                }
+            ?>
         </div> <!--End of container div-->
         <?php
         include("footer.php");
